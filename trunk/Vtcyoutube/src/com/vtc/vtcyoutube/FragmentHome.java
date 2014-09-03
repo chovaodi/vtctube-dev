@@ -22,18 +22,21 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.munix.gridviewheader.TestAdapter;
 import com.vtc.vtcyoutube.connectserver.AysnRequestHttp;
 import com.vtc.vtcyoutube.connectserver.IResult;
-import com.vtc.vtcyoutube.connectserver.Utils;
+import com.vtc.vtcyoutube.utils.Utils;
 
 public class FragmentHome extends SherlockFragment {
 	int mNum;
@@ -83,14 +86,14 @@ public class FragmentHome extends SherlockFragment {
 
 		@Override
 		public void getResult(int type, String result) {
-			List<ItemCategory> listData=null;
+			List<ItemCategory> listData = null;
 			Log.d("result", result);
 			try {
 				JSONObject jsonObj = new JSONObject(result);
-				String status=jsonObj.getString("status");
-				if(status.equals("ok")){
+				String status = jsonObj.getString("status");
+				if (status.equals("ok")) {
 					JSONArray jsonArray = jsonObj.getJSONArray("categories");
-					 listData = new ArrayList<ItemCategory>();
+					listData = new ArrayList<ItemCategory>();
 					for (int i = 0; i < jsonArray.length(); i++) {
 						ItemCategory item = new ItemCategory();
 						JSONObject json = (JSONObject) jsonArray.get(i);
@@ -101,10 +104,22 @@ public class FragmentHome extends SherlockFragment {
 						listData.add(item);
 					}
 				}
-			
+
 				list = (GridView) v.findViewById(R.id.list);
 				TestAdapter adapter = new TestAdapter(getActivity(), listData);
 				list.setAdapter(adapter);
+				list.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						Intent intent = new Intent(getActivity(),
+								CategoryActivity.class);
+						getActivity().startActivity(intent);
+
+					}
+
+				});
 
 			} catch (Exception exception) {
 				exception.printStackTrace();
