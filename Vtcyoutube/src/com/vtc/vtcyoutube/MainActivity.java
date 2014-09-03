@@ -1,5 +1,7 @@
 package com.vtc.vtcyoutube;
 
+import java.util.List;
+
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 import android.app.SearchManager;
@@ -16,6 +18,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -33,9 +36,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private static final String[] COLUMNS = { BaseColumns._ID,
 			SearchManager.SUGGEST_COLUMN_TEXT_1, };
 
+	private ListView listview;
+	private View header;
+	private View fotter;
+	private List<ItemMeu> listItemMenu;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		listItemMenu = Utils.getMenu(MainActivity.this, R.menu.ribbon_menu);
+
 		leftMenu = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW,
 				Position.LEFT);
 		leftMenu.setDropShadowColor(Color.parseColor("#503f3f3f"));
@@ -43,9 +53,20 @@ public class MainActivity extends SherlockFragmentActivity implements
 		leftMenu.setMenuView(R.layout.leftmenu);
 
 		setContentView(R.layout.fragment_content);
+
+		listview = (ListView) findViewById(R.id.listView1);
+		header = getLayoutInflater().inflate(R.layout.account_layout, null);
+		listview.addHeaderView(header);
+
+		MenuAdapter menuAdapter = new MenuAdapter(MainActivity.this);
+		for (int i = 0; i < listItemMenu.size(); i++) {
+			menuAdapter.addItem(listItemMenu.get(i));
+		}
+		listview.setAdapter(menuAdapter);
+
 		smooth = (SmoothProgressBar) findViewById(R.id.google_now);
 		smooth.setVisibility(View.GONE);
-		
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setIcon(
