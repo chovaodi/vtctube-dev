@@ -87,7 +87,7 @@ public class FragmentHome extends SherlockFragment {
 			try {
 				JSONObject jsonObj = new JSONObject(result);
 				JSONArray jsonArray = jsonObj.getJSONArray("items");
-				List<ItemCategory> listData = new ArrayList<>();
+				List<ItemCategory> listData = new ArrayList<ItemCategory>();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					ItemCategory item = new ItemCategory();
 					JSONObject json = (JSONObject) jsonArray.get(i);

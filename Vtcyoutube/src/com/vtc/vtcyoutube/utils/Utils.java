@@ -1,8 +1,10 @@
-package com.vtc.vtcyoutube;
+package com.vtc.vtcyoutube.utils;
 
 import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
+
+import com.vtc.vtcyoutube.ItemMeu;
 
 import android.app.Activity;
 import android.content.res.XmlResourceParser;

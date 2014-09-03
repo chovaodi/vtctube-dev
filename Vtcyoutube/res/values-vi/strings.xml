@@ -4,9 +4,7 @@
     <string name="app_name">Vtcyoutube</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-	<string name="lblChuyenmuc">CATEGORY</string>
-	<string name="lblCopyright">2014 CopyRight by: VTCTube.vn</string>
-	<string name="lblTimkiem">Search</string>
-	<string name="lblTaitro">Nhà tài trợ</string>
-	
+	<string name="lblChuyenmuc">CHUYÊN MỤC CHÍNH</string>
+	<string name="lblCopyright">2014 Bản quền thuộc về: VTCTube.vn</string>
+	<string name="lblTimkiem">Tìm kiếm</string>
 </resources>

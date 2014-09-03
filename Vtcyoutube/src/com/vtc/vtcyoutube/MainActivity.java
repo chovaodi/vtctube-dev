@@ -6,6 +6,7 @@ import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Color;
@@ -25,6 +26,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.sromku.simple.fb.SimpleFacebook;
+import com.vtc.vtcyoutube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
@@ -40,10 +43,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private View header;
 	private View fotter;
 	private List<ItemMeu> listItemMenu;
+	private SimpleFacebook mSimpleFacebook = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		listItemMenu = Utils.getMenu(MainActivity.this, R.menu.ribbon_menu);
 
 		leftMenu = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW,
@@ -56,7 +61,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		listview = (ListView) findViewById(R.id.listView1);
 		header = getLayoutInflater().inflate(R.layout.account_layout, null);
+		fotter = getLayoutInflater().inflate(R.layout.footer_menu, null);
 		listview.addHeaderView(header);
+		listview.addFooterView(fotter);
 
 		MenuAdapter menuAdapter = new MenuAdapter(MainActivity.this);
 		for (int i = 0; i < listItemMenu.size(); i++) {
@@ -79,6 +86,18 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		ft.add(R.id.container, newFragment).commit();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mSimpleFacebook = SimpleFacebook.getInstance(this);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		mSimpleFacebook.onActivityResult(this, requestCode, resultCode, data);
 
 	}
 

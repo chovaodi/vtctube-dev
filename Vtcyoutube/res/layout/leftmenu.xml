@@ -9,7 +9,7 @@
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
+        android:divider="#50c4c4c4"
         android:dividerHeight="0dp"
         android:scrollbars="none"
         android:scrollingCache="false" >
