@@ -4,8 +4,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,7 +16,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.vtc.vtcyoutube.ItemCategory;
 import com.vtc.vtcyoutube.R;
-import com.vtc.vtcyoutube.connectserver.Utils;
+import com.vtc.vtcyoutube.utils.Utils;
 
 public class TestAdapter extends BaseAdapter {
 	ViewHolder holder;
