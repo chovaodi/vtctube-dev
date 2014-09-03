@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,7 +27,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.sromku.simple.fb.Permission.Type;
 import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.vtc.vtcyoutube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -65,6 +68,18 @@ public class MainActivity extends SherlockFragmentActivity implements
 		listview.addHeaderView(header);
 		listview.addFooterView(fotter);
 
+		header.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (mSimpleFacebook.isLogin()) {
+
+				} else {
+					mSimpleFacebook.login(onLoginListener);
+				}
+			}
+		});
+
 		MenuAdapter menuAdapter = new MenuAdapter(MainActivity.this);
 		for (int i = 0; i < listItemMenu.size(); i++) {
 			menuAdapter.addItem(listItemMenu.get(i));
@@ -100,6 +115,31 @@ public class MainActivity extends SherlockFragmentActivity implements
 		mSimpleFacebook.onActivityResult(this, requestCode, resultCode, data);
 
 	}
+
+	OnLoginListener onLoginListener = new OnLoginListener() {
+
+		@Override
+		public void onFail(String reason) {
+		}
+
+		@Override
+		public void onException(Throwable throwable) {
+		}
+
+		@Override
+		public void onThinking() {
+		}
+
+		@Override
+		public void onLogin() {
+
+		}
+
+		@Override
+		public void onNotAcceptingPermissions(Type type) {
+
+		}
+	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

@@ -27,9 +27,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.munix.gridviewheader.GridView;
 import com.munix.gridviewheader.TestAdapter;
 import com.vtc.vtcyoutube.connectserver.AysnRequestHttp;
 import com.vtc.vtcyoutube.connectserver.IResult;
@@ -74,7 +74,7 @@ public class FragmentHome extends SherlockFragment {
 
 		ResultCallBack callBack = new ResultCallBack();
 		new AysnRequestHttp(Utils.LOAD_CATEGORY, MainActivity.smooth, callBack)
-				.execute("https://www.googleapis.com/youtube/v3/playlists?channelId=UCZcCmWhvK0gfThyWRmRerDQ&part=snippet&key=AIzaSyBZ7zRjhMHtl2CjG8rjdFYB0WQWl8H3VII&maxResults=50");
+				.execute("http://vtctube.vn/api/get_category_index");
 
 		return v;
 	}
@@ -83,34 +83,26 @@ public class FragmentHome extends SherlockFragment {
 
 		@Override
 		public void getResult(int type, String result) {
+			List<ItemCategory> listData=null;
 			Log.d("result", result);
 			try {
 				JSONObject jsonObj = new JSONObject(result);
-				JSONArray jsonArray = jsonObj.getJSONArray("items");
-				List<ItemCategory> listData = new ArrayList<ItemCategory>();
-				for (int i = 0; i < jsonArray.length(); i++) {
-					ItemCategory item = new ItemCategory();
-					JSONObject json = (JSONObject) jsonArray.get(i);
-					item.setIdCategory(json.getString("id"));
-
-					JSONObject jsonSnipet = json.getJSONObject("snippet");
-					item.setTitle(jsonSnipet.getString("title"));
-					JSONObject jsonThumnail = jsonSnipet
-							.getJSONObject("thumbnails");
-
-					JSONObject jsonStandard = jsonThumnail
-							.getJSONObject("high");
-					item.setUrlThumnail(jsonStandard.getString("url"));
-					listData.add(item);
+				String status=jsonObj.getString("status");
+				if(status.equals("ok")){
+					JSONArray jsonArray = jsonObj.getJSONArray("categories");
+					 listData = new ArrayList<ItemCategory>();
+					for (int i = 0; i < jsonArray.length(); i++) {
+						ItemCategory item = new ItemCategory();
+						JSONObject json = (JSONObject) jsonArray.get(i);
+						item.setIdCategory(json.getString("id"));
+						item.setTitle(json.getString("title"));
+						item.setSlug(json.getString("slug"));
+						item.setPostcount(json.getInt("post_count"));
+						listData.add(item);
+					}
 				}
-
+			
 				list = (GridView) v.findViewById(R.id.list);
-
-				View header = View
-						.inflate(getActivity(), R.layout.header, null);
-				list.addHeaderView(header);
-				list.setNumColumns(3);
-
 				TestAdapter adapter = new TestAdapter(getActivity(), listData);
 				list.setAdapter(adapter);
 
