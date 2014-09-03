@@ -13,9 +13,9 @@ public class Utils {
 
 	public static DisplayImageOptions getOptions(Context activity) {
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.showImageForEmptyUri(R.drawable.img_erorrs)
-				.showImageOnFail(R.drawable.img_erorrs)
-				.showImageOnLoading(R.drawable.img_erorrs)
+				.showImageForEmptyUri(R.drawable.bgr_icon_category)
+				.showImageOnFail(R.drawable.bgr_icon_category)
+				.showImageOnLoading(R.drawable.bgr_icon_category)
 				.resetViewBeforeLoading(true).cacheOnDisc(true)
 				.imageScaleType(ImageScaleType.EXACTLY)
 				.bitmapConfig(Bitmap.Config.RGB_565)

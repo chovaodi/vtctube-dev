@@ -5,6 +5,24 @@ public class ItemCategory {
 	private String title;
 	private String urlThumnail;
 	private String idCategory;
+	private String slug;
+	private int postcount;
+
+	public int getPostcount() {
+		return postcount;
+	}
+
+	public void setPostcount(int postcount) {
+		this.postcount = postcount;
+	}
+
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
+	public String getSlug() {
+		return slug;
+	}
 
 	public String getIdCategory() {
 		return idCategory;
