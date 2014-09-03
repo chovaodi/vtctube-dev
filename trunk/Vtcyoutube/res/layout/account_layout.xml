@@ -56,4 +56,13 @@
             android:src="@drawable/ic_setting" />
     </LinearLayout>
 
-</LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/line_menu_left1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/line_menu_left" />
+</LinearLayout>
