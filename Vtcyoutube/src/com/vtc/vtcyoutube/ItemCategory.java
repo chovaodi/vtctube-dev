@@ -7,6 +7,15 @@ public class ItemCategory {
 	private String idCategory;
 	private String slug;
 	private int postcount;
+	private int idPost;
+
+	public int getIdPost() {
+		return idPost;
+	}
+
+	public void setIdPost(int idPost) {
+		this.idPost = idPost;
+	}
 
 	public int getPostcount() {
 		return postcount;

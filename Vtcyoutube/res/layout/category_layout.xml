@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ListView
+    <com.vtc.vtcyoutube.PinnedSectionListView
         android:id="@+id/listvideo"
-        android:dividerHeight="0dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="#503f3f3f"
+        android:dividerHeight="0dp"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false" />
 
-</LinearLayout>
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:id="@+id/google_now"
+        style="@style/GNowProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:indeterminate="true"
+        android:visibility="visible" />
+
+</FrameLayout>

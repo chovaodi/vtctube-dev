@@ -1,5 +1,7 @@
 package com.vtc.vtcyoutube.connectserver;
 
+import com.vtc.vtcyoutube.utils.Utils;
+
 import android.accounts.NetworkErrorException;
 import android.os.AsyncTask;
 import android.view.View;
@@ -16,6 +18,10 @@ public class AysnRequestHttp extends AsyncTask<String, Integer, String> {
 		this.iResult = iResult;
 	}
 
+	public static String getUrlHttp(String host, String function) {
+		return host + "/" + function;
+	}
+
 	@Override
 	protected String doInBackground(String... params) {
 		String json = "";
@@ -30,12 +36,14 @@ public class AysnRequestHttp extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPreExecute() {
-		process.setVisibility(View.VISIBLE);
+		if (keyOption != Utils.AYSN_LOAD && process != null)
+			process.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	protected void onPostExecute(String result) {
-		process.setVisibility(View.GONE);
+		if (process != null)
+			process.setVisibility(View.GONE);
 		this.iResult.getResult(keyOption, result);
 	}
 }

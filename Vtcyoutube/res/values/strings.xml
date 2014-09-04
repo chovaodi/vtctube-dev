@@ -9,5 +9,8 @@
     <string name="lblCopyright">2014 CopyRight by: VTCTube.vn</string>
     <string name="lblTimkiem">Search</string>
     <string name="lblTaitro">Nhà tài trợ</string>
+    <string name="lblMoinhat">Mới nhất</string>
+    <string name="lblXemnhieu">Xem nhiều</string>
+    <string name="lblYeuthich">Yêu thích</string>
 
 </resources>
