@@ -22,26 +22,38 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.HeaderTransformer;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
+import android.accounts.NetworkErrorException;
+import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.munix.gridviewheader.TestAdapter;
 import com.vtc.vtcyoutube.connectserver.AysnRequestHttp;
 import com.vtc.vtcyoutube.connectserver.IResult;
+import com.vtc.vtcyoutube.connectserver.JSONParser;
 import com.vtc.vtcyoutube.utils.Utils;
 
-public class FragmentHome extends SherlockFragment {
+public class FragmentHome extends SherlockFragment implements OnRefreshListener {
 	int mNum;
 	private GridView list;
 	private View v;
+	private PullToRefreshLayout mPullToRefreshLayout;
+	ResultCallBack callBack = null;
 
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
@@ -65,6 +77,7 @@ public class FragmentHome extends SherlockFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+		callBack = new ResultCallBack();
 	}
 
 	/**
@@ -73,56 +86,194 @@ public class FragmentHome extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
 		v = inflater.inflate(R.layout.fragment_home, container, false);
 
-		ResultCallBack callBack = new ResultCallBack();
-		new AysnRequestHttp(Utils.LOAD_CATEGORY, MainActivity.smooth, callBack)
-				.execute("http://vtctube.vn/api/get_category_index");
+		mPullToRefreshLayout = (PullToRefreshLayout) v
+				.findViewById(R.id.ptr_layout);
+		ActionBarPullToRefresh.from(getActivity()).options(Options.create()
+		// Here we make the refresh scroll distance to 75% of the GridView
+		// height
+				.scrollDistance(.75f)
+				// Here we define a custom header layout which will be inflated
+				// and used
+				.headerLayout(R.layout.customised_header)
+				// Here we define a custom header transformer which will alter
+				// the header
+				// based on the current pull-to-refresh state
+				.headerTransformer(new CustomisedHeaderTransformer()).build())
+				.allChildrenArePullable().listener(this)
+				// Here we'll set a custom ViewDelegate
+				.useViewDelegate(GridView.class, new AbsListViewDelegate())
+				.setup(mPullToRefreshLayout);
+
+		if (GlobalApplication.dataCate.length() > 0) {
+			showView(GlobalApplication.dataCate);
+		} else {
+			if (Utils.isExistFile(Utils.GET_CATE_INDEX)) {
+				GlobalApplication.dataCate = Utils
+						.readJsonFile(Utils.GET_CATE_INDEX);
+				showView(GlobalApplication.dataCate);
+			} else {
+				String url = Utils.getUrlHttp(Utils.host, "get_category_index");
+
+				new AysnRequestHttp(Utils.LOAD_CATEGORY, MainActivity.smooth,
+						callBack).execute(url);
+			}
+		}
 
 		return v;
+	}
+
+	static class CustomisedHeaderTransformer extends HeaderTransformer {
+
+		private View mHeaderView;
+		private TextView mMainTextView;
+		private TextView mProgressTextView;
+
+		@Override
+		public void onViewCreated(Activity activity, View headerView) {
+			mHeaderView = headerView;
+			mMainTextView = (TextView) headerView.findViewById(R.id.ptr_text);
+			mProgressTextView = (TextView) headerView
+					.findViewById(R.id.ptr_text_secondary);
+		}
+
+		@Override
+		public void onReset() {
+			mMainTextView.setVisibility(View.VISIBLE);
+			mMainTextView.setText(R.string.pull_to_refresh_pull_label);
+
+			mProgressTextView.setVisibility(View.GONE);
+			mProgressTextView.setText("");
+		}
+
+		@Override
+		public void onPulled(float percentagePulled) {
+			mProgressTextView.setVisibility(View.VISIBLE);
+			mProgressTextView
+					.setText(Math.round(100f * percentagePulled) + "%");
+		}
+
+		@Override
+		public void onRefreshStarted() {
+			mMainTextView.setText(R.string.pull_to_refresh_refreshing_label);
+			mProgressTextView.setVisibility(View.GONE);
+		}
+
+		@Override
+		public void onReleaseToRefresh() {
+			mMainTextView.setText(R.string.pull_to_refresh_release_label);
+		}
+
+		@Override
+		public void onRefreshMinimized() {
+			// In this header transformer, we will ignore this call
+		}
+
+		@Override
+		public boolean showHeaderView() {
+			final boolean changeVis = mHeaderView.getVisibility() != View.VISIBLE;
+			if (changeVis) {
+				mHeaderView.setVisibility(View.VISIBLE);
+			}
+			return changeVis;
+		}
+
+		@Override
+		public boolean hideHeaderView() {
+			final boolean changeVis = mHeaderView.getVisibility() == View.VISIBLE;
+			if (changeVis) {
+				mHeaderView.setVisibility(View.GONE);
+			}
+			return changeVis;
+		}
+	}
+
+	public void showView(String result) {
+
+		List<ItemCategory> listData = null;
+		try {
+			JSONObject jsonObj = new JSONObject(result);
+			String status = jsonObj.getString("status");
+			if (status.equals("ok")) {
+				JSONArray jsonArray = jsonObj.getJSONArray("categories");
+				listData = new ArrayList<ItemCategory>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					ItemCategory item = new ItemCategory();
+					JSONObject json = (JSONObject) jsonArray.get(i);
+					item.setIdCategory(json.getString("id"));
+					item.setTitle(json.getString("title"));
+					item.setSlug(json.getString("slug"));
+					item.setPostcount(json.getInt("post_count"));
+					listData.add(item);
+				}
+			}
+
+			list = (GridView) v.findViewById(R.id.list);
+			TestAdapter adapter = new TestAdapter(getActivity(), listData);
+			list.setAdapter(adapter);
+			list.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					Intent intent = new Intent(getActivity(),
+							CategoryActivity.class);
+					getActivity().startActivity(intent);
+
+				}
+
+			});
+
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		// Hide the list
+
+		/**
+		 * Simulate Refresh with 4 seconds sleep
+		 */
+		new AsyncTask<String, Integer, String>() {
+
+			@Override
+			protected String doInBackground(String... params) {
+				String json = "";
+				JSONParser jsonParser = new JSONParser();
+				try {
+					json = jsonParser.makeHttpRequest(Utils.getUrlHttp(
+							Utils.host, Utils.GET_CATE_INDEX));
+				} catch (NetworkErrorException e) {
+					e.printStackTrace();
+				}
+				return json;
+			}
+
+			@Override
+			protected void onPostExecute(String result) {
+				super.onPostExecute(result);
+
+				// Notify PullToRefreshLayout that the refresh has finished
+				mPullToRefreshLayout.setRefreshComplete();
+
+			}
+		}.execute();
 	}
 
 	public class ResultCallBack implements IResult {
 
 		@Override
 		public void getResult(int type, String result) {
-			List<ItemCategory> listData = null;
-			Log.d("result", result);
-			try {
-				JSONObject jsonObj = new JSONObject(result);
-				String status = jsonObj.getString("status");
-				if (status.equals("ok")) {
-					JSONArray jsonArray = jsonObj.getJSONArray("categories");
-					listData = new ArrayList<ItemCategory>();
-					for (int i = 0; i < jsonArray.length(); i++) {
-						ItemCategory item = new ItemCategory();
-						JSONObject json = (JSONObject) jsonArray.get(i);
-						item.setIdCategory(json.getString("id"));
-						item.setTitle(json.getString("title"));
-						item.setSlug(json.getString("slug"));
-						item.setPostcount(json.getInt("post_count"));
-						listData.add(item);
-					}
-				}
-
-				list = (GridView) v.findViewById(R.id.list);
-				TestAdapter adapter = new TestAdapter(getActivity(), listData);
-				list.setAdapter(adapter);
-				list.setOnItemClickListener(new OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int arg2, long arg3) {
-						Intent intent = new Intent(getActivity(),
-								CategoryActivity.class);
-						getActivity().startActivity(intent);
-
-					}
-
-				});
-
-			} catch (Exception exception) {
-				exception.printStackTrace();
+			GlobalApplication.dataCate = result;
+			if (result.length() > 0)
+				Utils.writeJsonFile(result, false, Utils.GET_CATE_INDEX);
+			if (type == Utils.LOAD_CATEGORY) {
+				showView(result);
 			}
 		}
 	}

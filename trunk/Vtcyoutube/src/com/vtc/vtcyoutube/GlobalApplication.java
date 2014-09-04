@@ -10,6 +10,8 @@ import com.sromku.simple.fb.SimpleFacebookConfiguration;
 public class GlobalApplication extends Application {
 	private static final String APP_ID = "691296997625912";
 	private static final String APP_NAMESPACE = "VTC 565";
+	
+	public static String dataCate="";
 
 	@Override
 	public void onCreate() {
