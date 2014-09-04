@@ -73,6 +73,7 @@ public class Utils {
 	}
 
 	public final static int LOAD_CATEGORY = 1;
+	public final static int LOAD_MORE = 3;
 	public final static int AYSN_LOAD = 2;
 
 	public static DisplayImageOptions getOptions(Context activity) {

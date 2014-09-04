@@ -54,7 +54,7 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 	private View v;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	ResultCallBack callBack = null;
-
+	List<ItemCategory> listData = null;
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
 	 * argument.
@@ -192,7 +192,7 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 
 	public void showView(String result) {
 
-		List<ItemCategory> listData = null;
+		
 		try {
 			JSONObject jsonObj = new JSONObject(result);
 			String status = jsonObj.getString("status");
@@ -220,6 +220,7 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 						int arg2, long arg3) {
 					Intent intent = new Intent(getActivity(),
 							CategoryActivity.class);
+					intent.putExtra("cate", listData.get(arg2).getIdCategory());
 					getActivity().startActivity(intent);
 
 				}
