@@ -3,6 +3,7 @@ package com.vtc.vtcyoutube;
 import java.util.List;
 
 import net.simonvt.menudrawer.MenuDrawer;
+import net.simonvt.menudrawer.MenuDrawer.OnDrawerStateChangeListener;
 import net.simonvt.menudrawer.Position;
 import android.app.SearchManager;
 import android.content.Context;
@@ -12,14 +13,17 @@ import android.database.MatrixCursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.provider.SyncStateContract.Constants;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,9 +31,13 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sromku.simple.fb.Permission.Type;
 import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
+import com.sromku.simple.fb.listeners.OnProfileListener;
 import com.vtc.vtcyoutube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -44,36 +52,60 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private ListView listview;
 	private View header;
-	private View fotter;
 	private List<ItemMeu> listItemMenu;
 	private SimpleFacebook mSimpleFacebook = null;
+
+	private GlobalApplication globalApp;
+	private TextView lblUserName;
+	private TextView lblAccountId;
+	private ImageView imgAvata;
+
+	public static ImageLoader imageLoader = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		globalApp = (GlobalApplication) getApplicationContext();
 		listItemMenu = Utils.getMenu(MainActivity.this, R.menu.ribbon_menu);
-
+		if (imageLoader == null) {
+			imageLoader = ImageLoader.getInstance();
+			imageLoader.init(ImageLoaderConfiguration
+					.createDefault(MainActivity.this.getApplicationContext()));
+		}
+		
 		leftMenu = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW,
 				Position.LEFT);
 		leftMenu.setDropShadowColor(Color.parseColor("#503f3f3f"));
 		leftMenu.setDropShadowSize(8);
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		int width = displaymetrics.widthPixels;
+		leftMenu.setMenuSize(2 * width / 3);
 		leftMenu.setMenuView(R.layout.leftmenu);
-
 		setContentView(R.layout.fragment_content);
 
 		listview = (ListView) findViewById(R.id.listView1);
 		header = getLayoutInflater().inflate(R.layout.account_layout, null);
-		fotter = getLayoutInflater().inflate(R.layout.footer_menu, null);
 		listview.addHeaderView(header);
-		listview.addFooterView(fotter);
+		lblUserName = (TextView) header.findViewById(R.id.lblName);
+		lblAccountId = (TextView) header.findViewById(R.id.lblEmail);
+		imgAvata = (ImageView) header.findViewById(R.id.imgAvata);
+		leftMenu.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
+
+			@Override
+			public void onDrawerStateChange(int oldState, int newState) {
+				if (mSimpleFacebook.isLogin()) {
+					getProfile();
+				}
+			}
+		});
 
 		header.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				if (mSimpleFacebook.isLogin()) {
-
+					getProfile();
 				} else {
 					mSimpleFacebook.login(onLoginListener);
 				}
@@ -101,6 +133,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		ft.add(R.id.container, newFragment).commit();
+	}
+
+	public String getLinkAvataFace(String id) {
+		return "https://graph.facebook.com/" + id + "/picture?type=normal";
+	}
+
+	public void setAccInfo() {
+		if (globalApp.getAccountModel() != null) {
+			lblAccountId.setText(globalApp.getAccountModel().getUserID());
+
+			if (lblUserName.getText().equals("Đăng nhập")) {
+				imageLoader.displayImage(getLinkAvataFace(globalApp
+						.getAccountModel().getUserID()), imgAvata, Utils
+						.getOptions(MainActivity.this));
+			}
+			lblUserName.setText(globalApp.getAccountModel().getUserName());
+
+		}
 	}
 
 	@Override
@@ -132,6 +182,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onLogin() {
+			getProfile();
 
 		}
 
@@ -140,6 +191,34 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		}
 	};
+
+	public void getProfile() {
+
+		mSimpleFacebook.getProfile(new OnProfileListener() {
+			@Override
+			public void onComplete(Profile profile) {
+				String user_ID = profile.getId();// user id
+				String profileName = profile.getName();// user's
+				AccountModel account = new AccountModel();
+				account.setUserID(user_ID);
+				account.setUserName(profileName);
+				globalApp.setAccountModel(account);
+				setAccInfo();
+			}
+
+			@Override
+			public void onThinking() {
+			}
+
+			@Override
+			public void onFail(String reason) {
+
+				super.onFail(reason);
+			}
+
+		});
+
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

@@ -98,10 +98,10 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 				@Override
 				public void onClick(View arg0) {
-					Log.d("btnMoinhat","btnMoinhat");
-					//					holder.btnMoinhat.setSelected(true);
-//					holder.btnXemnhieu.setSelected(false);
-//					holder.btnYeuthich.setSelected(false);
+					Log.d("btnMoinhat", "btnMoinhat");
+					// holder.btnMoinhat.setSelected(true);
+					// holder.btnXemnhieu.setSelected(false);
+					// holder.btnYeuthich.setSelected(false);
 
 					callBack.getResult(PinnedAdapter.MOINHAT, "");
 				}
@@ -131,7 +131,8 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 		} else {
 			holder.txtTitle.setText(getItem(position).getTitle());
-			imageLoader.displayImage(getItem(position).getUrl(),
+			imageLoader.displayImage(
+					getItem(position).getUrl(),
 					holder.imgIcon, Utils.getOptions(context),
 					new SimpleImageLoadingListener() {
 						@Override

@@ -101,6 +101,8 @@ public class MenuAdapter extends BaseAdapter {
 
 				convertView = mInflater.inflate(R.layout.item_menu_left, null);
 				holder.txtTitle = (TextView) convertView.findViewById(R.id.lblTitle);
+				holder.imgIcon = (ImageView) convertView.findViewById(R.id.icon_menu);
+				
 				break;
 			}
 			convertView.setTag(holder);
@@ -110,6 +112,7 @@ public class MenuAdapter extends BaseAdapter {
 		ItemMeu item = getItem(position);
 		if (type == TYPE_ITEM) {
 			holder.txtTitle.setText(item.getTitle());
+			holder.imgIcon.setBackgroundResource(item.getIcon());
 		}
 		return convertView;
 	}

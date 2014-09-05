@@ -10,8 +10,16 @@ import com.sromku.simple.fb.SimpleFacebookConfiguration;
 public class GlobalApplication extends Application {
 	private static final String APP_ID = "691296997625912";
 	private static final String APP_NAMESPACE = "VTC 565";
-	
-	public static String dataCate="";
+	public static String dataCate = "";
+	private AccountModel accountModel;
+
+	public void setAccountModel(AccountModel accountModel) {
+		this.accountModel = accountModel;
+	}
+
+	public AccountModel getAccountModel() {
+		return accountModel;
+	}
 
 	@Override
 	public void onCreate() {
