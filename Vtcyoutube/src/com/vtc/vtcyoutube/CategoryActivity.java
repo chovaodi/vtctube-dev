@@ -21,6 +21,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.PageIndicator;
 import com.vtc.vtcyoutube.connectserver.AysnRequestHttp;
 import com.vtc.vtcyoutube.connectserver.IResult;
@@ -51,8 +52,19 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.category_layout);
+		overridePendingTransition(R.anim.slide_in_bottom,
+				R.anim.slide_out_bottom);
 		Intent intent = getIntent();
 		String cate = intent.getStringExtra("cate");
+		String title = intent.getStringExtra("title");
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setIcon(
+				getResources().getDrawable(R.drawable.logo));
+		getSupportActionBar().setTitle(title);
+		getSupportActionBar().setBackgroundDrawable(
+				getResources().getDrawable(R.drawable.bgr_tasktop));
 
 		smooth = (SmoothProgressBar) findViewById(R.id.google_now);
 		smooth.setVisibility(View.GONE);
@@ -98,6 +110,23 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 				+ cate;
 		Log.d("url", url);
 		new AysnRequestHttp(Utils.LOAD_CATEGORY, smooth, callBack).execute(url);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			finish();
+			overridePendingTransition(R.anim.slide_in_bottom,
+					R.anim.slide_out_bottom);
+		}
+		return false;
+	}
+
+	@Override
+	public void onBackPressed() {
+		finish();
+		overridePendingTransition(R.anim.slide_in_bottom,
+				R.anim.slide_out_bottom);
 	}
 
 	public class ResultOnclik implements IResult {
