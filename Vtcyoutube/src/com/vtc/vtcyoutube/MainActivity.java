@@ -5,6 +5,9 @@ import java.util.List;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.MenuDrawer.OnDrawerStateChangeListener;
 import net.simonvt.menudrawer.Position;
+
+import org.json.JSONObject;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -13,12 +16,12 @@ import android.database.MatrixCursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.provider.SyncStateContract.Constants;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,11 +29,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sromku.simple.fb.Permission.Type;
@@ -38,6 +43,8 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
+import com.vtc.vtcyoutube.connectserver.AysnRequestHttp;
+import com.vtc.vtcyoutube.connectserver.IResult;
 import com.vtc.vtcyoutube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -60,7 +67,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private TextView lblAccountId;
 	private ImageView imgAvata;
 
+	private String queryCurent;
 	public static ImageLoader imageLoader = null;
+	private ResultSearchCallBack callBackSearch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +81,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 			imageLoader.init(ImageLoaderConfiguration
 					.createDefault(MainActivity.this.getApplicationContext()));
 		}
-		
+		callBackSearch = new ResultSearchCallBack();
+
 		leftMenu = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW,
 				Position.LEFT);
 		leftMenu.setDropShadowColor(Color.parseColor("#503f3f3f"));
@@ -228,8 +238,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// Create the search view
 		SearchView searchView = new SearchView(getSupportActionBar()
 				.getThemedContext());
-		searchView.setQueryHint("Search for countries…");
-		searchView.setOnQueryTextListener(this);
+		searchView.setQueryHint("Tìm kiếm");
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				queryCurent = query;
+				String url = "http://vtctube.vn/api/get_search_results?search="
+						+ query;
+				new AysnRequestHttp(1, smooth, callBackSearch).execute(url);
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				Log.d("chovaodi", "chovaodiqqq");
+				return false;
+			}
+		});
 		searchView.setOnSuggestionListener(this);
 
 		if (mSuggestionsAdapter == null) {
@@ -253,6 +279,30 @@ public class MainActivity extends SherlockFragmentActivity implements
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
 		return true;
+	}
+
+	public class ResultSearchCallBack implements IResult {
+
+		@Override
+		public void getResult(int type, String result) {
+			try {
+				JSONObject jsonObj = new JSONObject(result);
+				String status = jsonObj.getString("status");
+				int count_total=jsonObj.getInt("count_total");
+				if (status.equals("ok")&count_total>0) {
+					Intent intent = new Intent(MainActivity.this,
+							SearchResultActivity.class);
+					intent.putExtra("json", result);
+					intent.putExtra("keyword", queryCurent);
+					startActivity(intent);
+				}else{
+					Toast.makeText(MainActivity.this, "Không tìm thấy nội dụng này", Toast.LENGTH_LONG).show();
+				}
+			} catch (Exception e) {
+				Toast.makeText(MainActivity.this, "Không tìm thấy nội dụng này", Toast.LENGTH_LONG).show();
+			}
+		}
+
 	}
 
 	@Override

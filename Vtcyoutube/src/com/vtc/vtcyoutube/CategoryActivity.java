@@ -236,7 +236,8 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
 				pageCount = jsonObj.getInt("pages");
-				if (status.equals("ok")) {
+				int count_total=jsonObj.getInt("count_total");
+				if (status.equals("ok") & count_total > 0) {
 					List<ItemPost> listTmp = new ArrayList<ItemPost>();
 					JSONArray jsonArray = jsonObj.getJSONArray("posts");
 					for (int i = 0; i < jsonArray.length(); i++) {
