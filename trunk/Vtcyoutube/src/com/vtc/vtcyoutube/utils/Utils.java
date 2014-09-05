@@ -72,15 +72,15 @@ public class Utils {
 
 	}
 
-	public final static int LOAD_CATEGORY = 1;
+	public final static int LOAD_FIRST_DATA = 1;
 	public final static int LOAD_MORE = 3;
 	public final static int AYSN_LOAD = 2;
-
+	public final static int REFRESH = 4;
 	public static DisplayImageOptions getOptions(Context activity) {
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.showImageForEmptyUri(R.drawable.bgr_icon_category)
-				.showImageOnFail(R.drawable.bgr_icon_category)
-				.showImageOnLoading(R.drawable.bgr_icon_category)
+				.showImageForEmptyUri(R.drawable.img_erorrs)
+				.showImageOnFail(R.drawable.img_erorrs)
+				.showImageOnLoading(R.drawable.img_erorrs)
 				.resetViewBeforeLoading(true).cacheOnDisc(true)
 				.imageScaleType(ImageScaleType.EXACTLY)
 				.bitmapConfig(Bitmap.Config.RGB_565)

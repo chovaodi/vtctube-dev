@@ -10,11 +10,16 @@
         android:layout_margin="10dp"
         android:gravity="center_vertical|left" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/avata_demo" />
+        <com.makeramen.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/imgAvata"
+            android:layout_width="80dip"
+            android:layout_height="80dip"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avata_demo"
+            app:border_color="#3883cc"
+            app:border_width="1dip"
+            app:corner_radius="80dip" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Nguyễn Đức"
+                    android:text="Đăng nhập"
                     android:textColor="@android:color/white"
                     android:textSize="15dp" />
 
@@ -42,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="nguyenduc@gmail.com"
+                    android:text="Click để đăng nhập"
                     android:textColor="@android:color/white"
                     android:textSize="14dp" />
             </LinearLayout>
@@ -65,4 +70,5 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@drawable/line_menu_left" />
-</LinearLayout>
+
+</LinearLayout>

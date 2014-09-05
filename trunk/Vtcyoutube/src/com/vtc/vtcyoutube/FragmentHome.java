@@ -117,7 +117,7 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 			} else {
 				String url = Utils.getUrlHttp(Utils.host, "get_category_index");
 
-				new AysnRequestHttp(Utils.LOAD_CATEGORY, MainActivity.smooth,
+				new AysnRequestHttp(Utils.LOAD_FIRST_DATA, MainActivity.smooth,
 						callBack).execute(url);
 			}
 		}
@@ -275,7 +275,7 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 			GlobalApplication.dataCate = result;
 			if (result.length() > 0)
 				Utils.writeJsonFile(result, false, Utils.GET_CATE_INDEX);
-			if (type == Utils.LOAD_CATEGORY) {
+			if (type == Utils.LOAD_FIRST_DATA) {
 				showView(result);
 			}
 		}

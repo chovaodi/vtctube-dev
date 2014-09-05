@@ -9,49 +9,49 @@
 
     <item
         android:id="@+id/menu_video_hotinday"
-        android:icon="@drawable/video_moinhat"
+        android:icon="@drawable/video_trongngay"
         android:title="Hot trong ngày">
     </item>
 
     <item
         android:id="@+id/menu_video_hotinwek"
-        android:icon="@drawable/video_moinhat"
+        android:icon="@drawable/video_trongtuan"
         android:title="Hot trong tuần">
     </item>
 
     <item
         android:id="@+id/menu_video_hotinmonth"
-        android:icon="@drawable/video_moinhat"
+        android:icon="@drawable/video_trongthang"
         android:title="Hot trong tháng">
     </item>
 
     <item
         android:id="@+id/menu_video_xemnhieu"
-        android:icon="@drawable/video_moinhat"
+        android:icon="@drawable/video_xemnhieu"
         android:title="Video xem nhiều">
     </item>
 
     <item
         android:id="@+id/menu_video_yeuthich"
-        android:icon="@drawable/video_moinhat"
+        android:icon="@drawable/video_yeuthich"
         android:title="Video yêu thích">
     </item>
 
     <item
         android:id="@+id/menu_video_daxem"
-        android:icon="@drawable/video_moinhat"
+        android:icon="@drawable/video_daxem"
         android:title="Video đã xem">
     </item>
 
     <item
         android:id="@+id/menu_tivi_tructuyen"
-        android:icon="@drawable/video_moinhat"
+        android:icon="@drawable/video_xemtivi"
         android:title="Xem tivi trực tuyến">
     </item>
 
     <item
         android:id="@+id/menu_setting"
-        android:icon="@drawable/video_moinhat"
+        android:icon="@drawable/video_caidat"
         android:title="Cài đặt">
     </item>
 
