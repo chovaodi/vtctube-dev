@@ -1,4 +1,4 @@
-package com.vtc.vtcyoutube.connectserver;
+package com.vtc.vtctube.connectserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.vtc.vtcyoutube.database;
+package com.vtc.vtctube.database;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,7 +19,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	String DB_PATH = null;
 
 	public static String DB_NAME = "vtctube.sqlite";
-	public static String TB_NAME = "tblListVideo";
+	public static String TB_LISTVIDEO = "tblListVideo";
+	public static String TB_QUERY_SEARCH = "tblQuerySearch";
 
 	public static String COLLUM_COUNT = "count";
 	public static String COLLUM_ID = "id";
@@ -30,9 +31,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static String COLLUM_URL = "url";
 	public static String COLLUM_STATUS = "status";
 	public static String COLLUM_PAGECOUNT = "pageCount";
-	
-	
-	
+	public static String COLLUM_QUERY = "query";
+
 	private SQLiteDatabase myDataBase;
 
 	private final Context myContext;
@@ -196,6 +196,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String where = DatabaseHelper.COLLUM_ID + " = ?";
 		myDataBase.update(table, updatedValues, where, new String[] { "0" });
 	}
+
 	public int getCountRow(String table, String query) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(query, null);
@@ -203,7 +204,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cursor.close();
 		return cnt;
 	}
-	public long insert(String table, String cateId, String title,
+
+	public long insertListVideo(String table, String cateId, String title,
 			String videoId, String url, String status, int pageCount) {
 		ContentValues initialValues = new ContentValues();
 
@@ -215,6 +217,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		initialValues.put(COLLUM_PAGECOUNT, pageCount);
 
 		return myDataBase.insert(table, null, initialValues);
+	}
+
+	public long insertQuerySearch( String query) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(COLLUM_QUERY, query);
+		return myDataBase.insert(TB_QUERY_SEARCH, null, initialValues);
 	}
 
 	public Cursor query(String table, String[] columns, String selection,

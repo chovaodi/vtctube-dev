@@ -1,4 +1,4 @@
-package com.vtc.vtcyoutube;
+package com.vtc.vtctube;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +19,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import com.vtc.vtcyoutube.PinnedSectionListView.PinnedSectionListAdapter;
-import com.vtc.vtcyoutube.connectserver.IResult;
-import com.vtc.vtcyoutube.utils.Utils;
+import com.vtc.vtctube.PinnedSectionListView.PinnedSectionListAdapter;
+import com.vtc.vtctube.connectserver.IResult;
+import com.vtc.vtctube.utils.Utils;
 
 class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 		PinnedSectionListAdapter {

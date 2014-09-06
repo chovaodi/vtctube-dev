@@ -7,7 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.vtc.vtcyoutube.R;
+import com.vtc.vtctube.R;
 
 public class BottomDrawer extends VerticalDrawer {
 

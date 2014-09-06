@@ -1,4 +1,4 @@
-package com.vtc.vtcyoutube;
+package com.vtc.vtctube;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import com.vtc.vtcyoutube.utils.Utils;
+import com.vtc.vtctube.utils.Utils;
 
 public final class TestFragment extends Fragment {
 	private static final String KEY_CONTENT = "TestFragment:Content";

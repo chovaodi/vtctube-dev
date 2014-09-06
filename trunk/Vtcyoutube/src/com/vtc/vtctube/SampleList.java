@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.vtc.vtcyoutube;
+package com.vtc.vtctube;
 
 import java.text.Collator;
 import java.util.ArrayList;

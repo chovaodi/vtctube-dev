@@ -1,10 +1,9 @@
-package com.vtc.vtcyoutube;
+package com.vtc.vtctube;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.facebook.android.Util;
 import com.viewpagerindicator.IconPagerAdapter;
 
 public class SliderTopFragmentAdapter extends FragmentStatePagerAdapter

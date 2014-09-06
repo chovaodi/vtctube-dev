@@ -1,5 +1,7 @@
-package com.vtc.vtcyoutube;
+package com.vtc.vtctube;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.simonvt.menudrawer.MenuDrawer;
@@ -13,19 +15,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.database.SQLException;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
+import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,7 +41,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
-import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sromku.simple.fb.Permission.Type;
@@ -43,9 +48,10 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
-import com.vtc.vtcyoutube.connectserver.AysnRequestHttp;
-import com.vtc.vtcyoutube.connectserver.IResult;
-import com.vtc.vtcyoutube.utils.Utils;
+import com.vtc.vtctube.connectserver.AysnRequestHttp;
+import com.vtc.vtctube.connectserver.IResult;
+import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
@@ -66,14 +72,30 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private TextView lblUserName;
 	private TextView lblAccountId;
 	private ImageView imgAvata;
+	private SearchView searchView;
 
 	private String queryCurent;
 	public static ImageLoader imageLoader = null;
 	private ResultSearchCallBack callBackSearch;
+	public static DatabaseHelper myDbHelper;
+	private List<String> listQuerySearch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		myDbHelper = new DatabaseHelper(MainActivity.this);
+
+		try {
+			myDbHelper.createDataBase();
+			myDbHelper.openDataBase();
+
+		} catch (IOException ioe) {
+			throw new Error("Unable to create database");
+		} catch (SQLException sqle) {
+			throw sqle;
+		}
+		listQuerySearch = getQuerySearch("SELECT * FROM "
+				+ DatabaseHelper.TB_QUERY_SEARCH);
 		globalApp = (GlobalApplication) getApplicationContext();
 		listItemMenu = Utils.getMenu(MainActivity.this, R.menu.ribbon_menu);
 		if (imageLoader == null) {
@@ -143,6 +165,20 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		ft.add(R.id.container, newFragment).commit();
+	}
+
+	public ArrayList<String> getQuerySearch(String sql) {
+		Cursor c = myDbHelper.query(DatabaseHelper.TB_LISTVIDEO, null, null,
+				null, null, null, null);
+		c = myDbHelper.rawQuery(sql);
+		ArrayList<String> listAccount = new ArrayList<String>();
+
+		if (c.moveToFirst()) {
+			do {
+				listAccount.add(c.getString(0));
+			} while (c.moveToNext());
+		}
+		return listAccount;
 	}
 
 	public String getLinkAvataFace(String id) {
@@ -236,33 +272,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 		boolean isLight = SampleList.THEME == R.style.Theme_Sherlock_Light;
 
 		// Create the search view
-		SearchView searchView = new SearchView(getSupportActionBar()
-				.getThemedContext());
+		searchView = new SearchView(getSupportActionBar().getThemedContext());
 		searchView.setQueryHint("Tìm kiếm");
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				queryCurent = query;
-				String url = "http://vtctube.vn/api/get_search_results?search="
-						+ query;
-				new AysnRequestHttp(1, smooth, callBackSearch).execute(url);
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				Log.d("chovaodi", "chovaodiqqq");
-				return false;
-			}
-		});
+		searchView.setOnQueryTextListener(this);
 		searchView.setOnSuggestionListener(this);
 
 		if (mSuggestionsAdapter == null) {
 			MatrixCursor cursor = new MatrixCursor(COLUMNS);
-			cursor.addRow(new String[] { "1", "'Murica" });
-			cursor.addRow(new String[] { "2", "Canada" });
-			cursor.addRow(new String[] { "3", "Denmark" });
+			for (int i = 0; i < listQuerySearch.size(); i++) {
+				cursor.addRow(new String[] { String.valueOf(i),
+						listQuerySearch.get(i) });
+			}
 			mSuggestionsAdapter = new SuggestionsAdapter(getSupportActionBar()
 					.getThemedContext(), cursor);
 		}
@@ -288,18 +308,30 @@ public class MainActivity extends SherlockFragmentActivity implements
 			try {
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
-				int count_total=jsonObj.getInt("count_total");
-				if (status.equals("ok")&count_total>0) {
+				int count_total = jsonObj.getInt("count_total");
+				if (status.equals("ok") & count_total > 0) {
+					String sqlCheck = "SELECT * FROM "
+							+ DatabaseHelper.TB_QUERY_SEARCH + " WHERE query='"
+							+ queryCurent + "'";
+
+					if (myDbHelper.getCountRow(DatabaseHelper.TB_QUERY_SEARCH,
+							sqlCheck) == 0) {
+						myDbHelper.insertQuerySearch(queryCurent);
+					}
 					Intent intent = new Intent(MainActivity.this,
 							SearchResultActivity.class);
 					intent.putExtra("json", result);
 					intent.putExtra("keyword", queryCurent);
 					startActivity(intent);
-				}else{
-					Toast.makeText(MainActivity.this, "Không tìm thấy nội dụng này", Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(MainActivity.this,
+							"Không tìm thấy nội dụng này", Toast.LENGTH_LONG)
+							.show();
 				}
 			} catch (Exception e) {
-				Toast.makeText(MainActivity.this, "Không tìm thấy nội dụng này", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this,
+						"Không tìm thấy nội dụng này", Toast.LENGTH_LONG)
+						.show();
 			}
 		}
 
@@ -315,25 +347,58 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onSuggestionSelect(int position) {
-		// TODO Auto-generated method stub
+		Log.d("onSuggestionSelect", "onSuggestionSelect");
 		return false;
 	}
 
 	@Override
 	public boolean onSuggestionClick(int position) {
-		// TODO Auto-generated method stub
+		Cursor c = (Cursor) mSuggestionsAdapter.getItem(position);
+		queryCurent = c.getString(c
+				.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+
+		AutoCompleteTextView searchTextView = (AutoCompleteTextView) searchView
+				.findViewById(R.id.abs__search_src_text);
+
+		if (searchTextView != null) {
+			searchTextView.setInputType(InputType.TYPE_CLASS_TEXT
+					| InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+			searchTextView.setTypeface(Typeface.DEFAULT);
+			searchTextView.setText(queryCurent);
+		}
+
+		actionSearch(queryCurent);
 		return false;
+	}
+
+	public void actionSearch(String query) {
+		String url = Utils.host + "get_search_results?search=" + query;
+		new AysnRequestHttp(1, smooth, callBackSearch).execute(url);
 	}
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		// TODO Auto-generated method stub
+		queryCurent = query;
+		actionSearch(queryCurent);
 		return false;
 	}
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
-		// TODO Auto-generated method stub
+		List<String> listTmp = new ArrayList<String>();
+		for (int i = 0; i < listQuerySearch.size(); i++) {
+			if (listQuerySearch.get(i).contains(newText)) {
+				listTmp.add(listQuerySearch.get(i));
+			}
+		}
+
+		MatrixCursor cursor = new MatrixCursor(COLUMNS);
+		for (int i = 0; i < listTmp.size(); i++) {
+			cursor.addRow(new String[] { String.valueOf(i), listTmp.get(i) });
+		}
+		mSuggestionsAdapter.changeCursor(cursor);
+		mSuggestionsAdapter.notifyDataSetChanged();
+
 		return false;
 	}
 

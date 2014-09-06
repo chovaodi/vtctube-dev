@@ -20,7 +20,7 @@ import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.view.animation.Interpolator;
 
-import com.vtc.vtcyoutube.R;
+import com.vtc.vtctube.R;
 
 public abstract class MenuDrawer extends ViewGroup {
 

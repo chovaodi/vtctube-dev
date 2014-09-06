@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vtc.vtcyoutube"
+    package="com.vtc.vtctube"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:theme="@style/Mytheme" >
         <activity
-            android:name="com.vtc.vtcyoutube.MainActivity"
+            android:name="com.vtc.vtctube.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,11 +28,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.vtc.vtcyoutube.CategoryActivity"
+            android:name="com.vtc.vtctube.CategoryActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.vtc.vtcyoutube.SearchResultActivity"
+            android:name="com.vtc.vtctube.SearchResultActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity

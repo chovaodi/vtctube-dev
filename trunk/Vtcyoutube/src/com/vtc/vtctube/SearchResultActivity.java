@@ -1,4 +1,4 @@
-package com.vtc.vtcyoutube;
+package com.vtc.vtctube;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +16,9 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.vtc.vtcyoutube.connectserver.AysnRequestHttp;
-import com.vtc.vtcyoutube.connectserver.IResult;
-import com.vtc.vtcyoutube.utils.Utils;
+import com.vtc.vtctube.connectserver.AysnRequestHttp;
+import com.vtc.vtctube.connectserver.IResult;
+import com.vtc.vtctube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
