@@ -1,4 +1,4 @@
-package com.vtc.vtcyoutube.utils;
+package com.vtc.vtctube.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,8 +18,8 @@ import android.util.Log;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.vtc.vtcyoutube.ItemMeu;
-import com.vtc.vtcyoutube.R;
+import com.vtc.vtctube.ItemMeu;
+import com.vtc.vtctube.R;
 
 public class Utils {
 	private static String urlFolder = "/VtcTube/";

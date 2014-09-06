@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.vtc.vtcyoutube;
+package com.vtc.vtctube;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +43,10 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.munix.gridviewheader.TestAdapter;
-import com.vtc.vtcyoutube.connectserver.AysnRequestHttp;
-import com.vtc.vtcyoutube.connectserver.IResult;
-import com.vtc.vtcyoutube.connectserver.JSONParser;
-import com.vtc.vtcyoutube.utils.Utils;
+import com.vtc.vtctube.connectserver.AysnRequestHttp;
+import com.vtc.vtctube.connectserver.IResult;
+import com.vtc.vtctube.connectserver.JSONParser;
+import com.vtc.vtctube.utils.Utils;
 
 public class FragmentHome extends SherlockFragment implements OnRefreshListener {
 	int mNum;

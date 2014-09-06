@@ -1,6 +1,5 @@
-package com.vtc.vtcyoutube;
+package com.vtc.vtctube;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -25,10 +23,10 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.PageIndicator;
-import com.vtc.vtcyoutube.connectserver.AysnRequestHttp;
-import com.vtc.vtcyoutube.connectserver.IResult;
-import com.vtc.vtcyoutube.database.DatabaseHelper;
-import com.vtc.vtcyoutube.utils.Utils;
+import com.vtc.vtctube.connectserver.AysnRequestHttp;
+import com.vtc.vtctube.connectserver.IResult;
+import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
@@ -53,25 +51,13 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 
 	private List<ItemPost> listData = new ArrayList<ItemPost>();;
 	private ResultCallBack callBack = new ResultCallBack();
-	private DatabaseHelper myDbHelper;
 	private String queryLoadVideo;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		myDbHelper = new DatabaseHelper(CategoryActivity.this);
-
-		try {
-			myDbHelper.createDataBase();
-			myDbHelper.openDataBase();
-
-		} catch (IOException ioe) {
-			throw new Error("Unable to create database");
-		} catch (SQLException sqle) {
-			throw sqle;
-		}
-
+		
 		setContentView(R.layout.category_layout);
 		overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);
@@ -128,7 +114,7 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 				.listener(this).setup(mPullToRefreshLayout);
 		queryLoadVideo = "SELECT * FROM tblListVideo where cateId='" + cate
 				+ "'";
-		countDataLocal = myDbHelper.getCountRow(DatabaseHelper.TB_NAME,
+		countDataLocal = MainActivity.myDbHelper.getCountRow(DatabaseHelper.TB_LISTVIDEO,
 				queryLoadVideo);
 		if (countDataLocal > 0) {
 			isLoadLocal = true;
@@ -146,9 +132,9 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 	}
 
 	public ArrayList<ItemPost> getVideoLocal(String sql) {
-		Cursor c = myDbHelper.query(DatabaseHelper.TB_NAME, null, null, null,
+		Cursor c = MainActivity.myDbHelper.query(DatabaseHelper.TB_LISTVIDEO, null, null, null,
 				null, null, null);
-		c = myDbHelper.rawQuery(sql);
+		c = MainActivity.myDbHelper.rawQuery(sql);
 		ArrayList<ItemPost> listAccount = new ArrayList<ItemPost>();
 
 		if (c.moveToFirst()) {
@@ -196,7 +182,7 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 	public void addViewPost(boolean isClearCache) {
 
 		if (isClearCache)
-			myDbHelper.deleteAccount(DatabaseHelper.TB_NAME, cate);
+			MainActivity.myDbHelper.deleteAccount(DatabaseHelper.TB_LISTVIDEO, cate);
 
 		ItemPost section = new ItemPost();
 		section.setType(PinnedAdapter.SECTION);
@@ -207,7 +193,7 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 				adapter.add(listData.get(i));
 			}
 			if (isClearCache)
-				myDbHelper.insert(DatabaseHelper.TB_NAME, listData.get(i)
+				MainActivity.myDbHelper.insertListVideo(DatabaseHelper.TB_LISTVIDEO, listData.get(i)
 						.getCateId(), listData.get(i).getTitle(),
 						listData.get(i).getVideoId(), listData.get(i).getUrl(),
 						listData.get(i).getStatus(), listData.get(i)

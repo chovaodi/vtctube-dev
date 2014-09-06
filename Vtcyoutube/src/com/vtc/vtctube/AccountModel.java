@@ -1,4 +1,4 @@
-package com.vtc.vtcyoutube;
+package com.vtc.vtctube;
 
 public class AccountModel {
 

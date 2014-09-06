@@ -14,9 +14,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import com.vtc.vtcyoutube.ItemCategory;
-import com.vtc.vtcyoutube.R;
-import com.vtc.vtcyoutube.utils.Utils;
+import com.vtc.vtctube.R;
+import com.vtc.vtctube.ItemCategory;
+import com.vtc.vtctube.utils.Utils;
 
 public class TestAdapter extends BaseAdapter {
 	ViewHolder holder;

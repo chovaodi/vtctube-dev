@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.vtc.vtcyoutube.R;
+import com.vtc.vtctube.R;
 
 public class RoundedImageView extends ImageView {
 

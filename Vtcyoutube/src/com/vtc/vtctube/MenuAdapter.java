@@ -1,10 +1,9 @@
-package com.vtc.vtcyoutube;
+package com.vtc.vtctube;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-import android.content.ClipData.Item;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

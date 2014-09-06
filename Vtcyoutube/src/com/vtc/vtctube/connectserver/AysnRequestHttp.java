@@ -1,6 +1,6 @@
-package com.vtc.vtcyoutube.connectserver;
+package com.vtc.vtctube.connectserver;
 
-import com.vtc.vtcyoutube.utils.Utils;
+import com.vtc.vtctube.utils.Utils;
 
 import android.accounts.NetworkErrorException;
 import android.os.AsyncTask;

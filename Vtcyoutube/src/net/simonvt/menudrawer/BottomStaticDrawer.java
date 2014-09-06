@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
-import com.vtc.vtcyoutube.R;
+import com.vtc.vtctube.R;
 
 public class BottomStaticDrawer extends StaticDrawer {
 
