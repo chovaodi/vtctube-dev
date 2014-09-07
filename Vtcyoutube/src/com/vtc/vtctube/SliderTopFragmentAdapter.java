@@ -19,7 +19,7 @@ public class SliderTopFragmentAdapter extends FragmentStatePagerAdapter
 	public Fragment getItem(int position) {
 		try {
 			if (mCount > position)
-				return TestFragment.newInstance("http://anhdep.pro/wp-content/uploads/2014/06/tuyen-tap-bo-hinh-nen-hoa-nhai-dep-nhat-cho-may-tinh-4.jpg");
+				return TestFragment.newInstance("http://newsen.vn/data/cnn360/2014/3/10/tin-doc-quyen-hot-girl-kha-ngan-bo-facebook-500-nghin-fan-chinh-thuc-rut-khoi-showbiz.jpg");
 		} catch (Exception e) {
 
 		}

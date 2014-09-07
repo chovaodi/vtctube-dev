@@ -8,13 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <Button
+        <com.vtc.vtctube.font.RobotoBoldButton
             android:id="@+id/button1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/button_post"
             android:text="@string/lblMoinhat"
+            android:textColor="@color/text_color"
             android:textSize="16dp" />
 
         <TextView
@@ -22,13 +23,14 @@
             android:layout_height="match_parent"
             android:background="@drawable/bgrg_line" />
 
-        <Button
+        <com.vtc.vtctube.font.RobotoBoldButton
             android:id="@+id/button2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/button_post"
             android:text="@string/lblXemnhieu"
+            android:textColor="@color/text_color"
             android:textSize="16dp" />
 
         <TextView
@@ -36,13 +38,14 @@
             android:layout_height="match_parent"
             android:background="@drawable/bgrg_line" />
 
-        <Button
+        <com.vtc.vtctube.font.RobotoBoldButton
             android:id="@+id/button3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/button_post"
             android:text="@string/lblYeuthich"
+            android:textColor="@color/text_color"
             android:textSize="16dp" />
     </LinearLayout>
 

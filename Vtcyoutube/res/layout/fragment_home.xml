@@ -8,10 +8,11 @@
         android:id="@+id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:horizontalSpacing="10dp"
+        android:horizontalSpacing="5dp"
         android:listSelector="@android:color/transparent"
         android:numColumns="2"
-        android:padding="10dp" >
+        android:scrollbars="none"
+        android:padding="5dp" >
     </GridView>
 
 </uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout>

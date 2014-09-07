@@ -14,7 +14,7 @@
             android:id="@+id/imageView1"
             android:layout_width="130dp"
             android:layout_height="110dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/img_erorrs"
             android:scaleType="centerCrop" />
 
@@ -27,72 +27,75 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
-                <TextView
+                <com.vtc.vtctube.font.RobotoLightTextView
                     android:id="@+id/lblTitlePost"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|left"
-                    android:paddingTop="10dp"
                     android:text="TextView"
-                    android:textColor="@android:color/black"
-                    android:textSize="18dp" />
+                    android:textColor="@color/text_color"
+                    android:textSize="17dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" >
+                android:gravity="bottom"
+                android:layout_weight="0" >
 
                 <LinearLayout
+                    android:id="@+id/btnComment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="center_vertical|left"
                     android:orientation="vertical" >
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/Button02"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Button" />
-
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/video_comment" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/btnLike"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical" >
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/Button01"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/video_like" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/btnShare"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:orientation="vertical" >
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/button1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
-
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/video_share" />
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
 

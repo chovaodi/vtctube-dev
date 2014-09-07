@@ -68,9 +68,7 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 
 		ResultOnclik callBackOnlick = new ResultOnclik();
 
-		adapter = new PinnedAdapter(SearchResultActivity.this,
-				android.R.layout.simple_list_item_1, android.R.id.text1,
-				callBackOnlick);
+		adapter = new PinnedAdapter(SearchResultActivity.this, callBackOnlick);
 
 		callBack.getResult(Utils.LOAD_FIRST_DATA, json);
 		listvideo.setOnScrollListener(this);
@@ -116,7 +114,7 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void getResult(int type, String result) {
-			Log.d("result","result"+result);
+			Log.d("result", "result" + result);
 			isLoadding = false;
 			try {
 				JSONObject jsonObj = new JSONObject(result);
