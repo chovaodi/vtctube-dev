@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.vtc.vtctube.MainActivity;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -21,6 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static String DB_NAME = "vtctube.sqlite";
 	public static String TB_LISTVIDEO = "tblListVideo";
 	public static String TB_QUERY_SEARCH = "tblQuerySearch";
+	public static String TB_LIKE = "tblYeuthich";
 
 	public static String COLLUM_COUNT = "count";
 	public static String COLLUM_ID = "id";
@@ -205,6 +208,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return cnt;
 	}
 
+	public long insertVideoLike(int id, String cateId, String videoId,
+			String url, String status, String title) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(COLLUM_ID, id);
+		initialValues.put(COLLUM_CATID, cateId);
+		initialValues.put(COLLUM_VIDEOID, videoId);
+		initialValues.put(COLLUM_URL, url);
+		initialValues.put(COLLUM_STATUS, status);
+		initialValues.put(COLLUM_TITLE, title);
+
+		return myDataBase.insert(TB_LIKE, null, initialValues);
+	}
+
 	public long insertListVideo(String table, String cateId, String title,
 			String videoId, String url, String status, int pageCount) {
 		ContentValues initialValues = new ContentValues();
@@ -219,7 +235,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return myDataBase.insert(table, null, initialValues);
 	}
 
-	public long insertQuerySearch( String query) {
+	public long insertQuerySearch(String query) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(COLLUM_QUERY, query);
 		return myDataBase.insert(TB_QUERY_SEARCH, null, initialValues);

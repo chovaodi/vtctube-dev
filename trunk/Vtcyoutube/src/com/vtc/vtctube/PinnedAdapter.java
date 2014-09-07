@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -21,6 +22,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.vtc.vtctube.PinnedSectionListView.PinnedSectionListAdapter;
 import com.vtc.vtctube.connectserver.IResult;
+import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.utils.Utils;
 
 class PinnedAdapter extends ArrayAdapter<ItemPost> implements
@@ -40,9 +42,8 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 	private List<ItemPost> mData = new ArrayList<ItemPost>();
 	private IResult callBack;
 
-	public PinnedAdapter(Context context, int resource, int textViewResourceId,
-			IResult callBack) {
-		super(context, resource, textViewResourceId);
+	public PinnedAdapter(Context context, IResult callBack) {
+		super(context, 0);
 		mInflater = LayoutInflater.from(context);
 		this.context = context;
 		this.callBack = callBack;
@@ -86,7 +87,13 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 						.findViewById(R.id.lblTitlePost);
 				holder.imgIcon = (ImageView) convertView
 						.findViewById(R.id.imageView1);
+				holder.btnComment = (LinearLayout) convertView
+						.findViewById(R.id.btnComment);
 
+				holder.btnLike = (LinearLayout) convertView
+						.findViewById(R.id.btnLike);
+				holder.btnShare = (LinearLayout) convertView
+						.findViewById(R.id.btnShare);
 				break;
 			}
 			convertView.setTag(holder);
@@ -94,15 +101,26 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 			holder = (ViewHolder) convertView.getTag();
 		}
 		if (type == SECTION) {
+			Log.d("position", position + "chovaodi");
+			final ItemPost item = getItem(position);
+			if (item.getOption() == MOINHAT) {
+				holder.btnMoinhat.setSelected(true);
+				holder.btnXemnhieu.setSelected(false);
+				holder.btnYeuthich.setSelected(false);
+			} else if (item.getOption() == XEMNHIEU) {
+				holder.btnMoinhat.setSelected(false);
+				holder.btnXemnhieu.setSelected(true);
+				holder.btnYeuthich.setSelected(false);
+			} else {
+				holder.btnMoinhat.setSelected(false);
+				holder.btnXemnhieu.setSelected(false);
+				holder.btnYeuthich.setSelected(true);
+			}
+
 			holder.btnMoinhat.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
-					Log.d("btnMoinhat", "btnMoinhat");
-					// holder.btnMoinhat.setSelected(true);
-					// holder.btnXemnhieu.setSelected(false);
-					// holder.btnYeuthich.setSelected(false);
-
 					callBack.getResult(PinnedAdapter.MOINHAT, "");
 				}
 			});
@@ -110,30 +128,24 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 				@Override
 				public void onClick(View arg0) {
-					holder.btnMoinhat.setSelected(false);
-					holder.btnXemnhieu.setSelected(true);
-					holder.btnYeuthich.setSelected(false);
 
-					callBack.getResult(PinnedAdapter.MOINHAT, "");
+					callBack.getResult(PinnedAdapter.XEMNHIEU, "");
 				}
 			});
 			holder.btnYeuthich.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
-					holder.btnMoinhat.setSelected(false);
-					holder.btnXemnhieu.setSelected(false);
-					holder.btnYeuthich.setSelected(true);
 
-					callBack.getResult(PinnedAdapter.MOINHAT, "");
+					callBack.getResult(PinnedAdapter.YEUTHICH, "");
 				}
 			});
 
 		} else {
-			holder.txtTitle.setText(getItem(position).getTitle());
-			imageLoader.displayImage(
-					getItem(position).getUrl(),
-					holder.imgIcon, Utils.getOptions(context),
+			final ItemPost item = getItem(position);
+			holder.txtTitle.setText(item.getTitle());
+			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
+					Utils.getOptions(context),
 					new SimpleImageLoadingListener() {
 						@Override
 						public void onLoadingStarted(String imageUri, View view) {
@@ -158,6 +170,23 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 							// holder.spinner.setVisibility(View.GONE);
 						}
 					});
+
+			holder.btnLike.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
+							+ " WHERE id='" + item.getIdPost() + "'";
+					Log.d("sqlCheck",sqlCheck);
+					if (MainActivity.myDbHelper.getCountRow(
+							DatabaseHelper.TB_LIKE, sqlCheck) == 0) {
+						MainActivity.myDbHelper.insertVideoLike(
+								item.getIdPost(), item.getCateId(),
+								item.getVideoId(), item.getUrl(),
+								item.getStatus(), item.getTitle());
+					}
+				}
+			});
 
 		}
 		return convertView;
@@ -186,6 +215,10 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 		public Button btnMoinhat;
 		public Button btnXemnhieu;
 		public Button btnYeuthich;
+
+		public LinearLayout btnComment;
+		public LinearLayout btnShare;
+		public LinearLayout btnLike;
 
 	}
 

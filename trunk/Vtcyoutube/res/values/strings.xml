@@ -12,5 +12,6 @@
     <string name="lblMoinhat">Mới nhất</string>
     <string name="lblXemnhieu">Xem nhiều</string>
     <string name="lblYeuthich">Yêu thích</string>
-
+    <string name="lblLoangmore">Đang tải...</string>
+    
 </resources>

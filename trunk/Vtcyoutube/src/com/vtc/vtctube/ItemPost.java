@@ -9,6 +9,15 @@ public class ItemPost {
 	private String videoId;
 	private String status;
 	private int pageCount;
+	private int option = 1;
+
+	public void setOption(int option) {
+		this.option = option;
+	}
+
+	public int getOption() {
+		return option;
+	}
 
 	public int getPageCount() {
 		return pageCount;
