@@ -175,6 +175,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return myDataBase.delete(table, COLLUM_CATID + "='" + cateId + "'",
 				null);
 	}
+	
+	public int deleteLikeVideo(String table, String id) {
+		return myDataBase.delete(table, COLLUM_ID + "='" + id + "'",
+				null);
+	}
 
 	public void updateEntry(String table, String accountName,
 			String numberPhone, String vertifycode) {
@@ -222,7 +227,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public long insertListVideo(String table, String cateId, String title,
-			String videoId, String url, String status, int pageCount) {
+			String videoId, String url, String status, int pageCount, int postId) {
 		ContentValues initialValues = new ContentValues();
 
 		initialValues.put(COLLUM_CATID, cateId);
@@ -231,6 +236,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		initialValues.put(COLLUM_URL, url);
 		initialValues.put(COLLUM_STATUS, status);
 		initialValues.put(COLLUM_PAGECOUNT, pageCount);
+		initialValues.put(COLLUM_ID, postId);
 
 		return myDataBase.insert(table, null, initialValues);
 	}
