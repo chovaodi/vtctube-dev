@@ -9,7 +9,16 @@ public class ItemPost {
 	private String videoId;
 	private String status;
 	private int pageCount;
-	private int option = 1;
+	private int option = PinnedAdapter.MOINHAT;
+	private boolean isLike = false;
+
+	public boolean isLike() {
+		return isLike;
+	}
+
+	public void setLike(boolean isLike) {
+		this.isLike = isLike;
+	}
 
 	public void setOption(int option) {
 		this.option = option;

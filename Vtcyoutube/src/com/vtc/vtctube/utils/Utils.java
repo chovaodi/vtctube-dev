@@ -11,6 +11,7 @@ import org.xmlpull.v1.XmlPullParser;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
@@ -19,12 +20,19 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.vtc.vtctube.ItemMeu;
+import com.vtc.vtctube.ItemPost;
+import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
+import com.vtc.vtctube.database.DatabaseHelper;
 
 public class Utils {
 	private static String urlFolder = "/VtcTube/";
 	public static String GET_CATE_INDEX = "get_category_index";
 	public static String host = "http://vtctube.vn/api/";
+	public final static int LOAD_FIRST_DATA = 1;
+	public final static int LOAD_MORE = 3;
+	public final static int AYSN_LOAD = 2;
+	public final static int REFRESH = 4;
 
 	public static String getUrlHttp(String host, String funtionName) {
 		return host + funtionName;
@@ -72,10 +80,6 @@ public class Utils {
 
 	}
 
-	public final static int LOAD_FIRST_DATA = 1;
-	public final static int LOAD_MORE = 3;
-	public final static int AYSN_LOAD = 2;
-	public final static int REFRESH = 4;
 	public static DisplayImageOptions getOptions(Context activity) {
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 				.showImageForEmptyUri(R.drawable.img_erorrs)
@@ -86,6 +90,53 @@ public class Utils {
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.displayer(new FadeInBitmapDisplayer(300)).build();
 		return options;
+	}
+
+	public static ArrayList<ItemPost> getVideoLike(String sql) {
+		Cursor c = MainActivity.myDbHelper.query(DatabaseHelper.TB_LIKE, null,
+				null, null, null, null, null);
+		c = MainActivity.myDbHelper.rawQuery(sql);
+		ArrayList<ItemPost> listAccount = new ArrayList<ItemPost>();
+
+		if (c.moveToFirst()) {
+
+			do {
+				ItemPost item = new ItemPost();
+				item.setIdPost(c.getInt(0));
+				item.setCateId(c.getInt(1) + "");
+				item.setVideoId(c.getString(2));
+				item.setUrl(c.getString(3));
+				item.setStatus(c.getString(4));
+				item.setTitle(c.getString(5));
+				item.setLike(true);
+				listAccount.add(item);
+			} while (c.moveToNext());
+		}
+		return listAccount;
+	}
+
+	public static ArrayList<ItemPost> getVideoLocal(String sql) {
+		Cursor c = MainActivity.myDbHelper.query(DatabaseHelper.TB_LISTVIDEO,
+				null, null, null, null, null, null);
+		c = MainActivity.myDbHelper.rawQuery(sql);
+		ArrayList<ItemPost> listAccount = new ArrayList<ItemPost>();
+
+		if (c.moveToFirst()) {
+
+			do {
+				ItemPost item = new ItemPost();
+				item.setCateId(c.getInt(0) + "");
+				item.setTitle(c.getString(1));
+				item.setVideoId(c.getString(2));
+				item.setUrl(c.getString(3));
+				item.setStatus(c.getString(4));
+				item.setPageCount(c.getInt(5));
+				item.setIdPost(c.getInt(6));
+				
+				listAccount.add(item);
+			} while (c.moveToNext());
+		}
+		return listAccount;
 	}
 
 	public static boolean isExistFile(String urlFile) {
@@ -115,8 +166,8 @@ public class Utils {
 
 			File myFile = new File(Environment.getExternalStorageDirectory()
 					+ urlFolder + pathFile);
-			Log.d("path",Environment.getExternalStorageDirectory()
-					+ urlFolder + pathFile);
+			Log.d("path", Environment.getExternalStorageDirectory() + urlFolder
+					+ pathFile);
 			if (!myFile.exists()) {
 				myFile.createNewFile();
 			}

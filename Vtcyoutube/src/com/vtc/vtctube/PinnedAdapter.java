@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,8 +22,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.vtc.vtctube.PinnedSectionListView.PinnedSectionListAdapter;
-import com.vtc.vtctube.connectserver.IResult;
 import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
 class PinnedAdapter extends ArrayAdapter<ItemPost> implements
@@ -37,6 +38,7 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 	public static final int YEUTHICH = 3;
 
 	private Context context;
+	private int pos;
 
 	public static ImageLoader imageLoader = null;
 	private List<ItemPost> mData = new ArrayList<ItemPost>();
@@ -64,6 +66,7 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		holder = null;
+		pos = position;
 		int type = getItemViewType(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
@@ -85,8 +88,12 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 				convertView = mInflater.inflate(R.layout.item_post, null);
 				holder.txtTitle = (TextView) convertView
 						.findViewById(R.id.lblTitlePost);
+				holder.iconLike = (ImageButton) convertView
+						.findViewById(R.id.ic_like);
+
 				holder.imgIcon = (ImageView) convertView
 						.findViewById(R.id.imageView1);
+
 				holder.btnComment = (LinearLayout) convertView
 						.findViewById(R.id.btnComment);
 
@@ -121,28 +128,39 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 				@Override
 				public void onClick(View arg0) {
-					callBack.getResult(PinnedAdapter.MOINHAT, "");
+					if (item.getOption() != MOINHAT) {
+						callBack.getResult(PinnedAdapter.MOINHAT, "");
+					}
 				}
 			});
 			holder.btnXemnhieu.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
-
-					callBack.getResult(PinnedAdapter.XEMNHIEU, "");
+					if (item.getOption() != XEMNHIEU) {
+						callBack.getResult(PinnedAdapter.XEMNHIEU, "");
+					}
 				}
 			});
+
 			holder.btnYeuthich.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
-
-					callBack.getResult(PinnedAdapter.YEUTHICH, "");
+					if (item.getOption() != YEUTHICH) {
+						callBack.getResult(PinnedAdapter.YEUTHICH, "");
+					}
 				}
 			});
 
 		} else {
 			final ItemPost item = getItem(position);
+			if (item.isLike()) {
+				holder.iconLike.setSelected(true);
+			} else {
+				holder.iconLike.setSelected(false);
+			}
+
 			holder.txtTitle.setText(item.getTitle());
 			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
 					Utils.getOptions(context),
@@ -175,15 +193,27 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 				@Override
 				public void onClick(View arg0) {
-					String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
-							+ " WHERE id='" + item.getIdPost() + "'";
-					Log.d("sqlCheck",sqlCheck);
-					if (MainActivity.myDbHelper.getCountRow(
-							DatabaseHelper.TB_LIKE, sqlCheck) == 0) {
-						MainActivity.myDbHelper.insertVideoLike(
-								item.getIdPost(), item.getCateId(),
-								item.getVideoId(), item.getUrl(),
-								item.getStatus(), item.getTitle());
+					Log.d("getPosition(item)", getPosition(item)+"nxnxn");
+					if (item.isLike()) {
+						MainActivity.myDbHelper.deleteLikeVideo(
+								DatabaseHelper.TB_LIKE, item.getId());
+						callBack.pushResutClickItem(item.getOption(), getPosition(item),
+								false);
+					} else {
+						String sqlCheck = "SELECT * FROM "
+								+ DatabaseHelper.TB_LIKE + " WHERE id='"
+								+ item.getIdPost() + "'";
+
+						if (MainActivity.myDbHelper.getCountRow(
+								DatabaseHelper.TB_LIKE, sqlCheck) == 0) {
+							MainActivity.myDbHelper.insertVideoLike(
+									item.getIdPost(), item.getCateId(),
+									item.getVideoId(), item.getUrl(),
+									item.getStatus(), item.getTitle());
+							callBack.pushResutClickItem(item.getOption(), getPosition(item),
+									true);
+						}
+
 					}
 				}
 			});
@@ -211,6 +241,8 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 		public TextView txtTitle;
 		public ImageView imgIcon;
 		public ImageView submenu;
+
+		public ImageButton iconLike;
 
 		public Button btnMoinhat;
 		public Button btnXemnhieu;

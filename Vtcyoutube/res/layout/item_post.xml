@@ -44,8 +44,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="bottom"
-                android:layout_weight="0" >
+                android:layout_weight="0"
+                android:gravity="bottom" >
 
                 <LinearLayout
                     android:id="@+id/btnComment"
@@ -61,6 +61,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:src="@drawable/video_comment" />
                 </LinearLayout>
 
@@ -73,10 +76,13 @@
                     android:orientation="vertical" >
 
                     <ImageButton
-                        android:id="@+id/Button01"
+                        android:id="@+id/ic_like"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:src="@drawable/video_like" />
                 </LinearLayout>
 
@@ -93,6 +99,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:src="@drawable/video_share" />
                 </LinearLayout>
             </LinearLayout>

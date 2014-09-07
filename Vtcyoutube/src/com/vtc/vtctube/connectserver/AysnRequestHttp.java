@@ -1,5 +1,6 @@
 package com.vtc.vtctube.connectserver;
 
+import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
 import android.accounts.NetworkErrorException;

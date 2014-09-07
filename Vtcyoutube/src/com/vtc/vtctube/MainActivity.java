@@ -49,8 +49,8 @@ import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
 import com.vtc.vtctube.connectserver.AysnRequestHttp;
-import com.vtc.vtctube.connectserver.IResult;
 import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -334,6 +334,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 						.show();
 			}
 		}
+
+		@Override
+		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+			
+		}
+
+	
 
 	}
 

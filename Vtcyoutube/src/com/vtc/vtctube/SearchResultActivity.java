@@ -17,7 +17,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.vtc.vtctube.connectserver.AysnRequestHttp;
-import com.vtc.vtctube.connectserver.IResult;
+import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -66,9 +66,7 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 
 		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
-		ResultOnclik callBackOnlick = new ResultOnclik();
-
-		adapter = new PinnedAdapter(SearchResultActivity.this, callBackOnlick);
+		adapter = new PinnedAdapter(SearchResultActivity.this, callBack);
 
 		callBack.getResult(Utils.LOAD_FIRST_DATA, json);
 		listvideo.setOnScrollListener(this);
@@ -90,14 +88,6 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 		finish();
 		overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);
-	}
-
-	public class ResultOnclik implements IResult {
-
-		@Override
-		public void getResult(int type, String result) {
-
-		}
 	}
 
 	public void addViewPost() {
@@ -162,6 +152,12 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+
+		@Override
+		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 

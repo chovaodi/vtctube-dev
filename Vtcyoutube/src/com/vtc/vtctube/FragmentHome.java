@@ -44,8 +44,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.munix.gridviewheader.TestAdapter;
 import com.vtc.vtctube.connectserver.AysnRequestHttp;
-import com.vtc.vtctube.connectserver.IResult;
 import com.vtc.vtctube.connectserver.JSONParser;
+import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
 public class FragmentHome extends SherlockFragment implements OnRefreshListener {
@@ -278,6 +278,13 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 			if (type == Utils.LOAD_FIRST_DATA) {
 				showView(result);
 			}
+		}
+
+		
+		@Override
+		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 }
