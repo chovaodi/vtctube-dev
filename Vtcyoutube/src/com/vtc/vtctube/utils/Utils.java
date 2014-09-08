@@ -92,7 +92,7 @@ public class Utils {
 		return options;
 	}
 
-	public static ArrayList<ItemPost> getVideoLike(String sql) {
+	public static ArrayList<ItemPost> getVideoLike(String sql, int tabIndex) {
 		Cursor c = MainActivity.myDbHelper.query(DatabaseHelper.TB_LIKE, null,
 				null, null, null, null, null);
 		c = MainActivity.myDbHelper.rawQuery(sql);
@@ -109,6 +109,7 @@ public class Utils {
 				item.setStatus(c.getString(4));
 				item.setTitle(c.getString(5));
 				item.setLike(true);
+				item.setOption(tabIndex);
 				listAccount.add(item);
 			} while (c.moveToNext());
 		}

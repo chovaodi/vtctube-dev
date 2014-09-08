@@ -51,13 +51,14 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 
 	private String cate;
 	private String queryLoadVideo;
+	private String queryLikeVideo;
 
 	private boolean isLoadding = false;
 	private boolean isLoadLocal = true;
 
 	private List<ItemPost> listViewNew = new ArrayList<ItemPost>();;
 	private ResultCallBack callBack = new ResultCallBack();
-	private List<ItemPost> listVideoLike = new ArrayList<>();
+	private List<ItemPost> listVideoLike = new ArrayList<ItemPost>();
 	private ResultOnclikTab callBackOnlick;
 
 	@Override
@@ -70,6 +71,8 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 		Intent intent = getIntent();
 		cate = intent.getStringExtra("cate");
 		String title = intent.getStringExtra("title");
+		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
+				+ " WHERE cateId='" + cate + "'";
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -138,12 +141,10 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 
 	public List<ItemPost> updateLikeView(List<ItemPost> list) {
 		List<ItemPost> listTmp = new ArrayList<ItemPost>();
-		if (listVideoLike == null || listVideoLike.size() == 0) {
-			listVideoLike = Utils.getVideoLike("SELECT * FROM "
-					+ DatabaseHelper.TB_LIKE + " WHERE cateId='" + cate + "'");
-		}
+		listTmp = list;
+		listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
 		for (int i = 0; i < list.size(); i++) {
-			listTmp.add(list.get(i));
+			listTmp.get(i).setLike(false);
 			for (int j = 0; j < listVideoLike.size(); j++) {
 				if (list.get(i).getIdPost() == listVideoLike.get(j).getIdPost()) {
 					listTmp.get(i).setLike(true);
@@ -187,18 +188,28 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 
 			switch (type) {
 			case PinnedAdapter.MOINHAT:
-				setViewTab(updateLikeView(listViewNew));
+				listViewNew = updateLikeView(listViewNew);
+				adapter.clear();
+				adapter.notifyDataSetChanged();
+				
+				ItemPost section = new ItemPost();
+				section.setType(PinnedAdapter.SECTION);
+				section.setOption(tabIndex);
+				adapter.add(section);
+				for (int i = 0; i < listViewNew.size(); i++) {
+					listViewNew.get(i).setType(PinnedAdapter.ITEM);
+					adapter.add(listViewNew.get(i));
+				}
+				adapter.notifyDataSetChanged();
 
 				break;
 			case PinnedAdapter.XEMNHIEU:
 
 				break;
 			case PinnedAdapter.YEUTHICH:
-				mPullToRefreshLayout.setRefreshComplete();
-				listVideoLike = updateLikeView(Utils
-						.getVideoLike("SELECT * FROM " + DatabaseHelper.TB_LIKE
-								+ " WHERE cateId='" + cate + "'"));
 
+				mPullToRefreshLayout.setRefreshComplete();
+				listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
 				setViewTab(listVideoLike);
 				break;
 			}
@@ -217,26 +228,36 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 				break;
 			case PinnedAdapter.YEUTHICH:
 				mPullToRefreshLayout.setRefreshComplete();
-				listVideoLike = updateLikeView(Utils
-						.getVideoLike("SELECT * FROM " + DatabaseHelper.TB_LIKE
-								+ " WHERE cateId='" + cate + "'"));
+				adapter.getItem(0).setOption(tabIndex);
+				if (listVideoLike != null & listVideoLike.size() > 0) {
+					for (int i = 0; i < listVideoLike.size(); i++) {
+						adapter.remove(listVideoLike.get(i));
+					}
+				}
+				listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
+				adapter.notifyDataSetChanged();
+				for (int i = 0; i < listVideoLike.size(); i++) {
+					listVideoLike.get(i).setType(PinnedAdapter.ITEM);
+					if (i == position) {
+						listVideoLike.get(i).setLike(isLike);
+					}
+					adapter.add(listVideoLike.get(i));
+				}
+				adapter.notifyDataSetChanged();
 
-				setViewTab(listVideoLike);
 				break;
 			}
-			adapter.getItem(position).setLike(isLike);
-			adapter.notifyDataSetChanged();
 
 		}
 	}
 
 	public void setViewTab(List<ItemPost> list) {
-		if (listViewNew != null & listViewNew.size() > 0) {
+		if (listViewNew != null && listViewNew.size() > 0) {
 			for (int i = 0; i < listViewNew.size(); i++) {
 				adapter.remove(listViewNew.get(i));
 			}
 		}
-		if (listVideoLike != null & listVideoLike.size() > 0) {
+		if (listVideoLike != null && listVideoLike.size() > 0) {
 			for (int i = 0; i < listVideoLike.size(); i++) {
 				adapter.remove(listVideoLike.get(i));
 			}
@@ -394,7 +415,6 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 		int lastInScreen = firstVisibleItem + visibleItemCount;
 		if ((lastInScreen == totalItemCount)) {
 			page = 1 + (listViewNew.size() / pageSize);
-			Log.d("page", page + " " + listViewNew.size());
 			if (page >= pageCount)
 				isLoadding = true;
 
