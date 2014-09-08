@@ -3,7 +3,9 @@ package com.vtc.vtctube.like;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -24,15 +26,18 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 	private ListView listvideo;
 
 	public static SmoothProgressBar smooth;
-	private String queryLikeVideo;
+	private String queryResent;
 	private ResultOnclickTab callBackOnlick;
 
-	private List<ItemPost> listVideoLike = new ArrayList<ItemPost>();
+	private List<ItemPost> listData = new ArrayList<ItemPost>();
+	private int key;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
+		Intent intent = getIntent();
+		key = intent.getIntExtra("key", 0);
+
 		setContentView(R.layout.category_layout);
 		overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);
@@ -66,18 +71,27 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 
 		@Override
 		public void pushResutClickItem(int type, int position, boolean isLike) {
-			if (!isLike) {
-				adapter.remove(listVideoLike.get(position));
-			} else {
+			switch (type) {
+			case PinnedAdapter.YEUTHICH:
+				if (!isLike) {
+					adapter.remove(listData.get(position));
+				} else {
+					adapter.getItem(position).setLike(isLike);
+				}
+				break;
+			case PinnedAdapter.MOINHAT:
+				Log.d("chovaodi", "111111111111");
 				adapter.getItem(position).setLike(isLike);
+				break;
 			}
+
 			adapter.notifyDataSetChanged();
 		}
 
 		@Override
 		public void onCLickView(int type, String idYoutube) {
-			// TODO Auto-generated method stub
-			
+			Utils.getVideoView(idYoutube, LikeVideoActivity.this);
+
 		}
 	}
 
@@ -99,14 +113,25 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 	}
 
 	public void addViewPost() {
-		listVideoLike = Utils.getVideoLike(queryLikeVideo, 0);
+		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
+		if (key == R.id.menu_video_yeuthich) {
+			listData = Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH);
 
-		for (int i = 0; i < listVideoLike.size(); i++) {
-			if (listVideoLike.get(i).getStatus().equals("publish")) {
-				listVideoLike.get(i).setType(PinnedAdapter.ITEM);
-				adapter.add(listVideoLike.get(i));
+		} else {
+			queryResent = "SELECT * FROM " + DatabaseHelper.TB_RESENT;
+			listData = Utils.getVideoLocal(queryResent,
+					PinnedAdapter.MOINHAT);
+			listData = Utils.checkLikeVideo(listData,
+					Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH));
+		}
+
+		for (int i = 0; i < listData.size(); i++) {
+			if (listData.get(i).getStatus().equals("publish")) {
+				listData.get(i).setType(PinnedAdapter.ITEM);
+				adapter.add(listData.get(i));
 			}
 		}
+
 		listvideo.setAdapter(adapter);
 	}
 

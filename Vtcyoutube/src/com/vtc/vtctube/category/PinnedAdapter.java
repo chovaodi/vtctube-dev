@@ -165,10 +165,21 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 				@Override
 				public void onClick(View arg0) {
+					String sqlCheck = "SELECT * FROM "
+							+ DatabaseHelper.TB_RESENT + " WHERE id='"
+							+ item.getIdPost() + "'";
+					if (MainActivity.myDbHelper.getCountRow(
+							DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
+						MainActivity.myDbHelper.insertListVideo(
+								DatabaseHelper.TB_RESENT, item.getCateId(),
+								item.getTitle(), item.getVideoId(),
+								item.getUrl(), item.getStatus(),
+								item.getPageCount(), item.getIdPost());
+					}
 					callBack.onCLickView(item.getOption(), item.getVideoId());
 				}
 			});
-			
+
 			holder.txtTitle.setText(item.getTitle());
 			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
 					Utils.getOptions(context),

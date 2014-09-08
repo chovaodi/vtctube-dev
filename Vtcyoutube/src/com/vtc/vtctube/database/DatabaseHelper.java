@@ -22,7 +22,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static String TB_LISTVIDEO = "tblListVideo";
 	public static String TB_QUERY_SEARCH = "tblQuerySearch";
 	public static String TB_LIKE = "tblYeuthich";
-
+	public static String TB_RESENT = "tblVideoResent";
+	
 	public static String COLLUM_COUNT = "count";
 	public static String COLLUM_ID = "id";
 
