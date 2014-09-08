@@ -184,12 +184,20 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu(int position) {
-		int id = listItemMenu.get(position-1).getRegId();
+		int id = listItemMenu.get(position - 1).getRegId();
 		switch (id) {
 		case R.id.menu_video_yeuthich:
 			Intent intent = new Intent(MainActivity.this,
 					LikeVideoActivity.class);
+			intent.putExtra("key", R.id.menu_video_yeuthich);
 			startActivity(intent);
+
+			break;
+		case R.id.menu_video_daxem:
+			Intent intent1 = new Intent(MainActivity.this,
+					LikeVideoActivity.class);
+			intent1.putExtra("key", R.id.menu_video_daxem);
+			startActivity(intent1);
 
 			break;
 
@@ -373,7 +381,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public void onCLickView(int type, String idYoutube) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 	}

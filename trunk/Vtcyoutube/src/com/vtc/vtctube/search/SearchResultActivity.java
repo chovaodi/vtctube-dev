@@ -17,6 +17,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.vtc.vtctube.R;
+import com.vtc.vtctube.category.CategoryActivity;
 import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.category.PinnedSectionListView;
 import com.vtc.vtctube.database.DatabaseHelper;
@@ -173,7 +174,7 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onCLickView(int type, String idYoutube) {
-			// TODO Auto-generated method stub
+			Utils.getVideoView(idYoutube,SearchResultActivity.this);
 			
 		}
 	}

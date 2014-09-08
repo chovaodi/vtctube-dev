@@ -52,7 +52,7 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 	private int pageSize = 5;
 	private int pageCount = 0;
 	private int countDataLocal;
-	private int tabIndex = 1;
+	private int tabIndex = PinnedAdapter.MOINHAT;
 
 	private String cate;
 	private String queryLoadVideo;
@@ -129,7 +129,7 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 				DatabaseHelper.TB_LISTVIDEO, queryLoadVideo);
 		if (countDataLocal > 0) {
 			isLoadLocal = true;
-			listViewNew = Utils.getVideoLocal(queryLoadVideo);
+			listViewNew = Utils.getVideoLocal(queryLoadVideo, tabIndex);
 			if (listViewNew != null && listViewNew.size() > 0) {
 				pageCount = listViewNew.get(0).getPageCount();
 				listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
@@ -232,7 +232,7 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onCLickView(int type, String idYoutube) {
-			getVideoView(idYoutube);
+			Utils.getVideoView(idYoutube, CategoryActivity.this);
 		}
 	}
 
@@ -358,28 +358,6 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 			// TODO Auto-generated method stub
 
 		}
-	}
-
-	public void getVideoView(String videoId) {
-
-		Intent intent = null;
-		intent = YouTubeStandalonePlayer.createVideoIntent(
-				CategoryActivity.this, Utils.DEVELOPER_KEY_YOUTUBE, videoId);
-		if (intent != null) {
-			if (canResolveIntent(intent)) {
-				startActivityForResult(intent, 101);
-			} else {
-				YouTubeInitializationResult.SERVICE_MISSING.getErrorDialog(
-						CategoryActivity.this, 102).show();
-			}
-		}
-
-	}
-
-	private boolean canResolveIntent(Intent intent) {
-		List<ResolveInfo> resolveInfo = CategoryActivity.this.getPackageManager()
-				.queryIntentActivities(intent, 0);
-		return resolveInfo != null && !resolveInfo.isEmpty();
 	}
 
 	public void removeFotter() {

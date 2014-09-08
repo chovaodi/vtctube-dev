@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlPullParser;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
+import com.vtc.vtctube.category.CategoryActivity;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemMeu;
 import com.vtc.vtctube.model.ItemPost;
@@ -44,6 +46,28 @@ public class Utils {
 	public static String getUrlHttp(String host, String funtionName) {
 		return host + funtionName;
 
+	}
+
+	public static void getVideoView(String videoId, Activity activity) {
+
+		Intent intent = null;
+		intent = YouTubeStandalonePlayer.createVideoIntent(
+				activity, Utils.DEVELOPER_KEY_YOUTUBE, videoId);
+		if (intent != null) {
+			if (canResolveIntent(intent,activity)) {
+				activity.startActivityForResult(intent, 101);
+			} else {
+				YouTubeInitializationResult.SERVICE_MISSING.getErrorDialog(
+						activity, 102).show();
+			}
+		}
+
+	}
+
+	private static boolean canResolveIntent(Intent intent, Activity activity) {
+		List<ResolveInfo> resolveInfo =activity.getPackageManager()
+				.queryIntentActivities(intent, 0);
+		return resolveInfo != null && !resolveInfo.isEmpty();
 	}
 
 	
@@ -150,7 +174,7 @@ public class Utils {
 		return listAccount;
 	}
 
-	public static ArrayList<ItemPost> getVideoLocal(String sql) {
+	public static ArrayList<ItemPost> getVideoLocal(String sql, int tabidex) {
 		Cursor c = MainActivity.myDbHelper.query(DatabaseHelper.TB_LISTVIDEO,
 				null, null, null, null, null, null);
 		c = MainActivity.myDbHelper.rawQuery(sql);
@@ -167,6 +191,7 @@ public class Utils {
 				item.setStatus(c.getString(4));
 				item.setPageCount(c.getInt(5));
 				item.setIdPost(c.getInt(6));
+				item.setOption(tabidex);
 
 				listAccount.add(item);
 			} while (c.moveToNext());
