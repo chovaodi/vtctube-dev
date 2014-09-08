@@ -31,6 +31,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sromku.simple.fb.Permission.Type;
@@ -78,6 +81,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private TextView lblAccountId;
 	private ImageView imgAvata;
 	private SearchView searchView;
+	private LinearLayout lineAdmob;
 
 	private String queryCurent;
 	public static ImageLoader imageLoader = null;
@@ -120,6 +124,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		leftMenu.setMenuSize(2 * width / 3);
 		leftMenu.setMenuView(R.layout.leftmenu);
 		setContentView(R.layout.fragment_content);
+		lineAdmob=(LinearLayout)findViewById(R.id.adview);
+		AdView adView = new AdView(this);
+		adView.setAdSize(AdSize.BANNER);
+		adView.setAdUnitId(AD_UNIT_ID);
 
 		listview = (ListView) findViewById(R.id.listView1);
 		header = getLayoutInflater().inflate(R.layout.account_layout, null);

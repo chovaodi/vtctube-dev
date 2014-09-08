@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -103,6 +104,9 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 						.findViewById(R.id.btnShare);
 				holder.lineClick = (LinearLayout) convertView
 						.findViewById(R.id.onClickItem);
+				holder.loadingBanner=(ProgressBar) convertView
+						.findViewById(R.id.loadingBanner);
+				
 				break;
 			}
 			convertView.setTag(holder);
@@ -186,7 +190,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 					new SimpleImageLoadingListener() {
 						@Override
 						public void onLoadingStarted(String imageUri, View view) {
-							// holder.spinner.setVisibility(View.VISIBLE);
+							//holder.loadingBanner.setVisibility(View.VISIBLE);
 						}
 
 						@Override
@@ -198,13 +202,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 						@Override
 						public void onLoadingComplete(String imageUri,
 								View view, Bitmap loadedImage) {
-							try {
-								// WorldCupActivity.listNews.get(position)
-								// .setImgThumailbm(loadedImage);
-							} catch (Exception exception) {
-
-							}
-							// holder.spinner.setVisibility(View.GONE);
+							//holder.loadingBanner.setVisibility(View.GONE);
 						}
 					});
 
@@ -271,6 +269,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 		public LinearLayout btnLike;
 
 		public LinearLayout lineClick;
+		public ProgressBar loadingBanner;
 
 	}
 
