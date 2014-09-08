@@ -4,26 +4,32 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import org.xmlpull.v1.XmlPullParser;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.provider.SyncStateContract.Constants;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.vtc.vtctube.ItemMeu;
-import com.vtc.vtctube.ItemPost;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.model.ItemMeu;
+import com.vtc.vtctube.model.ItemPost;
 
 public class Utils {
 	private static String urlFolder = "/VtcTube/";
@@ -33,10 +39,38 @@ public class Utils {
 	public final static int LOAD_MORE = 3;
 	public final static int AYSN_LOAD = 2;
 	public final static int REFRESH = 4;
+	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyBOIqSHxSY2pRqPdJaCwjDQ9FBzkNQmXhE";
 
 	public static String getUrlHttp(String host, String funtionName) {
 		return host + funtionName;
 
+	}
+
+	
+	public static void hideSoftKeyboard(Activity activity) {
+		try {
+			InputMethodManager inputMethodManager = (InputMethodManager) activity
+					.getSystemService(Activity.INPUT_METHOD_SERVICE);
+			inputMethodManager.hideSoftInputFromWindow(activity
+					.getCurrentFocus().getWindowToken(), 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static List<ItemPost> checkLikeVideo(List<ItemPost> list,
+			List<ItemPost> listVideoLike) {
+		List<ItemPost> listTmp = new ArrayList<ItemPost>();
+		listTmp = list;
+		for (int i = 0; i < list.size(); i++) {
+			listTmp.get(i).setLike(false);
+			for (int j = 0; j < listVideoLike.size(); j++) {
+				if (list.get(i).getIdPost() == listVideoLike.get(j).getIdPost()) {
+					listTmp.get(i).setLike(true);
+				}
+			}
+		}
+		return listTmp;
 	}
 
 	public static ArrayList<ItemMeu> getMenu(Activity activity, int menu) {
@@ -133,7 +167,7 @@ public class Utils {
 				item.setStatus(c.getString(4));
 				item.setPageCount(c.getInt(5));
 				item.setIdPost(c.getInt(6));
-				
+
 				listAccount.add(item);
 			} while (c.moveToNext());
 		}

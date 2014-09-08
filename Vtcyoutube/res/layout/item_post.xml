@@ -6,106 +6,117 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/onClickItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp" >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="130dp"
-            android:layout_height="110dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/img_erorrs"
-            android:scaleType="centerCrop" />
+        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="left"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="130dp"
+                android:layout_height="110dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/img_erorrs"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
+                android:gravity="left"
                 android:orientation="vertical" >
 
-                <com.vtc.vtctube.font.RobotoLightTextView
-                    android:id="@+id/lblTitlePost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|left"
-                    android:text="TextView"
-                    android:textColor="@color/text_color"
-                    android:textSize="17dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="bottom" >
-
                 <LinearLayout
-                    android:id="@+id/btnComment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
-                    android:gravity="center_vertical|left"
                     android:orientation="vertical" >
 
-                    <ImageButton
-                        android:id="@+id/Button02"
+                    <com.vtc.vtctube.font.RobotoLightTextView
+                        android:id="@+id/lblTitlePost"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|left"
+                        android:text="TextView"
+                        android:textColor="@color/text_color"
+                        android:textSize="17dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="bottom" >
+
+                    <LinearLayout
+                        android:id="@+id/btnComment"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:src="@drawable/video_comment" />
-                </LinearLayout>
+                        android:gravity="center_vertical|left"
+                        android:orientation="vertical" >
 
-                <LinearLayout
-                    android:id="@+id/btnLike"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical" >
+                        <ImageButton
+                            android:id="@+id/Button02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:src="@drawable/video_comment" />
+                    </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/ic_like"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/btnLike"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:src="@drawable/video_like" />
-                </LinearLayout>
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical" >
 
-                <LinearLayout
-                    android:id="@+id/btnShare"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical" >
+                        <ImageButton
+                            android:id="@+id/ic_like"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:src="@drawable/video_like" />
+                    </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/button1"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/btnShare"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:src="@drawable/video_share" />
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical" >
+
+                        <ImageButton
+                            android:id="@+id/button1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:src="@drawable/video_share" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
     <TextView

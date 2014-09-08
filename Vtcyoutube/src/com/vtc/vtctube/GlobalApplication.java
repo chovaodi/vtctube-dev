@@ -6,6 +6,7 @@ import com.facebook.SessionDefaultAudience;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
+import com.vtc.vtctube.model.AccountModel;
 
 public class GlobalApplication extends Application {
 	private static final String APP_ID = "691296997625912";
