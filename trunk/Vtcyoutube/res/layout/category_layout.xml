@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.vtc.vtctube.PinnedSectionListView
+    <com.vtc.vtctube.category.PinnedSectionListView
         android:id="@+id/listvideo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
         android:id="@+id/google_now"
         style="@style/GNowProgressBar"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="5dp"
         android:indeterminate="true"
         android:visibility="visible" />
 

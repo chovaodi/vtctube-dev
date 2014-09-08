@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_id">691296997625912</string>
-    <string name="app_name">Vtcyoutube</string>
+    <string name="app_name">VTCTube</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="lblChuyenmuc">CATEGORY</string>

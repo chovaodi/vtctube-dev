@@ -10,7 +10,7 @@
         android:layout_margin="10dp"
         android:gravity="center_vertical|left" >
 
-        <com.makeramen.RoundedImageView
+        <com.vtc.vtctube.roundimg.RoundedImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/imgAvata"
             android:layout_width="80dip"

@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.vtc.vtctube.MainActivity;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

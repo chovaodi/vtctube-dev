@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.simonvt.menudrawer.MenuDrawer;
-import net.simonvt.menudrawer.MenuDrawer.OnDrawerStateChangeListener;
-import net.simonvt.menudrawer.Position;
-
 import org.json.JSONObject;
 
 import android.app.SearchManager;
@@ -31,6 +27,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -48,8 +46,15 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
-import com.vtc.vtctube.connectserver.AysnRequestHttp;
 import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.like.LikeVideoActivity;
+import com.vtc.vtctube.menu.MenuDrawer;
+import com.vtc.vtctube.menu.MenuDrawer.OnDrawerStateChangeListener;
+import com.vtc.vtctube.menu.Position;
+import com.vtc.vtctube.model.AccountModel;
+import com.vtc.vtctube.model.ItemMeu;
+import com.vtc.vtctube.search.SearchResultActivity;
+import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
@@ -129,6 +134,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				if (mSimpleFacebook.isLogin()) {
 					getProfile();
 				}
+				Utils.hideSoftKeyboard(MainActivity.this);
 			}
 		});
 
@@ -149,6 +155,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 			menuAdapter.addItem(listItemMenu.get(i));
 		}
 		listview.setAdapter(menuAdapter);
+		listview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				clickMenu(position);
+
+			}
+
+		});
 
 		smooth = (SmoothProgressBar) findViewById(R.id.google_now);
 		smooth.setVisibility(View.GONE);
@@ -165,6 +181,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		ft.add(R.id.container, newFragment).commit();
+	}
+
+	public void clickMenu(int position) {
+		int id = listItemMenu.get(position-1).getRegId();
+		switch (id) {
+		case R.id.menu_video_yeuthich:
+			Intent intent = new Intent(MainActivity.this,
+					LikeVideoActivity.class);
+			startActivity(intent);
+
+			break;
+
+		}
 	}
 
 	public ArrayList<String> getQuerySearch(String sql) {
@@ -338,10 +367,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public void pushResutClickItem(int type, int postion, boolean isLike) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
-	
+		@Override
+		public void onCLickView(int type, String idYoutube) {
+			// TODO Auto-generated method stub
+			
+		}
 
 	}
 

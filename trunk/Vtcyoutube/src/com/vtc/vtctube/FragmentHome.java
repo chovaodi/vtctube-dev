@@ -42,9 +42,11 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.munix.gridviewheader.TestAdapter;
-import com.vtc.vtctube.connectserver.AysnRequestHttp;
-import com.vtc.vtctube.connectserver.JSONParser;
+import com.vtc.vtctube.adpter.MenuHomeAdapter;
+import com.vtc.vtctube.category.CategoryActivity;
+import com.vtc.vtctube.model.ItemCategory;
+import com.vtc.vtctube.services.AysnRequestHttp;
+import com.vtc.vtctube.services.JSONParser;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
@@ -211,13 +213,14 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 			}
 
 			list = (GridView) v.findViewById(R.id.list);
-			TestAdapter adapter = new TestAdapter(getActivity(), listData);
+			MenuHomeAdapter adapter = new MenuHomeAdapter(getActivity(), listData);
 			list.setAdapter(adapter);
 			list.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
+					Utils.hideSoftKeyboard(getActivity()); 
 					Intent intent = new Intent(getActivity(),
 							CategoryActivity.class);
 					intent.putExtra("cate", listData.get(arg2).getIdCategory());
@@ -283,6 +286,13 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 		
 		@Override
 		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public void onCLickView(int type, String idYoutube) {
 			// TODO Auto-generated method stub
 			
 		}
