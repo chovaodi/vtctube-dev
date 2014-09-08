@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -108,7 +107,6 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 			holder = (ViewHolder) convertView.getTag();
 		}
 		if (type == SECTION) {
-			Log.d("position", position + "chovaodi");
 			final ItemPost item = getItem(position);
 			if (item.getOption() == MOINHAT) {
 				holder.btnMoinhat.setSelected(true);
@@ -193,17 +191,16 @@ class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 				@Override
 				public void onClick(View arg0) {
-					Log.d("getPosition(item)", getPosition(item)+"nxnxn");
+				
 					if (item.isLike()) {
 						MainActivity.myDbHelper.deleteLikeVideo(
-								DatabaseHelper.TB_LIKE, item.getId());
+								DatabaseHelper.TB_LIKE, item.getIdPost());
 						callBack.pushResutClickItem(item.getOption(), getPosition(item),
 								false);
 					} else {
 						String sqlCheck = "SELECT * FROM "
 								+ DatabaseHelper.TB_LIKE + " WHERE id='"
 								+ item.getIdPost() + "'";
-
 						if (MainActivity.myDbHelper.getCountRow(
 								DatabaseHelper.TB_LIKE, sqlCheck) == 0) {
 							MainActivity.myDbHelper.insertVideoLike(

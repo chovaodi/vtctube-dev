@@ -176,7 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				null);
 	}
 	
-	public int deleteLikeVideo(String table, String id) {
+	public int deleteLikeVideo(String table, int id) {
 		return myDataBase.delete(table, COLLUM_ID + "='" + id + "'",
 				null);
 	}
