@@ -14,11 +14,9 @@
     <LinearLayout
         android:id="@+id/adview"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:background="@android:color/black"
         android:orientation="vertical" >
-
     </LinearLayout>
 
     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar

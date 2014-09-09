@@ -17,7 +17,6 @@ import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.provider.SyncStateContract.Constants;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
@@ -28,7 +27,6 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
-import com.vtc.vtctube.category.CategoryActivity;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemMeu;
 import com.vtc.vtctube.model.ItemPost;
@@ -42,6 +40,7 @@ public class Utils {
 	public final static int AYSN_LOAD = 2;
 	public final static int REFRESH = 4;
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyBOIqSHxSY2pRqPdJaCwjDQ9FBzkNQmXhE";
+	public static String ADMOB_ID = "ca-app-pub-2988392623334504/4148633672";
 
 	public static String getUrlHttp(String host, String funtionName) {
 		return host + funtionName;
@@ -51,10 +50,10 @@ public class Utils {
 	public static void getVideoView(String videoId, Activity activity) {
 
 		Intent intent = null;
-		intent = YouTubeStandalonePlayer.createVideoIntent(
-				activity, Utils.DEVELOPER_KEY_YOUTUBE, videoId);
+		intent = YouTubeStandalonePlayer.createVideoIntent(activity,
+				Utils.DEVELOPER_KEY_YOUTUBE, videoId);
 		if (intent != null) {
-			if (canResolveIntent(intent,activity)) {
+			if (canResolveIntent(intent, activity)) {
 				activity.startActivityForResult(intent, 101);
 			} else {
 				YouTubeInitializationResult.SERVICE_MISSING.getErrorDialog(
@@ -65,12 +64,11 @@ public class Utils {
 	}
 
 	private static boolean canResolveIntent(Intent intent, Activity activity) {
-		List<ResolveInfo> resolveInfo =activity.getPackageManager()
+		List<ResolveInfo> resolveInfo = activity.getPackageManager()
 				.queryIntentActivities(intent, 0);
 		return resolveInfo != null && !resolveInfo.isEmpty();
 	}
 
-	
 	public static void hideSoftKeyboard(Activity activity) {
 		try {
 			InputMethodManager inputMethodManager = (InputMethodManager) activity

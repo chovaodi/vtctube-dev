@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +22,12 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.sromku.simple.fb.entities.Comment;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.category.PinnedSectionListView.PinnedSectionListAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.like.CommentAcitivity;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
@@ -104,9 +107,9 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 						.findViewById(R.id.btnShare);
 				holder.lineClick = (LinearLayout) convertView
 						.findViewById(R.id.onClickItem);
-				holder.loadingBanner=(ProgressBar) convertView
+				holder.loadingBanner = (ProgressBar) convertView
 						.findViewById(R.id.loadingBanner);
-				
+
 				break;
 			}
 			convertView.setTag(holder);
@@ -190,7 +193,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 					new SimpleImageLoadingListener() {
 						@Override
 						public void onLoadingStarted(String imageUri, View view) {
-							//holder.loadingBanner.setVisibility(View.VISIBLE);
+							// holder.loadingBanner.setVisibility(View.VISIBLE);
 						}
 
 						@Override
@@ -202,7 +205,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 						@Override
 						public void onLoadingComplete(String imageUri,
 								View view, Bitmap loadedImage) {
-							//holder.loadingBanner.setVisibility(View.GONE);
+							// holder.loadingBanner.setVisibility(View.GONE);
 						}
 					});
 
@@ -231,6 +234,17 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 						}
 
 					}
+				}
+			});
+
+			holder.btnComment.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					Intent intent = new Intent(context, CommentAcitivity.class);
+					intent.putExtra("link",
+							"http://www.haivl.com/photo/4530297");
+					context.startActivity(intent);
 				}
 			});
 

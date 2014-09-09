@@ -44,6 +44,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.vtc.vtctube.adpter.MenuHomeAdapter;
 import com.vtc.vtctube.category.CategoryActivity;
+import com.vtc.vtctube.like.CommentAcitivity;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.services.JSONParser;
@@ -221,11 +222,16 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
 					Utils.hideSoftKeyboard(getActivity()); 
-					Intent intent = new Intent(getActivity(),
-							CategoryActivity.class);
-					intent.putExtra("cate", listData.get(arg2).getIdCategory());
-					intent.putExtra("title", listData.get(arg2).getTitle());
+//					Intent intent = new Intent(getActivity(),
+//							CategoryActivity.class);
+//					intent.putExtra("cate", listData.get(arg2).getIdCategory());
+//					intent.putExtra("title", listData.get(arg2).getTitle());
+//					
+//					getActivity().startActivity(intent);
 					
+					Intent intent = new Intent(getActivity(), CommentAcitivity.class);
+					intent.putExtra("link",
+							"http://www.haivl.com/photo/4530297");
 					getActivity().startActivity(intent);
 
 				}
