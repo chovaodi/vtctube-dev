@@ -40,6 +40,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -82,7 +83,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private ImageView imgAvata;
 	private SearchView searchView;
 	private LinearLayout lineAdmob;
-
+	private AdView adView;
 	private String queryCurent;
 	public static ImageLoader imageLoader = null;
 	private ResultSearchCallBack callBackSearch;
@@ -124,10 +125,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 		leftMenu.setMenuSize(2 * width / 3);
 		leftMenu.setMenuView(R.layout.leftmenu);
 		setContentView(R.layout.fragment_content);
-		lineAdmob=(LinearLayout)findViewById(R.id.adview);
-		AdView adView = new AdView(this);
+		lineAdmob = (LinearLayout) findViewById(R.id.adview);
+
+		adView = new AdView(this);
 		adView.setAdSize(AdSize.BANNER);
-		adView.setAdUnitId(AD_UNIT_ID);
+		adView.setAdUnitId(Utils.ADMOB_ID);
+		lineAdmob.addView(adView);
+
+		AdRequest adRequest = new AdRequest.Builder().build();
+		adView.loadAd(adRequest);
 
 		listview = (ListView) findViewById(R.id.listView1);
 		header = getLayoutInflater().inflate(R.layout.account_layout, null);
@@ -248,6 +254,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		mSimpleFacebook = SimpleFacebook.getInstance(this);
+		adView.resume();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		adView.pause();
 	}
 
 	@Override
