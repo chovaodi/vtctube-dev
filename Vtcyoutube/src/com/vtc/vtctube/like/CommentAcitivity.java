@@ -26,16 +26,18 @@ public class CommentAcitivity extends Activity {
 		loaddingcmt = (ProgressBar) findViewById(R.id.loading);
 		webview_fbview = (WebView) findViewById(R.id.contentView);
 		settingWebView();
-		
-		webview_fbview.loadDataWithBaseURL("http://www.haivl.com/photo/4528925", getHtmlLink("http://www.haivl.com/photo/4528925"), "text/html",
-				"utf-8", null);
+		loadComment("http://www.haivl.com/photo/4528925");
+		// webview_fbview.loadDataWithBaseURL("http://www.haivl.com/photo/4528925",
+		// getHtmlLink("http://www.haivl.com/photo/4528925"), "text/html",
+		// "utf-8", null);
+		//
 
 	}
 
 	private void settingWebView() {
 		webview_fbview.getSettings().setJavaScriptEnabled(true);
 		webview_fbview.setLongClickable(false);
-		webview_fbview.getSettings().setBuiltInZoomControls(true);
+		webview_fbview.getSettings().setBuiltInZoomControls(false);
 		webview_fbview.getSettings().setLoadWithOverviewMode(true);
 		webview_fbview.getSettings().setJavaScriptCanOpenWindowsAutomatically(
 				true);
@@ -89,30 +91,17 @@ public class CommentAcitivity extends Activity {
 		}
 	}
 
-	private String getHtmlLink(String link) {
-		String linkhtml = "<html>"
-				+ "<meta name='viewport' content=width=device-width', initial-scale=1, maximum-scale=1>"
-				+ "<body style='margin:0; padding: 0;'>"
-				+ "<script>"
-				+ "(function(d, s, id) {"
-				+ "var js, fjs = d.getElementsByTagName(s)[0];"
-				+ "if (d.getElementById(id)) "
-				+ "return;"
-				+ "js = d.createElement(s); "
-				+ "js.id = id;"
-				+ "js.src = \"//connect.facebook.net/vi_VN/all.js#xfbml=1&appId="
-				+ getResources().getString(R.string.app_id)
-				+ "\";"
-				+ "fjs.parentNode.insertBefore(js, fjs);"
-				+ "}(document, 'script', 'facebook-jssdk'));"
-				+ "</script>"
+	private void loadComment(String url) {
+		String script = "<div id=\"fb-root\"></div><script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = \"//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=648492845199272&version=v2.0\";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>";
 
-				+ "<div class=\"fb-comments\" data-href="
-				+ link
-				+ "data-numposts=\"5\" data-width='100%' data-order-by='social' ></div>"
-				+ "</body></html>";
+		String commentBox = "<div class=\"fb-comments\" data-href=\"" + url
+				+ "\" data-numposts=\"30\" data-colorscheme=\"light\"></div>";
 
-		return linkhtml;
+		String html = "<html><head><style type='text/css'>img { max-width: 100%%; width: auto; height: auto; } p { text-align: justify; width: auto; } </style></head><body style=\"margin: 0; padding: 0\">"
+				+ script + commentBox + "</body></html>";
+
+		webview_fbview.loadDataWithBaseURL("http://9gag.tv", html, "text/html",
+				null, null);
 	}
 
 	private class webChromeClient extends WebChromeClient {
