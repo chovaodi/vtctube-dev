@@ -128,7 +128,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		lineAdmob = (LinearLayout) findViewById(R.id.adview);
 
 		adView = new AdView(this);
-		adView.setAdSize(AdSize.BANNER);
+		adView.setAdSize(AdSize.SMART_BANNER);
 		adView.setAdUnitId(Utils.ADMOB_ID);
 		lineAdmob.addView(adView);
 
