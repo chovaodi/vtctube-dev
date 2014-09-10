@@ -13,5 +13,38 @@
     <string name="lblXemnhieu">Xem nhiều</string>
     <string name="lblYeuthich">Yêu thích</string>
     <string name="lblLoangmore">Đang tải...</string>
-    
+    <string name="help_lienhe">
+<![CDATA[  
+
+		<p>ĐỊA CHỈ LIÊN HỆ:</p>
+		
+		<p><b>Văn phòng miền Bắc:</b> </p>
+		<p>- Tầng 15, Tòa nhà VTC, Số 23 Lạc Trung, Hai Bà Trưng, Hà Nội.</p>
+		<p>Fax: (+84 4) 3636 7728</p>
+		<p>-    Số 60 Lê Thanh Nghị, Hai Bà Trưng, Hà Nội.</p> 
+		<p>Hotline: 0983 080 389-0983 080 389</p>
+		
+		<p><b>Văn phòng miền Trung:</b></p>
+		<p>-   Số 62 Võ Văn Tần, Q.Thanh Khê, TP. Đà Nẵng.</p>
+		<p>Hotline: 0904 564 3690-904 564 369</p>
+		
+		<p><b>Văn phòng miền Nam:</b></p>
+		<p>-  128E Đường Nguyễn Đình Chính, P.8, Q. Phú Nhuận, TP.HCM</p>
+		<p>Hotline: 0979 225 050-0979 225 050</p>
+		
+		<p><b>Hỗ trợ khách hàng:</b></p>
+		<p>Điện thoại:1900 1530</p>      
+		<p>Email: <font color="#26a3dd">hotro.365@vtc.vn</font></p>
+		<p>Hỗ trợ trực tuyến: LiveChat</p>
+		
+		<p><b>Liên hệ hợp tác kinh doanh:</b></p>
+		<p>Email:<font color="#26a3dd"> 365@vtc.vn</font></p>
+		
+		<p><b>Liên hệ duyệt tiền:</b></p>
+		<p>Ms.Tống Hoàng Ngân</p>
+		<p>Email:<font color="#26a3dd">Ngan.tong@vtc.vn</font></p>
+		<p>Di động: 0915391984</p>
+		]]>
+    </string>
+
 </resources>

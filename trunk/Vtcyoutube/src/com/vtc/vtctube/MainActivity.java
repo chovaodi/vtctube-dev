@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -184,13 +185,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 		smooth.setVisibility(View.GONE);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setHomeButtonEnabled(true);
+
 		getSupportActionBar().setIcon(
 				getResources().getDrawable(R.drawable.icon_menuleft));
 		getSupportActionBar().setTitle(" ");
 		getSupportActionBar().setBackgroundDrawable(
 				getResources().getDrawable(R.drawable.bgr_tasktop));
 
+		getSupportActionBar().setDisplayOptions(
+				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_CUSTOM);
+		getSupportActionBar().setCustomView(R.layout.header_task);
+		getSupportActionBar().setHomeButtonEnabled(true);
 		Fragment newFragment = FragmentHome.newInstance(1);
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -405,6 +410,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		}
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		Fragment myFragment = getSupportFragmentManager().findFragmentByTag(
+				Utils.TAG_CATE);
+		if (myFragment!=null&&myFragment.isVisible()) {
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			fragmentManager.popBackStack();
+		}
 	}
 
 	@Override

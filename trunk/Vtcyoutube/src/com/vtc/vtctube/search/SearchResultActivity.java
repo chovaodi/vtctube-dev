@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
@@ -17,9 +18,9 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.vtc.vtctube.R;
-import com.vtc.vtctube.category.CategoryActivity;
 import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.category.PinnedSectionListView;
+import com.vtc.vtctube.category.SliderTopFragmentAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
@@ -32,6 +33,9 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 		OnScrollListener {
 	private PinnedAdapter adapter;
 	private ListView listvideo;
+	private View header;
+
+	private ViewPager pager;
 
 	public static SmoothProgressBar smooth;
 
@@ -71,7 +75,15 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 		smooth.setVisibility(View.GONE);
 
 		listvideo = (ListView) findViewById(R.id.listvideo);
+		listvideo.setAdapter(null);
+		header = getLayoutInflater().inflate(R.layout.header_cate, null);
+		listvideo.addHeaderView(header);
 
+		pager = (ViewPager) header.findViewById(R.id.pager);
+		SliderTopFragmentAdapter adapterPg = new SliderTopFragmentAdapter(
+				getSupportFragmentManager());
+
+		pager.setAdapter(adapterPg);
 		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
 		adapter = new PinnedAdapter(SearchResultActivity.this, callBack);
@@ -174,8 +186,8 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onCLickView(int type, String idYoutube) {
-			Utils.getVideoView(idYoutube,SearchResultActivity.this);
-			
+			Utils.getVideoView(idYoutube, SearchResultActivity.this);
+
 		}
 	}
 
