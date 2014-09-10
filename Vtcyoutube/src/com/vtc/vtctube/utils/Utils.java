@@ -41,6 +41,9 @@ public class Utils {
 	public final static int REFRESH = 4;
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyBOIqSHxSY2pRqPdJaCwjDQ9FBzkNQmXhE";
 	public static String ADMOB_ID = "ca-app-pub-2988392623334504/4148633672";
+	
+	public static String TAG_CATE="TAG_CATE";
+	
 
 	public static String getUrlHttp(String host, String funtionName) {
 		return host + funtionName;

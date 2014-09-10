@@ -30,9 +30,11 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 import android.accounts.NetworkErrorException;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +45,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.vtc.vtctube.adpter.MenuHomeAdapter;
-import com.vtc.vtctube.category.CategoryActivity;
-import com.vtc.vtctube.like.CommentAcitivity;
+import com.vtc.vtctube.category.FragmentCategory;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.services.JSONParser;
@@ -58,6 +59,7 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 	private PullToRefreshLayout mPullToRefreshLayout;
 	ResultCallBack callBack = null;
 	List<ItemCategory> listData = null;
+
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
 	 * argument.
@@ -195,7 +197,6 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 
 	public void showView(String result) {
 
-		
 		try {
 			JSONObject jsonObj = new JSONObject(result);
 			String status = jsonObj.getString("status");
@@ -214,25 +215,24 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 			}
 
 			list = (GridView) v.findViewById(R.id.list);
-			MenuHomeAdapter adapter = new MenuHomeAdapter(getActivity(), listData);
+			MenuHomeAdapter adapter = new MenuHomeAdapter(getActivity(),
+					listData);
 			list.setAdapter(adapter);
 			list.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
-					Utils.hideSoftKeyboard(getActivity()); 
-//					Intent intent = new Intent(getActivity(),
-//							CategoryActivity.class);
-//					intent.putExtra("cate", listData.get(arg2).getIdCategory());
-//					intent.putExtra("title", listData.get(arg2).getTitle());
-//					
-//					getActivity().startActivity(intent);
-					
-					Intent intent = new Intent(getActivity(), CommentAcitivity.class);
-					intent.putExtra("link",
-							"http://www.haivl.com/photo/4530297");
-					getActivity().startActivity(intent);
+					Utils.hideSoftKeyboard(getActivity());
+					addFragment(listData.get(arg2).getTitle(),
+							listData.get(arg2).getIdCategory());
+					// Intent intent = new Intent(getActivity(),
+					// CategoryActivity.class);
+					// intent.putExtra("cate",
+					// listData.get(arg2).getIdCategory());
+					// intent.putExtra("title", listData.get(arg2).getTitle());
+					//
+					// getActivity().startActivity(intent);
 
 				}
 
@@ -277,6 +277,25 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 		}.execute();
 	}
 
+	public void addFragment(String title, String cate) {
+
+		FragmentManager fragmentManager = getActivity()
+				.getSupportFragmentManager();
+		FragmentTransaction ft = fragmentManager.beginTransaction();
+		Fragment fragment = null;
+		fragment = (Fragment) fragmentManager.findFragmentByTag(Utils.TAG_CATE);
+		if (fragment == null) {
+			fragment = FragmentCategory.newInstance(cate, title);
+			ft.addToBackStack(null);
+			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
+		} else {
+			ft.show(fragment);
+		}
+
+		ft.commit();
+
+	}
+
 	public class ResultCallBack implements IResult {
 
 		@Override
@@ -289,18 +308,16 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 			}
 		}
 
-		
 		@Override
 		public void pushResutClickItem(int type, int postion, boolean isLike) {
 			// TODO Auto-generated method stub
-			
-		}
 
+		}
 
 		@Override
 		public void onCLickView(int type, String idYoutube) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
 }

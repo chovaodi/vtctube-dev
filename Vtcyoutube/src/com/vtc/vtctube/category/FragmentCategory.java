@@ -9,24 +9,23 @@ import org.json.JSONObject;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.GridView;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.viewpagerindicator.PageIndicator;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IResult;
@@ -35,9 +34,11 @@ import com.vtc.vtctube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
-public class CategoryActivity extends SherlockFragmentActivity implements
+public class FragmentCategory extends SherlockFragment implements
 		OnRefreshListener, OnScrollListener {
-
+	String mNum;
+	private View v;
+	List<ItemCategory> listData = null;
 	private View header;
 	private View fotter;
 
@@ -66,40 +67,54 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 	private List<ItemPost> listVideoLike = new ArrayList<ItemPost>();
 	private ResultOnclikTab callBackOnlick;
 
+	/**
+	 * Create a new instance of CountingFragment, providing "num" as an
+	 * argument.
+	 */
+	public static FragmentCategory newInstance(String num, String title) {
+		FragmentCategory f = new FragmentCategory();
+
+		// Supply num input as an argument.
+		Bundle args = new Bundle();
+		args.putString("num", num);
+		args.putString("title", title);
+		f.setArguments(args);
+
+		return f;
+	}
+
+	/**
+	 * When creating, retrieve this instance's number from its arguments.
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mNum = (String) (getArguments() != null ? getArguments().getString("num") : 1);
+		callBack = new ResultCallBack();
+	}
 
-		setContentView(R.layout.category_layout);
-		overridePendingTransition(R.anim.slide_in_bottom,
-				R.anim.slide_out_bottom);
-		Intent intent = getIntent();
-		cate = intent.getStringExtra("cate");
-		String title = intent.getStringExtra("title");
+	/**
+	 * The Fragment's UI is just a simple text view showing its instance number.
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		v = inflater.inflate(R.layout.category_layout, container, false);
 		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
-				+ " WHERE cateId='" + cate + "'";
+				+ " WHERE cateId='" + mNum + "'";
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setIcon(
-				getResources().getDrawable(R.drawable.logo));
-		getSupportActionBar().setTitle(title);
-		getSupportActionBar().setBackgroundDrawable(
-				getResources().getDrawable(R.drawable.bgr_tasktop));
-
-		smooth = (SmoothProgressBar) findViewById(R.id.google_now);
-		smooth.setVisibility(View.GONE);
-
-		listvideo = (ListView) findViewById(R.id.listvideo);
-		header = getLayoutInflater().inflate(R.layout.header_cate, null);
-		fotter = getLayoutInflater().inflate(R.layout.fotter_loadmore, null);
+		listvideo = (ListView) v.findViewById(R.id.listvideo);
+		header = getActivity().getLayoutInflater().inflate(
+				R.layout.header_cate, null);
+		fotter = getActivity().getLayoutInflater().inflate(
+				R.layout.fotter_loadmore, null);
 
 		listvideo.addHeaderView(header);
 
 		listvideo.setOnScrollListener(this);
 		pager = (ViewPager) header.findViewById(R.id.pager);
 		SliderTopFragmentAdapter adapterPg = new SliderTopFragmentAdapter(
-				getSupportFragmentManager());
+				getActivity().getSupportFragmentManager());
 
 		pager.setAdapter(adapterPg);
 
@@ -111,15 +126,13 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 
 		callBackOnlick = new ResultOnclikTab();
 
-		adapter = new PinnedAdapter(CategoryActivity.this,
+		adapter = new PinnedAdapter(getActivity(),
 
 		callBackOnlick);
 
-		final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
-				.findViewById(android.R.id.content)).getChildAt(0);
-		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+		mPullToRefreshLayout = new PullToRefreshLayout(getActivity());
 
-		ActionBarPullToRefresh.from(this).insertLayoutInto(viewGroup)
+		ActionBarPullToRefresh.from(getActivity()).insertLayoutInto(container)
 				.theseChildrenArePullable(R.id.listvideo, android.R.id.empty)
 				.listener(this).setup(mPullToRefreshLayout);
 
@@ -143,23 +156,15 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 			new AysnRequestHttp(Utils.LOAD_FIRST_DATA, smooth, callBack)
 					.execute(url);
 		}
+		return v;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			finish();
-			overridePendingTransition(R.anim.slide_in_bottom,
-					R.anim.slide_out_bottom);
+
 		}
 		return false;
-	}
-
-	@Override
-	public void onBackPressed() {
-		finish();
-		overridePendingTransition(R.anim.slide_in_bottom,
-				R.anim.slide_out_bottom);
 	}
 
 	public class ResultOnlickItem implements IResultOnclick {
@@ -232,7 +237,7 @@ public class CategoryActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onCLickView(int type, String idYoutube) {
-			Utils.getVideoView(idYoutube, CategoryActivity.this);
+			Utils.getVideoView(idYoutube, getActivity());
 		}
 	}
 

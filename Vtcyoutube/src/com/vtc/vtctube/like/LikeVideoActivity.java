@@ -5,15 +5,18 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.viewpagerindicator.PageIndicator;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.category.PinnedSectionListView;
+import com.vtc.vtctube.category.SliderTopFragmentAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.utils.IResult;
@@ -24,7 +27,10 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 public class LikeVideoActivity extends SherlockFragmentActivity {
 	private PinnedAdapter adapter;
 	private ListView listvideo;
+	private View header;
 
+	private ViewPager pager;
+	
 	public static SmoothProgressBar smooth;
 	private String queryResent;
 	private ResultOnclickTab callBackOnlick;
@@ -55,6 +61,20 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 		callBackOnlick = new ResultOnclickTab();
 		adapter = new PinnedAdapter(LikeVideoActivity.this, callBackOnlick);
 		listvideo = (ListView) findViewById(R.id.listvideo);
+		listvideo.setAdapter(null);
+		header = getLayoutInflater().inflate(R.layout.header_cate, null);
+		listvideo.addHeaderView(header);
+
+		pager = (ViewPager) header.findViewById(R.id.pager);
+		SliderTopFragmentAdapter adapterPg = new SliderTopFragmentAdapter(
+				getSupportFragmentManager());
+
+		pager.setAdapter(adapterPg);
+
+		PageIndicator mIndicator = (PageIndicator) header
+				.findViewById(R.id.indicator);
+		mIndicator.setViewPager(pager);
+		
 		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
 		addViewPost();
