@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical" >
+    android:gravity="center" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/iconHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_margin="5dp"
         android:src="@drawable/logo" />
 
-</LinearLayout>
+    <com.vtc.vtctube.font.RobotoTextviewBold
+        android:id="@+id/lblHeaderTile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Medium Text"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        android:textColor="#d18201"
+        android:textSize="18dp" />
+
+</FrameLayout>

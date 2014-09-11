@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.GridView;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
