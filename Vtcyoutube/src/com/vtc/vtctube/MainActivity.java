@@ -60,6 +60,7 @@ import com.vtc.vtctube.model.AccountModel;
 import com.vtc.vtctube.model.ItemMeu;
 import com.vtc.vtctube.search.SearchResultActivity;
 import com.vtc.vtctube.services.AysnRequestHttp;
+import com.vtc.vtctube.utils.IClickCate;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
@@ -67,39 +68,47 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
+
 	private MenuDrawer leftMenu;
 	private SuggestionsAdapter mSuggestionsAdapter;
-	public static SmoothProgressBar smooth;
 	private static final String[] COLUMNS = { BaseColumns._ID,
 			SearchManager.SUGGEST_COLUMN_TEXT_1, };
 
 	private ListView listview;
 	private View header;
-	private List<ItemMeu> listItemMenu;
 	private SimpleFacebook mSimpleFacebook = null;
-
-	private GlobalApplication globalApp;
 	private TextView lblUserName;
 	private TextView lblAccountId;
+	private TextView lblTitle;
+	private ImageView imgLogo;
+
 	private ImageView imgAvata;
 	private SearchView searchView;
 	private LinearLayout lineAdmob;
 	private AdView adView;
-	private String queryCurent;
+
 	public static ImageLoader imageLoader = null;
-	private ResultSearchCallBack callBackSearch;
 	public static DatabaseHelper myDbHelper;
+	public static SmoothProgressBar smooth;
+
+	private ResultSearchCallBack callBackSearch;
+	public static ResultCallBackCLick callBackCLick;
+
+	private List<ItemMeu> listItemMenu;
 	private List<String> listQuerySearch;
+	private String queryCurent;
+
+	private GlobalApplication globalApp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		myDbHelper = new DatabaseHelper(MainActivity.this);
+		callBackCLick = new ResultCallBackCLick();
 
 		try {
 			myDbHelper.createDataBase();
 			myDbHelper.openDataBase();
-
 		} catch (IOException ioe) {
 			throw new Error("Unable to create database");
 		} catch (SQLException sqle) {
@@ -108,6 +117,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		listQuerySearch = getQuerySearch("SELECT * FROM "
 				+ DatabaseHelper.TB_QUERY_SEARCH);
 		globalApp = (GlobalApplication) getApplicationContext();
+
 		listItemMenu = Utils.getMenu(MainActivity.this, R.menu.ribbon_menu);
 		if (imageLoader == null) {
 			imageLoader = ImageLoader.getInstance();
@@ -125,9 +135,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		int width = displaymetrics.widthPixels;
 		leftMenu.setMenuSize(2 * width / 3);
 		leftMenu.setMenuView(R.layout.leftmenu);
+
 		setContentView(R.layout.fragment_content);
 		lineAdmob = (LinearLayout) findViewById(R.id.adview);
-
 		adView = new AdView(this);
 		adView.setAdSize(AdSize.SMART_BANNER);
 		adView.setAdUnitId(Utils.ADMOB_ID);
@@ -139,9 +149,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 		listview = (ListView) findViewById(R.id.listView1);
 		header = getLayoutInflater().inflate(R.layout.account_layout, null);
 		listview.addHeaderView(header);
+
 		lblUserName = (TextView) header.findViewById(R.id.lblName);
 		lblAccountId = (TextView) header.findViewById(R.id.lblEmail);
 		imgAvata = (ImageView) header.findViewById(R.id.imgAvata);
+		
+
 		leftMenu.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
 
 			@Override
@@ -195,6 +208,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		getSupportActionBar().setDisplayOptions(
 				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_CUSTOM);
 		getSupportActionBar().setCustomView(R.layout.header_task);
+		imgLogo = (ImageView) findViewById(R.id.iconHeader);
+		lblTitle = (TextView) findViewById(R.id.lblHeaderTile);
+		
 		getSupportActionBar().setHomeButtonEnabled(true);
 		Fragment newFragment = FragmentHome.newInstance(1);
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -329,6 +345,23 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
+	public class ResultCallBackCLick implements IClickCate {
+
+		@Override
+		public void onClick(boolean isShowTitle, String title) {
+			if (isShowTitle) {
+				lblTitle.setVisibility(View.VISIBLE);
+				imgLogo.setVisibility(View.GONE);
+				lblTitle.setText(title);
+			} else {
+				lblTitle.setVisibility(View.GONE);
+				imgLogo.setVisibility(View.VISIBLE);
+
+			}
+		}
+
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Used to put dark icons on light action bar
@@ -416,10 +449,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onBackPressed() {
 		Fragment myFragment = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_CATE);
-		if (myFragment!=null&&myFragment.isVisible()) {
+		if (myFragment != null && myFragment.isVisible()) {
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.popBackStack();
+			MainActivity.callBackCLick.onClick(false, "");
+			return;
 		}
+		finish();
+		System.exit(0);
 	}
 
 	@Override

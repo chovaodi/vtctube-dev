@@ -15,8 +15,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.vtc.vtctube.R;
-import com.vtc.vtctube.R.id;
-import com.vtc.vtctube.R.layout;
 import com.vtc.vtctube.utils.Utils;
 
 public final class SlideTopFragment extends Fragment {

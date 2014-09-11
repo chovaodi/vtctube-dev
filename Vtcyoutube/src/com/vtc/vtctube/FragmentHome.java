@@ -278,7 +278,7 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 	}
 
 	public void addFragment(String title, String cate) {
-
+		MainActivity.callBackCLick.onClick(true, title);
 		FragmentManager fragmentManager = getActivity()
 				.getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();

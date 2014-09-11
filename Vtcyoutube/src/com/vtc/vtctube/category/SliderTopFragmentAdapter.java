@@ -6,11 +6,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.viewpagerindicator.IconPagerAdapter;
 import com.vtc.vtctube.R;
-import com.vtc.vtctube.R.drawable;
 
 public class SliderTopFragmentAdapter extends FragmentStatePagerAdapter
 		implements IconPagerAdapter {
-	
+
 	private int mCount = 4;
 
 	public SliderTopFragmentAdapter(FragmentManager fm) {
@@ -19,13 +18,10 @@ public class SliderTopFragmentAdapter extends FragmentStatePagerAdapter
 
 	@Override
 	public Fragment getItem(int position) {
-		try {
-			if (mCount > position)
-				return SlideTopFragment.newInstance("http://newsen.vn/data/cnn360/2014/3/10/tin-doc-quyen-hot-girl-kha-ngan-bo-facebook-500-nghin-fan-chinh-thuc-rut-khoi-showbiz.jpg");
-		} catch (Exception e) {
 
-		}
-		return null;
+		return SlideTopFragment
+				.newInstance("http://newsen.vn/data/cnn360/2014/3/10/tin-doc-quyen-hot-girl-kha-ngan-bo-facebook-500-nghin-fan-chinh-thuc-rut-khoi-showbiz.jpg");
+
 	}
 
 	@Override
