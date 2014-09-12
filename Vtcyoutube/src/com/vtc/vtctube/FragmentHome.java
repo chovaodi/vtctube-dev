@@ -274,6 +274,7 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 		FragmentManager fragmentManager = getActivity()
 				.getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();
+		//ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		Fragment fragment = null;
 		fragment = (Fragment) fragmentManager.findFragmentByTag(Utils.TAG_CATE);
 		if (fragment == null) {
