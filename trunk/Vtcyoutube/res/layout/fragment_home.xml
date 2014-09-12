@@ -1,18 +1,18 @@
-<uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:padding="20dp" >
 
     <GridView
         android:id="@+id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:horizontalSpacing="5dp"
+        android:horizontalSpacing="30dp"
         android:listSelector="@android:color/transparent"
         android:numColumns="2"
         android:scrollbars="none"
-        android:padding="5dp" >
+        android:verticalSpacing="0dp" >
     </GridView>
 
 </uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout>
