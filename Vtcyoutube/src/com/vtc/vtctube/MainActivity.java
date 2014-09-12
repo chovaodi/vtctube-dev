@@ -153,7 +153,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		lblUserName = (TextView) header.findViewById(R.id.lblName);
 		lblAccountId = (TextView) header.findViewById(R.id.lblEmail);
 		imgAvata = (ImageView) header.findViewById(R.id.imgAvata);
-		
 
 		leftMenu.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
 
@@ -210,7 +209,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		getSupportActionBar().setCustomView(R.layout.header_task);
 		imgLogo = (ImageView) findViewById(R.id.iconHeader);
 		lblTitle = (TextView) findViewById(R.id.lblHeaderTile);
-		
+
 		getSupportActionBar().setHomeButtonEnabled(true);
 		Fragment newFragment = FragmentHome.newInstance(1);
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -287,7 +286,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		mSimpleFacebook.onActivityResult(this, requestCode, resultCode, data);
+		if (requestCode != 102)
+			mSimpleFacebook.onActivityResult(this, requestCode, resultCode,
+					data);
 
 	}
 

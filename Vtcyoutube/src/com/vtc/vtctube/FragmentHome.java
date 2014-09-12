@@ -226,14 +226,6 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 					Utils.hideSoftKeyboard(getActivity());
 					addFragment(listData.get(arg2).getTitle(),
 							listData.get(arg2).getIdCategory());
-					// Intent intent = new Intent(getActivity(),
-					// CategoryActivity.class);
-					// intent.putExtra("cate",
-					// listData.get(arg2).getIdCategory());
-					// intent.putExtra("title", listData.get(arg2).getTitle());
-					//
-					// getActivity().startActivity(intent);
-
 				}
 
 			});

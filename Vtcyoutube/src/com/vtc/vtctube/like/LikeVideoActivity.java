@@ -30,7 +30,7 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 	private View header;
 
 	private ViewPager pager;
-	
+
 	public static SmoothProgressBar smooth;
 	private String queryResent;
 	private ResultOnclickTab callBackOnlick;
@@ -52,7 +52,11 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setIcon(
 				getResources().getDrawable(R.drawable.logo));
-		getSupportActionBar().setTitle("Tìm kiếm");
+		if (key == R.id.menu_video_yeuthich) {
+			getSupportActionBar().setTitle("Video yêu thích");
+		} else {
+			getSupportActionBar().setTitle("Video đã xem");
+		}
 		getSupportActionBar().setBackgroundDrawable(
 				getResources().getDrawable(R.drawable.bgr_tasktop));
 
@@ -74,7 +78,7 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 		PageIndicator mIndicator = (PageIndicator) header
 				.findViewById(R.id.indicator);
 		mIndicator.setViewPager(pager);
-		
+
 		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
 		addViewPost();
@@ -100,7 +104,6 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 				}
 				break;
 			case PinnedAdapter.MOINHAT:
-				Log.d("chovaodi", "111111111111");
 				adapter.getItem(position).setLike(isLike);
 				break;
 			}
@@ -139,8 +142,7 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 
 		} else {
 			queryResent = "SELECT * FROM " + DatabaseHelper.TB_RESENT;
-			listData = Utils.getVideoLocal(queryResent,
-					PinnedAdapter.MOINHAT);
+			listData = Utils.getVideoLocal(queryResent, PinnedAdapter.MOINHAT);
 			listData = Utils.checkLikeVideo(listData,
 					Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH));
 		}
