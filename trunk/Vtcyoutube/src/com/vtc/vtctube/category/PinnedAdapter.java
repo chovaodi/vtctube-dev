@@ -188,7 +188,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 			holder.txtTitle.setText(item.getTitle());
 			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
-					Utils.getOptions(context),
+					Utils.getOptions(context, R.drawable.img_erorrs),
 					new SimpleImageLoadingListener() {
 						@Override
 						public void onLoadingStarted(String imageUri, View view) {

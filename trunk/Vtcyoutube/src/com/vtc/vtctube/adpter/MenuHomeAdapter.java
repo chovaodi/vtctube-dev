@@ -74,7 +74,7 @@ public class MenuHomeAdapter extends BaseAdapter {
 		holder.text.setText(arr.get(position).getTitle());
 		imageLoader.displayImage("http://vtctube.vn/category-thumbs/"
 				+ arr.get(position).getSlug() + ".png", holder.icon,
-				Utils.getOptions(mContext), new SimpleImageLoadingListener() {
+				Utils.getOptions(mContext,R.drawable.bgr_icon_category), new SimpleImageLoadingListener() {
 					@Override
 					public void onLoadingStarted(String imageUri, View view) {
 					}

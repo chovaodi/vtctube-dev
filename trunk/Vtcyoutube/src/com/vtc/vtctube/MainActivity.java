@@ -246,7 +246,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		if (c.moveToFirst()) {
 			do {
-				listAccount.add(c.getString(0));
+				listAccount.add(c.getString(0).replace("%20", " "));
 			} while (c.moveToNext());
 		}
 		return listAccount;
@@ -263,7 +263,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (lblUserName.getText().equals("Đăng nhập")) {
 				imageLoader.displayImage(getLinkAvataFace(globalApp
 						.getAccountModel().getUserID()), imgAvata, Utils
-						.getOptions(MainActivity.this));
+						.getOptions(MainActivity.this,R.drawable.img_erorrs));
 			}
 			lblUserName.setText(globalApp.getAccountModel().getUserName());
 
@@ -470,7 +470,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onSuggestionSelect(int position) {
-		Log.d("onSuggestionSelect", "onSuggestionSelect");
 		return false;
 	}
 
@@ -489,7 +488,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			searchTextView.setTypeface(Typeface.DEFAULT);
 			searchTextView.setText(queryCurent);
 		}
-
+		queryCurent = queryCurent.replace(" ", "%20");
 		actionSearch(queryCurent);
 		return false;
 	}
@@ -501,7 +500,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		queryCurent = query;
+		queryCurent = query.replace(" ", "%20");
 		actionSearch(queryCurent);
 		return false;
 	}
