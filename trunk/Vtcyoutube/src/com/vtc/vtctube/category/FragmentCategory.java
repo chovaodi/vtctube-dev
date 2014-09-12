@@ -11,6 +11,7 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +32,6 @@ import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.IResultOnclick;
 import com.vtc.vtctube.utils.Utils;
 
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-
 public class FragmentCategory extends SherlockFragment implements
 		OnRefreshListener, OnScrollListener {
 	String mNum;
@@ -46,15 +45,12 @@ public class FragmentCategory extends SherlockFragment implements
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private ListView listvideo;
 
-	public static SmoothProgressBar smooth;
-
 	private int page = 1;
 	private int pageSize = 5;
 	private int pageCount = 0;
 	private int countDataLocal;
 	private int tabIndex = PinnedAdapter.MOINHAT;
 
-	private String cate;
 	private String queryLoadVideo;
 	private String queryLikeVideo;
 
@@ -88,7 +84,8 @@ public class FragmentCategory extends SherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mNum = (String) (getArguments() != null ? getArguments().getString("num") : 1);
+		mNum = (String) (getArguments() != null ? getArguments().getString(
+				"num") : 1);
 		callBack = new ResultCallBack();
 	}
 
@@ -109,7 +106,6 @@ public class FragmentCategory extends SherlockFragment implements
 				R.layout.fotter_loadmore, null);
 
 		listvideo.addHeaderView(header);
-
 		listvideo.setOnScrollListener(this);
 		pager = (ViewPager) header.findViewById(R.id.pager);
 		SliderTopFragmentAdapter adapterPg = new SliderTopFragmentAdapter(
@@ -124,18 +120,15 @@ public class FragmentCategory extends SherlockFragment implements
 		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
 		callBackOnlick = new ResultOnclikTab();
-
-		adapter = new PinnedAdapter(getActivity(),
-
-		callBackOnlick);
+		adapter = new PinnedAdapter(getActivity(), callBackOnlick);
 
 		mPullToRefreshLayout = new PullToRefreshLayout(getActivity());
-
-		ActionBarPullToRefresh.from(getActivity()).insertLayoutInto(container)
+		ActionBarPullToRefresh.from(getActivity())
+				.insertLayoutInto((ViewGroup) v)
 				.theseChildrenArePullable(R.id.listvideo, android.R.id.empty)
 				.listener(this).setup(mPullToRefreshLayout);
 
-		queryLoadVideo = "SELECT * FROM tblListVideo where cateId='" + cate
+		queryLoadVideo = "SELECT * FROM tblListVideo where cateId='" + mNum
 				+ "'";
 		countDataLocal = MainActivity.myDbHelper.getCountRow(
 				DatabaseHelper.TB_LISTVIDEO, queryLoadVideo);
@@ -150,10 +143,9 @@ public class FragmentCategory extends SherlockFragment implements
 			}
 		} else {
 			isLoadLocal = false;
-			String url = "http://vtctube.vn/api/get_posts?count=5&page=1&cat="
-					+ cate;
-			new AysnRequestHttp(Utils.LOAD_FIRST_DATA, smooth, callBack)
-					.execute(url);
+			String url = Utils.host + "get_posts?count=5&page=1&cat=" + mNum;
+			new AysnRequestHttp(Utils.LOAD_FIRST_DATA, MainActivity.smooth,
+					callBack).execute(url);
 		}
 		return v;
 	}
@@ -262,7 +254,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 		if (isClearCache)
 			MainActivity.myDbHelper.deleteAccount(DatabaseHelper.TB_LISTVIDEO,
-					cate);
+					mNum);
 		ItemPost section = new ItemPost();
 		section.setType(PinnedAdapter.SECTION);
 		section.setOption(currentTab);
@@ -290,6 +282,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 		@Override
 		public void getResult(int type, String result) {
+			MainActivity.smooth.setVisibility(View.GONE);
 			isLoadding = false;
 			if (type == Utils.REFRESH) {
 				for (int i = 0; i < listViewNew.size(); i++) {
@@ -311,7 +304,7 @@ public class FragmentCategory extends SherlockFragment implements
 						ItemPost item = new ItemPost();
 						JSONObject json = (JSONObject) jsonArray.get(i);
 						item.setIdPost(json.getInt("id"));
-						item.setCateId(cate);
+						item.setCateId(mNum);
 						item.setPageCount(pageCount);
 						item.setTitle(json.getString("title"));
 						item.setStatus(json.getString("status"));
@@ -388,11 +381,13 @@ public class FragmentCategory extends SherlockFragment implements
 		/**
 		 * Simulate Refresh with 4 seconds sleep
 		 */
-		if (isLoadLocal) {
-			String url = "http://vtctube.vn/api/get_posts?count=5&page=1&cat="
-					+ cate;
 
-			new AysnRequestHttp(Utils.REFRESH, smooth, callBack).execute(url);
+		Log.d("chovaodi", "111111111111");
+		if (isLoadLocal) {
+			String url = Utils.host + "get_posts?count=5&page=1&cat=" + mNum;
+
+			new AysnRequestHttp(Utils.REFRESH, MainActivity.smooth, callBack)
+					.execute(url);
 
 		} else {
 			mPullToRefreshLayout.setRefreshComplete();
@@ -414,11 +409,12 @@ public class FragmentCategory extends SherlockFragment implements
 				if (listvideo.getFooterViewsCount() == 0)
 					listvideo.addFooterView(fotter);
 
-				String url = "http://vtctube.vn/api/get_posts?count=5&page="
-						+ page + "&cat=" + cate;
+				String url = Utils.host + "get_posts?count=5&page=" + page
+						+ "&cat=" + mNum;
 				int keyOption = Utils.LOAD_MORE;
 
-				new AysnRequestHttp(keyOption, smooth, callBack).execute(url);
+				new AysnRequestHttp(keyOption, MainActivity.smooth, callBack)
+						.execute(url);
 			}
 		}
 	}

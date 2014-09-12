@@ -1,6 +1,5 @@
 package com.vtc.vtctube.like;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +9,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.vtc.vtctube.R;
+import com.vtc.vtctube.SampleList;
+import com.vtc.vtctube.utils.Utils;
 
-public class CommentAcitivity extends Activity {
+public class CommentAcitivity extends SherlockActivity {
 	private WebView webview_fbview;
 	private ProgressBar loaddingcmt;
 
@@ -23,6 +27,14 @@ public class CommentAcitivity extends Activity {
 		overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);
 		setContentView(R.layout.comment);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setIcon(
+				getResources().getDrawable(R.drawable.logo));
+		getSupportActionBar().setTitle("Bình luận");
+		getSupportActionBar().setBackgroundDrawable(
+				getResources().getDrawable(R.drawable.bgr_tasktop));
+
 		loaddingcmt = (ProgressBar) findViewById(R.id.loading);
 		webview_fbview = (WebView) findViewById(R.id.contentView);
 		settingWebView();
@@ -32,6 +44,27 @@ public class CommentAcitivity extends Activity {
 		// "utf-8", null);
 		//
 
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Used to put dark icons on light action bar
+		boolean isLight = SampleList.THEME == R.style.Theme_Sherlock_Light;
+		menu.add(1, Utils.REFRESH, Menu.NONE, "Chia sẽ facebook")
+				.setIcon(
+						isLight ? R.drawable.reload_refresh
+								: R.drawable.reload_refresh)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == Utils.REFRESH) {
+			loadComment("http://www.haivl.com/photo/4528925");
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void settingWebView() {

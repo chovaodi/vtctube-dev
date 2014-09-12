@@ -57,7 +57,7 @@ public class Utils {
 				Utils.DEVELOPER_KEY_YOUTUBE, videoId);
 		if (intent != null) {
 			if (canResolveIntent(intent, activity)) {
-				activity.startActivityForResult(intent, 101);
+				activity.startActivityForResult(intent, 102);
 			} else {
 				YouTubeInitializationResult.SERVICE_MISSING.getErrorDialog(
 						activity, 102).show();
