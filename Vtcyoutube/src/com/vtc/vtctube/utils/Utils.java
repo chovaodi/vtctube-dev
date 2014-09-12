@@ -139,11 +139,11 @@ public class Utils {
 
 	}
 
-	public static DisplayImageOptions getOptions(Context activity) {
+	public static DisplayImageOptions getOptions(Context activity, int draw) {
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.showImageForEmptyUri(R.drawable.img_erorrs)
-				.showImageOnFail(R.drawable.img_erorrs)
-				.showImageOnLoading(R.drawable.img_erorrs)
+				.showImageForEmptyUri(draw)
+				.showImageOnFail(draw)
+				.showImageOnLoading(draw)
 				.resetViewBeforeLoading(true).cacheOnDisc(true)
 				.imageScaleType(ImageScaleType.EXACTLY)
 				.bitmapConfig(Bitmap.Config.RGB_565)

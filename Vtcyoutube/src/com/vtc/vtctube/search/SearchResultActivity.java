@@ -34,7 +34,7 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 	private PinnedAdapter adapter;
 	private ListView listvideo;
 	private View header;
-
+	private View fotter;
 	private ViewPager pager;
 
 	public static SmoothProgressBar smooth;
@@ -42,6 +42,7 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 	private int page = 1;
 	private int pageSize = 5;
 	private int pageCount = 0;
+
 	private String json;
 	private String keyword;
 	private String queryLikeVideo;
@@ -78,6 +79,7 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 		listvideo.setAdapter(null);
 		header = getLayoutInflater().inflate(R.layout.header_cate, null);
 		listvideo.addHeaderView(header);
+		fotter = getLayoutInflater().inflate(R.layout.fotter_loadmore, null);
 
 		pager = (ViewPager) header.findViewById(R.id.pager);
 		SliderTopFragmentAdapter adapterPg = new SliderTopFragmentAdapter(
@@ -160,6 +162,8 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 					if (type == Utils.LOAD_FIRST_DATA) {
 						addViewPost();
 					} else {
+						if (listvideo.getFooterViewsCount() > 0)
+							listvideo.removeFooterView(fotter);
 						listVideoLike = Utils.getVideoLike(queryLikeVideo, 0);
 						listTmp = Utils.checkLikeVideo(listTmp, listVideoLike);
 						for (int i = 0; i < listTmp.size(); i++) {
@@ -215,6 +219,8 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 
 			if (!isLoadding) {
 				isLoadding = true;
+				if (listvideo.getFooterViewsCount() == 0)
+					listvideo.addFooterView(fotter);
 
 				String url = Utils.host + "get_search_results?search="
 						+ keyword + "&count=" + pageSize + "&page=" + page;

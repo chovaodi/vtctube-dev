@@ -65,7 +65,7 @@ public final class SlideTopFragment extends Fragment {
 			}
 		});
 		imageLoader.displayImage(mContent, imageView,
-				Utils.getOptions(getActivity()),
+				Utils.getOptions(getActivity(),R.drawable.img_erorrs),
 				new SimpleImageLoadingListener() {
 					@Override
 					public void onLoadingStarted(String imageUri, View view) {
