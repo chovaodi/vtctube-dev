@@ -21,6 +21,7 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gms.internal.ca;
 import com.viewpagerindicator.PageIndicator;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
@@ -34,7 +35,7 @@ import com.vtc.vtctube.utils.Utils;
 
 public class FragmentCategory extends SherlockFragment implements
 		OnRefreshListener, OnScrollListener {
-	String mNum;
+	public static String mNum;
 	private View v;
 	List<ItemCategory> listData = null;
 	private View header;
@@ -61,13 +62,22 @@ public class FragmentCategory extends SherlockFragment implements
 	private ResultCallBack callBack = new ResultCallBack();
 	private List<ItemPost> listVideoLike = new ArrayList<ItemPost>();
 	private ResultOnclikTab callBackOnlick;
+	private static FragmentCategory f = null;
 
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
 	 * argument.
+	 * 
+	 * @return
 	 */
+	public void setCate(String cate) {
+		FragmentCategory.mNum = cate;
+		onLoadData();
+	}
+
 	public static FragmentCategory newInstance(String num, String title) {
-		FragmentCategory f = new FragmentCategory();
+		if (f == null)
+			f = new FragmentCategory();
 
 		// Supply num input as an argument.
 		Bundle args = new Bundle();
@@ -127,9 +137,15 @@ public class FragmentCategory extends SherlockFragment implements
 				.insertLayoutInto((ViewGroup) v)
 				.theseChildrenArePullable(R.id.listvideo, android.R.id.empty)
 				.listener(this).setup(mPullToRefreshLayout);
+		onLoadData();
 
+		return v;
+	}
+
+	public void onLoadData() {
 		queryLoadVideo = "SELECT * FROM tblListVideo where cateId='" + mNum
 				+ "'";
+		Log.d("queryLoadVideo", queryLoadVideo);
 		countDataLocal = MainActivity.myDbHelper.getCountRow(
 				DatabaseHelper.TB_LISTVIDEO, queryLoadVideo);
 		if (countDataLocal > 0) {
@@ -147,7 +163,6 @@ public class FragmentCategory extends SherlockFragment implements
 			new AysnRequestHttp(Utils.LOAD_FIRST_DATA, MainActivity.smooth,
 					callBack).execute(url);
 		}
-		return v;
 	}
 
 	@Override

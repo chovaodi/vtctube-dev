@@ -58,7 +58,7 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 	private View v;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	ResultCallBack callBack = null;
-	List<ItemCategory> listData = null;
+	public static List<ItemCategory> listData = null;
 
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
@@ -224,8 +224,9 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
 					Utils.hideSoftKeyboard(getActivity());
-					addFragment(listData.get(arg2).getTitle(),
-							listData.get(arg2).getIdCategory());
+					MainActivity.callBackCLickCate.getCate(listData.get(arg2)
+							.getTitle(), listData.get(arg2).getIdCategory());
+
 				}
 
 			});
@@ -267,26 +268,6 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 
 			}
 		}.execute();
-	}
-
-	public void addFragment(String title, String cate) {
-		MainActivity.callBackCLick.onClick(true, title);
-		FragmentManager fragmentManager = getActivity()
-				.getSupportFragmentManager();
-		FragmentTransaction ft = fragmentManager.beginTransaction();
-		//ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-		Fragment fragment = null;
-		fragment = (Fragment) fragmentManager.findFragmentByTag(Utils.TAG_CATE);
-		if (fragment == null) {
-			fragment = FragmentCategory.newInstance(cate, title);
-			ft.addToBackStack(null);
-			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
-		} else {
-			ft.show(fragment);
-		}
-
-		ft.commit();
-
 	}
 
 	public class ResultCallBack implements IResult {
