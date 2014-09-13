@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,6 +51,7 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
+import com.vtc.vtctube.category.FragmentCategory;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.like.LikeVideoActivity;
 import com.vtc.vtctube.menu.MenuDrawer;
@@ -60,6 +62,7 @@ import com.vtc.vtctube.model.ItemMeu;
 import com.vtc.vtctube.search.SearchResultActivity;
 import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IClickCate;
+import com.vtc.vtctube.utils.IRclickTocate;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
@@ -92,6 +95,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private ResultSearchCallBack callBackSearch;
 	public static ResultCallBackCLick callBackCLick;
+	public static ResultCallBackCate callBackCLickCate;
 
 	private List<ItemMeu> listItemMenu;
 	private List<String> listQuerySearch;
@@ -99,11 +103,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private GlobalApplication globalApp;
 
+	private boolean isMenuCate = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		myDbHelper = new DatabaseHelper(MainActivity.this);
 		callBackCLick = new ResultCallBackCLick();
+		callBackCLickCate = new ResultCallBackCate();
 
 		try {
 			myDbHelper.createDataBase();
@@ -199,17 +206,20 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		getSupportActionBar().setIcon(
 				getResources().getDrawable(R.drawable.icon_menuleft));
-		getSupportActionBar().setTitle(" ");
+		getSupportActionBar().setTitle("VTCTUBE");
 		getSupportActionBar().setBackgroundDrawable(
 				getResources().getDrawable(R.drawable.bgr_tasktop));
 
 		getSupportActionBar().setDisplayOptions(
-				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_CUSTOM);
+				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_CUSTOM
+						| ActionBar.DISPLAY_SHOW_TITLE);
 		getSupportActionBar().setCustomView(R.layout.header_task);
 		imgLogo = (ImageView) findViewById(R.id.iconHeader);
 		lblTitle = (TextView) findViewById(R.id.lblHeaderTile);
 
 		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayShowTitleEnabled(true);
+
 		Fragment newFragment = FragmentHome.newInstance(1);
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -262,7 +272,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (lblUserName.getText().equals("Đăng nhập")) {
 				imageLoader.displayImage(getLinkAvataFace(globalApp
 						.getAccountModel().getUserID()), imgAvata, Utils
-						.getOptions(MainActivity.this,R.drawable.img_erorrs));
+						.getOptions(MainActivity.this, R.drawable.img_erorrs));
 			}
 			lblUserName.setText(globalApp.getAccountModel().getUserName());
 
@@ -345,10 +355,43 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
+	public class ResultCallBackCate implements IRclickTocate {
+
+		@Override
+		public void getCate(String title, String cate) {
+			addFragment(title, cate);
+		}
+
+	}
+
+	public void addFragment(String title, String cate) {
+		MainActivity.callBackCLick.onClick(true, title);
+		FragmentManager fragmentManager = MainActivity.this
+				.getSupportFragmentManager();
+		FragmentTransaction ft = fragmentManager.beginTransaction();
+		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+		FragmentCategory fragment = null;
+		fragment = (FragmentCategory) fragmentManager
+				.findFragmentByTag(Utils.TAG_CATE);
+		if (fragment == null) {
+			fragment = FragmentCategory.newInstance(cate, title);
+			ft.addToBackStack(null);
+			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
+		} else {
+			FragmentCategory fragmentTmp = new FragmentCategory();
+			fragmentTmp.setCate(cate);
+			ft.show(fragment);
+		}
+
+		ft.commit();
+
+	}
+
 	public class ResultCallBackCLick implements IClickCate {
 
 		@Override
 		public void onClick(boolean isShowTitle, String title) {
+			isMenuCate = isShowTitle;
 			if (isShowTitle) {
 				lblTitle.setVisibility(View.VISIBLE);
 				imgLogo.setVisibility(View.GONE);
@@ -356,8 +399,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 			} else {
 				lblTitle.setVisibility(View.GONE);
 				imgLogo.setVisibility(View.VISIBLE);
-
 			}
+			invalidateOptionsMenu();
 		}
 
 	}
@@ -393,8 +436,32 @@ public class MainActivity extends SherlockFragmentActivity implements
 				.setShowAsAction(
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+		if (isMenuCate) {
+			// SubMenu subMenu1 = menu.addSubMenu("Danh mục");
+			for (int i = 0; i < FragmentHome.listData.size(); i++) {
+				menu.add(0, Integer.parseInt(FragmentHome.listData.get(i)
+						.getIdCategory()), Menu.NONE, FragmentHome.listData
+						.get(i).getTitle());
+			}
 
+			// MenuItem subMenu1Item = subMenu1.getItem();
+			// subMenu1Item.setIcon(R.drawable.ic_feedmnu_o);
+			// subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
+			// | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		}
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == android.R.id.home) {
+			leftMenu.toggleMenu();
+		} else {
+			lblTitle.setText(item.getTitle());
+			addFragment(item.getTitle().toString(), String.valueOf(id));
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	public class ResultSearchCallBack implements IResult {
@@ -457,14 +524,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 		finish();
 		System.exit(0);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			leftMenu.toggleMenu();
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
