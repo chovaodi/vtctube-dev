@@ -22,7 +22,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,6 +39,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.actionbarsherlock.widget.SearchView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -428,7 +428,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		searchView.setSuggestionsAdapter(mSuggestionsAdapter);
 
-		menu.add("Search")
+		menu.add(1, 100, Menu.NONE, "Search")
 				.setIcon(
 						isLight ? R.drawable.icon_search
 								: R.drawable.icon_search)
@@ -437,17 +437,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		if (isMenuCate) {
-			// SubMenu subMenu1 = menu.addSubMenu("Danh mục");
+			//SubMenu subMenu1 = menu.addSubMenu("Danh mục");
 			for (int i = 0; i < FragmentHome.listData.size(); i++) {
 				menu.add(0, Integer.parseInt(FragmentHome.listData.get(i)
 						.getIdCategory()), Menu.NONE, FragmentHome.listData
 						.get(i).getTitle());
 			}
 
-			// MenuItem subMenu1Item = subMenu1.getItem();
-			// subMenu1Item.setIcon(R.drawable.ic_feedmnu_o);
-			// subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
-			// | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//			MenuItem subMenu1Item = subMenu1.getItem();
+//			subMenu1Item.setIcon(R.drawable.ic_feedmnu_o);
+//			subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
+//					| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		}
 		return true;
 	}
@@ -457,7 +457,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
 			leftMenu.toggleMenu();
-		} else {
+		} else if (id != 100) {
 			lblTitle.setText(item.getTitle());
 			addFragment(item.getTitle().toString(), String.valueOf(id));
 		}
