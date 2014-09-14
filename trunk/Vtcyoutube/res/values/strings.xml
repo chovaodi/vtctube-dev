@@ -13,6 +13,8 @@
     <string name="lblXemnhieu">Xem nhiều</string>
     <string name="lblYeuthich">Yêu thích</string>
     <string name="lblLoangmore">Đang tải...</string>
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+    <string name="playerview_text">This is a YouTubePlayerView!</string>
     <string name="help_lienhe">
 <![CDATA[  
 
