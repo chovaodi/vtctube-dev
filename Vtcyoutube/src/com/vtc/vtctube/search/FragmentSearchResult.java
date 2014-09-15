@@ -6,17 +6,18 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.category.PinnedSectionListView;
@@ -27,9 +28,7 @@ import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-
-public class SearchResultActivity extends SherlockFragmentActivity implements
+public class FragmentSearchResult extends SherlockFragment implements
 		OnScrollListener {
 	private PinnedAdapter adapter;
 	private ListView listvideo;
@@ -37,79 +36,105 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 	private View fotter;
 	private ViewPager pager;
 
-	public static SmoothProgressBar smooth;
-
 	private int page = 1;
 	private int pageSize = 5;
 	private int pageCount = 0;
+	public static String json;
+	private static FragmentSearchResult frament = null;
 
-	private String json;
 	private String keyword;
 	private String queryLikeVideo;
 
 	private boolean isLoadding = false;
 
-	private List<ItemPost> listData = new ArrayList<ItemPost>();;
+	private List<ItemPost> listData =null;
 	private ResultCallBack callBack = new ResultCallBack();
 	private List<ItemPost> listVideoLike = new ArrayList<ItemPost>();
 
+	public void setCate(String json, String keyword) {
+		if (!FragmentSearchResult.json.equals(json)) {
+			Log.d("chovaodi", "11111111111");
+			this.keyword=keyword;
+			pageCount = 0;
+			FragmentSearchResult.json = json;
+			adapter.clear();
+			adapter.notifyDataSetChanged();
+
+		}
+	}
+
+	public static FragmentSearchResult newInstance(String num, String keyword) {
+		if (frament == null)
+			frament = new FragmentSearchResult();
+		
+		// Supply num input as an argument.
+		Bundle args = new Bundle();
+		args.putString("num", num);
+		args.putString("keyword", keyword);
+		frament.setArguments(args);
+
+		return frament;
+	}
+
+	/**
+	 * When creating, retrieve this instance's number from its arguments.
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		json = (String) (getArguments() != null ? getArguments().getString(
+				"num") : 1);
+		keyword = (String) (getArguments() != null ? getArguments().getString(
+				"keyword") : 1);
+		callBack = new ResultCallBack();
+	}
+
+	/**
+	 * The Fragment's UI is just a simple text view showing its instance number.
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater
+				.inflate(R.layout.category_layout, container, false);
+		listData= new ArrayList<ItemPost>();
 		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
-		setContentView(R.layout.category_layout);
-		overridePendingTransition(R.anim.slide_in_bottom,
-				R.anim.slide_out_bottom);
-		Intent intent = getIntent();
-		json = intent.getStringExtra("json");
-		keyword = intent.getStringExtra("keyword");
+		// setContentView(R.layout.category_layout);
+		// overridePendingTransition(R.anim.slide_in_bottom,
+		// R.anim.slide_out_bottom);
+		// Intent intent = getIntent();
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setIcon(
-				getResources().getDrawable(R.drawable.logo));
-		getSupportActionBar().setTitle("Tìm kiếm");
-		getSupportActionBar().setBackgroundDrawable(
-				getResources().getDrawable(R.drawable.bgr_tasktop));
+		// getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		// getSupportActionBar().setHomeButtonEnabled(true);
+		// getSupportActionBar().setIcon(
+		// getResources().getDrawable(R.drawable.logo));
+		// getSupportActionBar().setTitle("Tìm kiếm");
+		// getSupportActionBar().setBackgroundDrawable(
+		// getResources().getDrawable(R.drawable.bgr_tasktop));
+		//
+		// smooth = (SmoothProgressBar) findViewById(R.id.google_now);
+		// smooth.setVisibility(View.GONE);
 
-		smooth = (SmoothProgressBar) findViewById(R.id.google_now);
-		smooth.setVisibility(View.GONE);
-
-		listvideo = (ListView) findViewById(R.id.listvideo);
+		listvideo = (ListView) view.findViewById(R.id.listvideo);
 		listvideo.setAdapter(null);
-		header = getLayoutInflater().inflate(R.layout.header_cate, null);
+		header = getActivity().getLayoutInflater().inflate(
+				R.layout.header_cate, null);
 		listvideo.addHeaderView(header);
-		fotter = getLayoutInflater().inflate(R.layout.fotter_loadmore, null);
+		fotter = getActivity().getLayoutInflater().inflate(
+				R.layout.fotter_loadmore, null);
 
 		pager = (ViewPager) header.findViewById(R.id.pager);
 		SliderTopFragmentAdapter adapterPg = new SliderTopFragmentAdapter(
-				getSupportFragmentManager());
+				getActivity().getSupportFragmentManager());
 
 		pager.setAdapter(adapterPg);
 		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
-		adapter = new PinnedAdapter(SearchResultActivity.this, callBack);
+		adapter = new PinnedAdapter(getActivity(), callBack);
 
 		callBack.getResult(Utils.LOAD_FIRST_DATA, json);
 		listvideo.setOnScrollListener(this);
-
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			finish();
-			overridePendingTransition(R.anim.slide_in_bottom,
-					R.anim.slide_out_bottom);
-		}
-		return false;
-	}
-
-	@Override
-	public void onBackPressed() {
-		finish();
-		overridePendingTransition(R.anim.slide_in_bottom,
-				R.anim.slide_out_bottom);
+		return view;
 	}
 
 	public void addViewPost() {
@@ -136,7 +161,7 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 				String status = jsonObj.getString("status");
 				pageCount = jsonObj.getInt("pages");
 				pageSize = jsonObj.getInt("count");
-				if (status.equals("ok")) {
+				if (status.equals("ok")&&pageSize>0) {
 					List<ItemPost> listTmp = new ArrayList<ItemPost>();
 					JSONArray jsonArray = jsonObj.getJSONArray("posts");
 					for (int i = 0; i < jsonArray.length(); i++) {
@@ -147,13 +172,9 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 						item.setTitle(json.getString("title"));
 						item.setStatus(json.getString("status"));
 						item.setVideoId(getIdVideo(json.getString("content")));
-						JSONArray jsonAttachments = json
-								.getJSONArray("attachments");
-						JSONObject jsonImg1 = (JSONObject) jsonAttachments
-								.get(0);
-						JSONObject jsonImg = jsonImg1.getJSONObject("images");
-						JSONObject jsonImgFull = jsonImg.getJSONObject("full");
-						item.setUrl(jsonImgFull.getString("url"));
+						item.setUrl(json.getString("thumbnail"));
+						
+						
 						listData.add(item);
 						listTmp.add(item);
 
@@ -190,7 +211,7 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onCLickView(int type, String idYoutube) {
-			Utils.getVideoView(idYoutube, SearchResultActivity.this);
+			Utils.getVideoView(idYoutube, getActivity());
 
 		}
 	}
@@ -226,8 +247,8 @@ public class SearchResultActivity extends SherlockFragmentActivity implements
 						+ keyword + "&count=" + pageSize + "&page=" + page;
 				Log.d("urlurl", url);
 
-				new AysnRequestHttp(Utils.LOAD_MORE, smooth, callBack)
-						.execute(url);
+				new AysnRequestHttp(Utils.LOAD_MORE, MainActivity.smooth,
+						callBack).execute(url);
 			}
 		}
 	}

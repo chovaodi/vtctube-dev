@@ -13,10 +13,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
@@ -26,7 +28,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.vtc.vtctube.MainActivity;
-import com.vtc.vtctube.R;
+import com.vtc.vtctube.PlayerViewActivity;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemMeu;
 import com.vtc.vtctube.model.ItemPost;
@@ -41,28 +43,39 @@ public class Utils {
 	public final static int REFRESH = 4;
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyBOIqSHxSY2pRqPdJaCwjDQ9FBzkNQmXhE";
 	public static String ADMOB_ID = "ca-app-pub-2988392623334504/4148633672";
-	
-	public static String TAG_CATE="TAG_CATE";
-	
 
+	public static String TAG_CATE = "TAG_CATE";
+	public static String TAG_SEARCH = "TAG_SEARCH";
 	public static String getUrlHttp(String host, String funtionName) {
 		return host + funtionName;
 
 	}
 
-	public static void getVideoView(String videoId, Activity activity) {
+	public static int convertDpToPixel(int dps, Context context) {
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
 
-		Intent intent = null;
-		intent = YouTubeStandalonePlayer.createVideoIntent(activity,
-				Utils.DEVELOPER_KEY_YOUTUBE, videoId);
-		if (intent != null) {
-			if (canResolveIntent(intent, activity)) {
-				activity.startActivityForResult(intent, 102);
-			} else {
-				YouTubeInitializationResult.SERVICE_MISSING.getErrorDialog(
-						activity, 102).show();
-			}
-		}
+		final float scale = metrics.density;
+		int pixels = (int) (dps * scale + 0.5f);
+		return pixels;
+	}
+
+	public static void getVideoView(String videoId, Activity activity) {
+		Intent intent=new Intent(activity, PlayerViewActivity.class);
+		intent.putExtra("videoId", videoId);
+		activity.startActivity(intent);
+
+//		Intent intent = null;
+//		intent = YouTubeStandalonePlayer.createVideoIntent(activity,
+//				Utils.DEVELOPER_KEY_YOUTUBE, videoId);
+//		if (intent != null) {
+//			if (canResolveIntent(intent, activity)) {
+//				activity.startActivityForResult(intent, 102);
+//			} else {
+//				YouTubeInitializationResult.SERVICE_MISSING.getErrorDialog(
+//						activity, 102).show();
+//			}
+//		}
 
 	}
 
@@ -85,6 +98,8 @@ public class Utils {
 
 	public static List<ItemPost> checkLikeVideo(List<ItemPost> list,
 			List<ItemPost> listVideoLike) {
+		if(listVideoLike==null)
+			return list;
 		List<ItemPost> listTmp = new ArrayList<ItemPost>();
 		listTmp = list;
 		for (int i = 0; i < list.size(); i++) {
@@ -141,36 +156,39 @@ public class Utils {
 
 	public static DisplayImageOptions getOptions(Context activity, int draw) {
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.showImageForEmptyUri(draw)
-				.showImageOnFail(draw)
-				.showImageOnLoading(draw)
-				.resetViewBeforeLoading(true).cacheOnDisc(true)
-				.imageScaleType(ImageScaleType.EXACTLY)
+				.showImageForEmptyUri(draw).showImageOnFail(draw)
+				.showImageOnLoading(draw).resetViewBeforeLoading(true)
+				.cacheOnDisc(true).imageScaleType(ImageScaleType.EXACTLY)
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.displayer(new FadeInBitmapDisplayer(300)).build();
 		return options;
 	}
 
 	public static ArrayList<ItemPost> getVideoLike(String sql, int tabIndex) {
-		Cursor c = MainActivity.myDbHelper.query(DatabaseHelper.TB_LIKE, null,
-				null, null, null, null, null);
-		c = MainActivity.myDbHelper.rawQuery(sql);
-		ArrayList<ItemPost> listAccount = new ArrayList<ItemPost>();
+		ArrayList<ItemPost> listAccount = null;
+		try {
+			Cursor c = MainActivity.myDbHelper.query(DatabaseHelper.TB_LIKE,
+					null, null, null, null, null, null);
+			c = MainActivity.myDbHelper.rawQuery(sql);
+			listAccount = new ArrayList<ItemPost>();
 
-		if (c.moveToFirst()) {
+			if (c.moveToFirst()) {
 
-			do {
-				ItemPost item = new ItemPost();
-				item.setIdPost(c.getInt(0));
-				item.setCateId(c.getInt(1) + "");
-				item.setVideoId(c.getString(2));
-				item.setUrl(c.getString(3));
-				item.setStatus(c.getString(4));
-				item.setTitle(c.getString(5));
-				item.setLike(true);
-				item.setOption(tabIndex);
-				listAccount.add(item);
-			} while (c.moveToNext());
+				do {
+					ItemPost item = new ItemPost();
+					item.setIdPost(c.getInt(0));
+					item.setCateId(c.getInt(1) + "");
+					item.setVideoId(c.getString(2));
+					item.setUrl(c.getString(3));
+					item.setStatus(c.getString(4));
+					item.setTitle(c.getString(5));
+					item.setLike(true);
+					item.setOption(tabIndex);
+					listAccount.add(item);
+				} while (c.moveToNext());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return listAccount;
 	}

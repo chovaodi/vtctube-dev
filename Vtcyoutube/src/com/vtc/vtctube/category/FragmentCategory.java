@@ -21,7 +21,6 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.gms.internal.ca;
 import com.viewpagerindicator.PageIndicator;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
@@ -42,7 +41,7 @@ public class FragmentCategory extends SherlockFragment implements
 	private View fotter;
 
 	private ViewPager pager;
-	private PinnedAdapter adapter;
+	public static PinnedAdapter adapter;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private ListView listvideo;
 
@@ -62,7 +61,7 @@ public class FragmentCategory extends SherlockFragment implements
 	private ResultCallBack callBack = new ResultCallBack();
 	private List<ItemPost> listVideoLike = new ArrayList<ItemPost>();
 	private ResultOnclikTab callBackOnlick;
-	private static FragmentCategory f = null;
+	private static FragmentCategory frament = null;
 
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
@@ -71,21 +70,26 @@ public class FragmentCategory extends SherlockFragment implements
 	 * @return
 	 */
 	public void setCate(String cate) {
-		FragmentCategory.mNum = cate;
-		onLoadData();
+		if (!cate.equals(FragmentCategory.mNum)) {
+			pageCount=0;
+			FragmentCategory.mNum = cate;
+			adapter.clear();
+			adapter.notifyDataSetChanged();
+			onLoadData();
+		}
 	}
 
 	public static FragmentCategory newInstance(String num, String title) {
-		if (f == null)
-			f = new FragmentCategory();
+		if (frament == null)
+			frament = new FragmentCategory();
 
 		// Supply num input as an argument.
 		Bundle args = new Bundle();
 		args.putString("num", num);
 		args.putString("title", title);
-		f.setArguments(args);
+		frament.setArguments(args);
 
-		return f;
+		return frament;
 	}
 
 	/**
@@ -160,6 +164,7 @@ public class FragmentCategory extends SherlockFragment implements
 		} else {
 			isLoadLocal = false;
 			String url = Utils.host + "get_posts?count=5&page=1&cat=" + mNum;
+			Log.d("url",url);
 			new AysnRequestHttp(Utils.LOAD_FIRST_DATA, MainActivity.smooth,
 					callBack).execute(url);
 		}
@@ -289,6 +294,10 @@ public class FragmentCategory extends SherlockFragment implements
 								.getPageCount(), listData.get(i).getIdPost());
 
 		}
+		if (listvideo == null) {
+			return;
+		}
+
 		listvideo.setAdapter(adapter);
 
 	}
@@ -324,13 +333,8 @@ public class FragmentCategory extends SherlockFragment implements
 						item.setTitle(json.getString("title"));
 						item.setStatus(json.getString("status"));
 						item.setVideoId(getIdVideo(json.getString("content")));
-						JSONArray jsonAttachments = json
-								.getJSONArray("attachments");
-						JSONObject jsonImg1 = (JSONObject) jsonAttachments
-								.get(0);
-						JSONObject jsonImg = jsonImg1.getJSONObject("images");
-						JSONObject jsonImgFull = jsonImg.getJSONObject("full");
-						item.setUrl(jsonImgFull.getString("url"));
+						item.setUrl(json.getString("thumbnail"));
+	
 						listViewNew.add(item);
 						listTmp.add(item);
 
@@ -416,6 +420,7 @@ public class FragmentCategory extends SherlockFragment implements
 		int lastInScreen = firstVisibleItem + visibleItemCount;
 		if ((lastInScreen == totalItemCount)) {
 			page = 1 + (listViewNew.size() / pageSize);
+			Log.d("pageCount", pageCount + "");
 			if (page >= pageCount)
 				isLoadding = true;
 
