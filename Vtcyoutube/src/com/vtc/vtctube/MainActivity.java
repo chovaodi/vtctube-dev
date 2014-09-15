@@ -365,6 +365,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void addFragmentSearch(String json) {
+		searchView.onActionViewCollapsed();
+		searchView.setQuery("", false);
+		searchView.clearFocus();
+		Utils.hideSoftKeyboard(MainActivity.this);
+		
 		MainActivity.callBackCLick.onClick(false, "Tìm kiếm");
 		FragmentManager fragmentManager = MainActivity.this
 				.getSupportFragmentManager();
