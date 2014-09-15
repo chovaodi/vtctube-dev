@@ -103,7 +103,7 @@ public class FragmentHome extends SherlockFragment implements
 						callBack).execute(url);
 			}
 		}
-		new AysnRequestHttp(Utils.REFRESH, MainActivity.smooth, callBack)
+		new AysnRequestHttp(Utils.REFRESH, null, callBack)
 				.execute(url);
 		return v;
 	}
