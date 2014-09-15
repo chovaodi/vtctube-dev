@@ -22,41 +22,36 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.HeaderTransformer;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
-import android.accounts.NetworkErrorException;
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayer.Provider;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.vtc.vtctube.adpter.MenuHomeAdapter;
-import com.vtc.vtctube.category.FragmentCategory;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.services.AysnRequestHttp;
-import com.vtc.vtctube.services.JSONParser;
+import com.vtc.vtctube.utils.GridView;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
-public class FragmentHome extends SherlockFragment implements OnRefreshListener {
+public class FragmentHome extends SherlockFragment implements
+		YouTubePlayer.OnInitializedListener {
 	int mNum;
 	private GridView list;
 	private View v;
-	private PullToRefreshLayout mPullToRefreshLayout;
+	private YouTubePlayerView youTubeView;
+
+	// private PullToRefreshLayout mPullToRefreshLayout;
 	ResultCallBack callBack = null;
 	public static List<ItemCategory> listData = null;
 
@@ -94,24 +89,7 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 
 		v = inflater.inflate(R.layout.fragment_home, container, false);
 
-		mPullToRefreshLayout = (PullToRefreshLayout) v
-				.findViewById(R.id.ptr_layout);
-		ActionBarPullToRefresh.from(getActivity()).options(Options.create()
-		// Here we make the refresh scroll distance to 75% of the GridView
-		// height
-				.scrollDistance(.75f)
-				// Here we define a custom header layout which will be inflated
-				// and used
-				.headerLayout(R.layout.customised_header)
-				// Here we define a custom header transformer which will alter
-				// the header
-				// based on the current pull-to-refresh state
-				.headerTransformer(new CustomisedHeaderTransformer()).build())
-				.allChildrenArePullable().listener(this)
-				// Here we'll set a custom ViewDelegate
-				.useViewDelegate(GridView.class, new AbsListViewDelegate())
-				.setup(mPullToRefreshLayout);
-
+		String url = Utils.getUrlHttp(Utils.host, "get_category_index");
 		if (GlobalApplication.dataCate.length() > 0) {
 			showView(GlobalApplication.dataCate);
 		} else {
@@ -120,13 +98,13 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 						.readJsonFile(Utils.GET_CATE_INDEX);
 				showView(GlobalApplication.dataCate);
 			} else {
-				String url = Utils.getUrlHttp(Utils.host, "get_category_index");
-
+				
 				new AysnRequestHttp(Utils.LOAD_FIRST_DATA, MainActivity.smooth,
 						callBack).execute(url);
 			}
 		}
-
+		new AysnRequestHttp(Utils.REFRESH, MainActivity.smooth, callBack)
+				.execute(url);
 		return v;
 	}
 
@@ -215,6 +193,18 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 			}
 
 			list = (GridView) v.findViewById(R.id.list);
+			View header = getActivity().getLayoutInflater().inflate(
+					R.layout.header, null);
+
+			// youTubeView = (YouTubePlayerView) header
+			// .findViewById(R.id.youtube_view);
+			// youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
+
+			list.addHeaderView(header);
+			list.setNumColumns(2);
+			list.setPadding(Utils.convertDpToPixel(20, getActivity()), 0,
+					Utils.convertDpToPixel(20, getActivity()), 0);
+
 			MenuHomeAdapter adapter = new MenuHomeAdapter(getActivity(),
 					listData);
 			list.setAdapter(adapter);
@@ -237,38 +227,38 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 
 	}
 
-	@Override
-	public void onRefreshStarted(View view) {
-		// Hide the list
-
-		/**
-		 * Simulate Refresh with 4 seconds sleep
-		 */
-		new AsyncTask<String, Integer, String>() {
-
-			@Override
-			protected String doInBackground(String... params) {
-				String json = "";
-				JSONParser jsonParser = new JSONParser();
-				try {
-					json = jsonParser.makeHttpRequest(Utils.getUrlHttp(
-							Utils.host, Utils.GET_CATE_INDEX));
-				} catch (NetworkErrorException e) {
-					e.printStackTrace();
-				}
-				return json;
-			}
-
-			@Override
-			protected void onPostExecute(String result) {
-				super.onPostExecute(result);
-
-				// Notify PullToRefreshLayout that the refresh has finished
-				mPullToRefreshLayout.setRefreshComplete();
-
-			}
-		}.execute();
-	}
+	// @Override
+	// public void onRefreshStarted(View view) {
+	// // Hide the list
+	//
+	// /**
+	// * Simulate Refresh with 4 seconds sleep
+	// */
+	// new AsyncTask<String, Integer, String>() {
+	//
+	// @Override
+	// protected String doInBackground(String... params) {
+	// String json = "";
+	// JSONParser jsonParser = new JSONParser();
+	// try {
+	// json = jsonParser.makeHttpRequest(Utils.getUrlHttp(
+	// Utils.host, Utils.GET_CATE_INDEX));
+	// } catch (NetworkErrorException e) {
+	// e.printStackTrace();
+	// }
+	// return json;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(String result) {
+	// super.onPostExecute(result);
+	//
+	// // Notify PullToRefreshLayout that the refresh has finished
+	// mPullToRefreshLayout.setRefreshComplete();
+	//
+	// }
+	// }.execute();
+	// }
 
 	public class ResultCallBack implements IResult {
 
@@ -292,6 +282,21 @@ public class FragmentHome extends SherlockFragment implements OnRefreshListener 
 		public void onCLickView(int type, String idYoutube) {
 			// TODO Auto-generated method stub
 
+		}
+	}
+
+	@Override
+	public void onInitializationFailure(Provider arg0,
+			YouTubeInitializationResult arg1) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onInitializationSuccess(YouTubePlayer.Provider provider,
+			YouTubePlayer player, boolean wasRestored) {
+		if (!wasRestored) {
+			player.cueVideo("wKJ9KzGQq0w");
 		}
 	}
 }

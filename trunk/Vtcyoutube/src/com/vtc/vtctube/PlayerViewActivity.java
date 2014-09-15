@@ -16,8 +16,8 @@
 
 package com.vtc.vtctube;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -33,11 +33,15 @@ import com.vtc.vtctube.utils.Utils;
  * {@link YouTubeBaseActivity}.
  */
 public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
-
+	String videoId="";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		overridePendingTransition(R.anim.slide_in_bottom,
+				R.anim.slide_out_bottom);
 		setContentView(R.layout.playerview_demo);
+		Intent intent = getIntent();
+		videoId=intent.getStringExtra("videoId");
 
 		YouTubePlayerView youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
 		youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
@@ -47,7 +51,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	public void onInitializationSuccess(YouTubePlayer.Provider provider,
 			YouTubePlayer player, boolean wasRestored) {
 		if (!wasRestored) {
-			player.cueVideo("wKJ9KzGQq0w");
+			player.cueVideo(videoId);
 		}
 	}
 
@@ -55,5 +59,13 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	protected YouTubePlayer.Provider getYouTubePlayerProvider() {
 		return (YouTubePlayerView) findViewById(R.id.youtube_view);
 	}
+	@Override
+	public void onBackPressed() {
+		finish();
+		overridePendingTransition(R.anim.slide_in_bottom,
+				R.anim.slide_out_bottom);
+
+	}
+	
 
 }
