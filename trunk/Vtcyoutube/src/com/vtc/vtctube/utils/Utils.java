@@ -22,8 +22,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -100,17 +98,15 @@ public class Utils {
 			List<ItemPost> listVideoLike) {
 		if(listVideoLike==null)
 			return list;
-		List<ItemPost> listTmp = new ArrayList<ItemPost>();
-		listTmp = list;
+		
 		for (int i = 0; i < list.size(); i++) {
-			listTmp.get(i).setLike(false);
 			for (int j = 0; j < listVideoLike.size(); j++) {
 				if (list.get(i).getIdPost() == listVideoLike.get(j).getIdPost()) {
-					listTmp.get(i).setLike(true);
+					list.get(i).setLike(true);
 				}
 			}
 		}
-		return listTmp;
+		return list;
 	}
 
 	public static ArrayList<ItemMeu> getMenu(Activity activity, int menu) {

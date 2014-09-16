@@ -34,7 +34,6 @@ import com.vtc.vtctube.utils.Utils;
 
 public class FragmentCategory extends SherlockFragment implements
 		OnRefreshListener, OnScrollListener {
-	public static String mNum;
 	private View v;
 	List<ItemCategory> listData = null;
 	private View header;
@@ -52,20 +51,27 @@ public class FragmentCategory extends SherlockFragment implements
 	private int tabIndex = PinnedAdapter.MOINHAT;
 
 	private String queryLoadVideo;
-	private String queryLikeVideo;
+	protected String queryLikeVideo;
 
 	private boolean isLoadding = false;
 	private boolean isLoadLocal = true;
 
-	private List<ItemPost> listViewNew = null;
+	private List<ItemPost> listViewNew = new ArrayList<ItemPost>();
 	private ResultCallBack callBack = null;
 	private List<ItemPost> listVideoLike = new ArrayList<ItemPost>();
 	private ResultOnclikTab callBackOnlick = null;
-	private static FragmentCategory frament = null;
+	public static FragmentCategory frament = null;
 
 	public FragmentCategory() {
-		callBack = new ResultCallBack();
-		callBackOnlick = new ResultOnclikTab();
+		if (callBack == null)
+			callBack = new ResultCallBack();
+
+		if (callBackOnlick == null)
+			callBackOnlick = new ResultOnclikTab();
+		listVideoLike = new ArrayList<ItemPost>();
+
+		page = 1;
+		pageCount = 0;
 	}
 
 	/**
@@ -75,18 +81,32 @@ public class FragmentCategory extends SherlockFragment implements
 	 * @return
 	 */
 	public void setCate(String cate) {
-		if (!cate.equals(FragmentCategory.mNum)) {
-			pageCount = 0;
-			listViewNew = new ArrayList<ItemPost>();
-			mNum = cate;
+		if (!cate.equals(MainActivity.currentCate)) {
+			MainActivity.currentCate = cate;
+			
+			
 			adapter.clear();
 			adapter.notifyDataSetChanged();
+			if (listViewNew != null) {
+				listViewNew.removeAll(listViewNew);
+				listViewNew=null;
+				
+				Log.d("MainActivity.currentCate", MainActivity.currentCate);
+			}
+			if (listVideoLike != null) {
+				listVideoLike.removeAll(listVideoLike);
+				listVideoLike=null;
+			}
+
 			onLoadData();
-			Log.d("mNum",mNum);
 		}
 	}
 
 	public static FragmentCategory newInstance(String num, String title) {
+		if (adapter != null) {
+			adapter.clear();
+		}
+		MainActivity.currentCate = num;
 		if (frament == null)
 			frament = new FragmentCategory();
 
@@ -105,8 +125,8 @@ public class FragmentCategory extends SherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mNum = (String) (getArguments() != null ? getArguments().getString(
-				"num") : 1);
+		MainActivity.currentCate = (String) (getArguments() != null ? getArguments()
+				.getString("num") : 1);
 
 	}
 
@@ -117,7 +137,7 @@ public class FragmentCategory extends SherlockFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		v = inflater.inflate(R.layout.category_layout, container, false);
-		
+
 		listvideo = (ListView) v.findViewById(R.id.listvideo);
 		header = getActivity().getLayoutInflater().inflate(
 				R.layout.header_cate, null);
@@ -152,29 +172,33 @@ public class FragmentCategory extends SherlockFragment implements
 
 	public void onLoadData() {
 		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
-				+ " WHERE cateId='" + mNum + "'";
+				+ " WHERE cateId='" + MainActivity.currentCate + "'";
+		Log.d("queryLikeVideo", queryLikeVideo);
+
 		listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
-		
-		queryLoadVideo = "SELECT * FROM tblListVideo where cateId='" + mNum
-				+ "'";
-	
+
+		queryLoadVideo = "SELECT * FROM tblListVideo where cateId='"
+				+ MainActivity.currentCate + "'";
+
 		countDataLocal = MainActivity.myDbHelper.getCountRow(
 				DatabaseHelper.TB_LISTVIDEO, queryLoadVideo);
-		if (countDataLocal > 0) {
-			isLoadLocal = true;
-			listViewNew = Utils.getVideoLocal(queryLoadVideo, tabIndex);
-			if (listViewNew != null && listViewNew.size() > 0) {
-				pageCount = listViewNew.get(0).getPageCount();
-				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
-				addViewPost(false, listViewNew, PinnedAdapter.MOINHAT);
-			}
-		} else {
-			isLoadLocal = false;
-			String url = Utils.host + "get_posts?count=5&page=1&cat=" + mNum;
-			Log.d("url", url);
-			new AysnRequestHttp(Utils.LOAD_FIRST_DATA, MainActivity.smooth,
-					callBack).execute(url);
-		}
+		// if (countDataLocal > 0) {
+		// isLoadLocal = true;
+		// listViewNew = Utils.getVideoLocal(queryLoadVideo, tabIndex);
+		// if (listViewNew != null && listViewNew.size() > 0) {
+		// pageCount = listViewNew.get(0).getPageCount();
+		// listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
+		// addViewPost(false, listViewNew, PinnedAdapter.MOINHAT);
+		// }
+		// } else {
+		isLoadLocal = false;
+		String url = Utils.host + "get_posts?count=5&page=1&cat="
+				+ MainActivity.currentCate;
+		Log.d("url", url);
+
+		new AysnRequestHttp(Utils.LOAD_FIRST_DATA, MainActivity.smooth,
+				callBack).execute(url);
+		// }
 	}
 
 	@Override
@@ -198,23 +222,37 @@ public class FragmentCategory extends SherlockFragment implements
 
 		@Override
 		public void getResult(int type, String result) {
+
 			tabIndex = type;
 
 			switch (type) {
 			case PinnedAdapter.MOINHAT:
-				listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
+//				queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
+//						+ " WHERE cateId='" + MainActivity.currentCate + "'";
+//				Log.d("queryLikeVideo", queryLikeVideo);
+//
+//				listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
+//				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
 				
-				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
+				//listViewNew=new ArrayList<ItemPost>();
+				Log.d("listSize",listViewNew.size()+"");
+				
 				setViewTab(listViewNew);
 				break;
 			case PinnedAdapter.XEMNHIEU:
 
 				break;
 			case PinnedAdapter.YEUTHICH:
+				Log.d("listSize2",listViewNew.get(0).getTitle()+"");
+				queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
+						+ " WHERE cateId='" + MainActivity.currentCate + "'";
+
+				Log.d("queryLikeVideo11", queryLikeVideo);
 				removeFotter();
-				mPullToRefreshLayout.setRefreshComplete();
+				//mPullToRefreshLayout.setRefreshComplete();
 				listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
 				setViewTab(listVideoLike);
+				Log.d("listSize3",listViewNew.get(0).getTitle()+"");
 				break;
 			}
 
@@ -222,11 +260,15 @@ public class FragmentCategory extends SherlockFragment implements
 
 		@Override
 		public void pushResutClickItem(int type, int position, boolean isLike) {
-			Log.d("type", type + "");
 			switch (type) {
 			case PinnedAdapter.MOINHAT:
-				listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
-				setViewTab(Utils.checkLikeVideo(listViewNew, listVideoLike));
+				queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
+						+ " WHERE cateId='" + MainActivity.currentCate + "'";
+				//listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
+				//listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
+				
+			
+				setViewTab(listViewNew);
 
 				break;
 			case PinnedAdapter.XEMNHIEU:
@@ -283,7 +325,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 		if (isClearCache)
 			MainActivity.myDbHelper.deleteAccount(DatabaseHelper.TB_LISTVIDEO,
-					mNum);
+					MainActivity.currentCate);
 		ItemPost section = new ItemPost();
 		section.setType(PinnedAdapter.SECTION);
 		section.setOption(currentTab);
@@ -294,13 +336,13 @@ public class FragmentCategory extends SherlockFragment implements
 				listData.get(i).setType(PinnedAdapter.ITEM);
 				adapter.add(listData.get(i));
 			}
-			if (isClearCache)
-				MainActivity.myDbHelper.insertListVideo(
-						DatabaseHelper.TB_LISTVIDEO, listData.get(i)
-								.getCateId(), listData.get(i).getTitle(),
-						listData.get(i).getVideoId(), listData.get(i).getUrl(),
-						listData.get(i).getStatus(), listData.get(i)
-								.getPageCount(), listData.get(i).getIdPost());
+//			if (isClearCache)
+//				MainActivity.myDbHelper.insertListVideo(
+//						DatabaseHelper.TB_LISTVIDEO, listData.get(i)
+//								.getCateId(), listData.get(i).getTitle(),
+//						listData.get(i).getVideoId(), listData.get(i).getUrl(),
+//						listData.get(i).getStatus(), listData.get(i)
+//								.getPageCount(), listData.get(i).getIdPost());
 
 		}
 		if (listvideo == null) {
@@ -308,6 +350,7 @@ public class FragmentCategory extends SherlockFragment implements
 		}
 
 		listvideo.setAdapter(adapter);
+		Log.d("listSize5",listViewNew.get(0).getTitle()+"");
 
 	}
 
@@ -326,6 +369,8 @@ public class FragmentCategory extends SherlockFragment implements
 				mPullToRefreshLayout.setRefreshComplete();
 			}
 			try {
+				if(listViewNew==null)
+					listViewNew=new ArrayList<ItemPost>(); 
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
 				pageCount = jsonObj.getInt("pages");
@@ -337,7 +382,7 @@ public class FragmentCategory extends SherlockFragment implements
 						ItemPost item = new ItemPost();
 						JSONObject json = (JSONObject) jsonArray.get(i);
 						item.setIdPost(json.getInt("id"));
-						item.setCateId(mNum);
+						item.setCateId(MainActivity.currentCate);
 						item.setPageCount(pageCount);
 						item.setTitle(json.getString("title"));
 						item.setStatus(json.getString("status"));
@@ -350,6 +395,7 @@ public class FragmentCategory extends SherlockFragment implements
 					}
 
 					if (type == Utils.LOAD_FIRST_DATA) {
+						Log.d("LOAD_FIRST_DATA","LOAD_FIRST_DATA");
 						addViewPost(true, listViewNew, PinnedAdapter.MOINHAT);
 					} else if (tabIndex == PinnedAdapter.MOINHAT) {
 						removeFotter();
@@ -412,7 +458,8 @@ public class FragmentCategory extends SherlockFragment implements
 
 		Log.d("chovaodi", "111111111111");
 		if (isLoadLocal) {
-			String url = Utils.host + "get_posts?count=5&page=1&cat=" + mNum;
+			String url = Utils.host + "get_posts?count=5&page=1&cat="
+					+ MainActivity.currentCate;
 
 			new AysnRequestHttp(Utils.REFRESH, MainActivity.smooth, callBack)
 					.execute(url);
@@ -433,18 +480,18 @@ public class FragmentCategory extends SherlockFragment implements
 			if (page >= pageCount)
 				isLoadding = true;
 
-			if (!isLoadding & tabIndex == PinnedAdapter.MOINHAT) {
-				isLoadding = true;
-				if (listvideo.getFooterViewsCount() == 0)
-					listvideo.addFooterView(fotter);
-
-				String url = Utils.host + "get_posts?count=5&page=" + page
-						+ "&cat=" + mNum;
-				int keyOption = Utils.LOAD_MORE;
-
-				new AysnRequestHttp(keyOption, MainActivity.smooth, callBack)
-						.execute(url);
-			}
+//			if (!isLoadding & tabIndex == PinnedAdapter.MOINHAT) {
+//				isLoadding = true;
+//				if (listvideo.getFooterViewsCount() == 0)
+//					listvideo.addFooterView(fotter);
+//
+//				String url = Utils.host + "get_posts?count=5&page=" + page
+//						+ "&cat=" + MainActivity.currentCate;
+//				int keyOption = Utils.LOAD_MORE;
+//
+//				new AysnRequestHttp(keyOption, MainActivity.smooth, callBack)
+//						.execute(url);
+//			}
 		}
 	}
 

@@ -1,11 +1,12 @@
 package com.vtc.vtctube.services;
 
-import com.vtc.vtctube.utils.IResult;
-import com.vtc.vtctube.utils.Utils;
-
 import android.accounts.NetworkErrorException;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
+
+import com.vtc.vtctube.utils.IResult;
+import com.vtc.vtctube.utils.Utils;
 
 public class AysnRequestHttp extends AsyncTask<String, Integer, String> {
 
@@ -43,6 +44,7 @@ public class AysnRequestHttp extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
+		Log.d("result",result);
 		if (process != null)
 			process.setVisibility(View.GONE);
 		this.iResult.getResult(keyOption, result);

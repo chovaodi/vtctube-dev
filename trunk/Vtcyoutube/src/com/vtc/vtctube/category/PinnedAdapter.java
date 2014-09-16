@@ -45,7 +45,6 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 	private Context context;
 
 	public static ImageLoader imageLoader = null;
-	private List<ItemPost> mData = new ArrayList<ItemPost>();
 	private IResult callBack;
 
 	public PinnedAdapter(Context context, IResult callBack) {
@@ -60,11 +59,6 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 					.getApplicationContext()));
 		}
 
-	}
-
-	public void addItem(final ItemPost item) {
-		mData.add(item);
-		notifyDataSetChanged();
 	}
 
 	@Override

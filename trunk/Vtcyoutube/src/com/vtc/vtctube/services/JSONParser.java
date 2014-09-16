@@ -14,6 +14,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.accounts.NetworkErrorException;
 
@@ -66,6 +68,9 @@ public class JSONParser {
 			}
 			is.close();
 			json = sb.toString();
+			new JSONObject(json);
+		} catch (JSONException e1) {
+			return "";
 		} catch (Exception e) {
 			return "";
 		}

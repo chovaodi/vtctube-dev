@@ -70,7 +70,8 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
-
+	public static String currentCate;
+	
 	private MenuDrawer leftMenu;
 	private SuggestionsAdapter mSuggestionsAdapter;
 	private static final String[] COLUMNS = { BaseColumns._ID,
@@ -550,6 +551,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (myFragment != null && myFragment.isVisible()) {
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.popBackStack();
+			FragmentCategory.frament=null;
 			MainActivity.callBackCLick.onClick(false, "");
 			return;
 		}
