@@ -54,6 +54,7 @@ public class FragmentHome extends SherlockFragment implements
 	// private PullToRefreshLayout mPullToRefreshLayout;
 	ResultCallBack callBack = null;
 	public static List<ItemCategory> listData = null;
+	public static String[] cateName;
 
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
@@ -98,13 +99,12 @@ public class FragmentHome extends SherlockFragment implements
 						.readJsonFile(Utils.GET_CATE_INDEX);
 				showView(GlobalApplication.dataCate);
 			} else {
-				
+
 				new AysnRequestHttp(Utils.LOAD_FIRST_DATA, MainActivity.smooth,
 						callBack).execute(url);
 			}
 		}
-		new AysnRequestHttp(Utils.REFRESH, null, callBack)
-				.execute(url);
+		new AysnRequestHttp(Utils.REFRESH, null, callBack).execute(url);
 		return v;
 	}
 
@@ -181,6 +181,7 @@ public class FragmentHome extends SherlockFragment implements
 			if (status.equals("ok")) {
 				JSONArray jsonArray = jsonObj.getJSONArray("categories");
 				listData = new ArrayList<ItemCategory>();
+				cateName = new String[jsonArray.length()];
 				for (int i = 0; i < jsonArray.length(); i++) {
 					ItemCategory item = new ItemCategory();
 					JSONObject json = (JSONObject) jsonArray.get(i);
@@ -188,6 +189,7 @@ public class FragmentHome extends SherlockFragment implements
 					item.setTitle(json.getString("title"));
 					item.setSlug(json.getString("slug"));
 					item.setPostcount(json.getInt("post_count"));
+					cateName[i] = json.getString("title");
 					listData.add(item);
 				}
 			}

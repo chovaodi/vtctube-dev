@@ -40,6 +40,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.actionbarsherlock.widget.SearchView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -71,7 +72,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 public class MainActivity extends SherlockFragmentActivity implements
 		SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	public static String currentCate;
-	
+
 	private MenuDrawer leftMenu;
 	private SuggestionsAdapter mSuggestionsAdapter;
 	private static final String[] COLUMNS = { BaseColumns._ID,
@@ -370,7 +371,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		searchView.setQuery("", false);
 		searchView.clearFocus();
 		Utils.hideSoftKeyboard(MainActivity.this);
-		
+
 		MainActivity.callBackCLick.onClick(false, "Tìm kiếm");
 		FragmentManager fragmentManager = MainActivity.this
 				.getSupportFragmentManager();
@@ -385,7 +386,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.replace(R.id.container, fragment, Utils.TAG_SEARCH);
 		} else {
 			FragmentSearchResult fragmentTmp = new FragmentSearchResult();
-			fragmentTmp.setCate(json,queryCurent);
+			fragmentTmp.setCate(json, queryCurent);
 			ft.show(fragment);
 		}
 
@@ -466,17 +467,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		if (isMenuCate) {
-			// SubMenu subMenu1 = menu.addSubMenu("Danh mục");
+			SubMenu subMenu1 = menu.addSubMenu("Danh mục");
 			for (int i = 0; i < FragmentHome.listData.size(); i++) {
-				menu.add(0, Integer.parseInt(FragmentHome.listData.get(i)
+				subMenu1.add(0, Integer.parseInt(FragmentHome.listData.get(i)
 						.getIdCategory()), Menu.NONE, FragmentHome.listData
 						.get(i).getTitle());
 			}
 
-			// MenuItem subMenu1Item = subMenu1.getItem();
-			// subMenu1Item.setIcon(R.drawable.ic_feedmnu_o);
-			// subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
-			// | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			MenuItem subMenu1Item = subMenu1.getItem();
+			subMenu1Item.setIcon(R.drawable.ic_feedmnu_o);
+			subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
+					| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		}
 		return true;
 	}
@@ -486,7 +487,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
 			leftMenu.toggleMenu();
-		} else if (id != 100) {
+		} else if (id != 1 && id != 0) {
 			lblTitle.setText(item.getTitle());
 			addFragment(item.getTitle().toString(), String.valueOf(id));
 		}
@@ -512,12 +513,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 					}
 					addFragmentSearch(result);
 
-//					Intent intent = new Intent(MainActivity.this,
-//							FragmentSearchResult.class);
-//					intent.putExtra("json", result);
-//					intent.putExtra("keyword", queryCurent);
-//					startActivity(intent);
-//					
 				} else {
 					Toast.makeText(MainActivity.this,
 							"Không tìm thấy nội dụng này", Toast.LENGTH_LONG)
@@ -551,20 +546,20 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (myFragment != null && myFragment.isVisible()) {
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.popBackStack();
-			FragmentCategory.frament=null;
+			FragmentCategory.frament = null;
 			MainActivity.callBackCLick.onClick(false, "");
 			return;
 		}
-		
-		Fragment myFragmentSearch = getSupportFragmentManager().findFragmentByTag(
-				Utils.TAG_SEARCH);
+
+		Fragment myFragmentSearch = getSupportFragmentManager()
+				.findFragmentByTag(Utils.TAG_SEARCH);
 		if (myFragmentSearch != null && myFragmentSearch.isVisible()) {
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.popBackStack();
 			MainActivity.callBackCLick.onClick(false, "");
 			return;
 		}
-		
+
 		finish();
 		System.exit(0);
 	}
@@ -596,7 +591,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public void actionSearch(String query) {
 		String url = Utils.host + "get_search_results?search=" + query;
-		Log.d("searchUrl",url);
+		Log.d("searchUrl", url);
 		new AysnRequestHttp(1, smooth, callBackSearch).execute(url);
 	}
 

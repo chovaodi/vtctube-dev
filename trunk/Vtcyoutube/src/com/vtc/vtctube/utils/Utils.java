@@ -35,7 +35,7 @@ public class Utils {
 	private static String urlFolder = "/VtcTube/";
 	public static String GET_CATE_INDEX = "get_category_index";
 	public static String host = "http://vtctube.vn/api/";
-	public final static int LOAD_FIRST_DATA = 1;
+	public final static int LOAD_FIRST_DATA = 7;
 	public final static int LOAD_MORE = 3;
 	public final static int AYSN_LOAD = 2;
 	public final static int REFRESH = 4;
