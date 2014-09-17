@@ -1,8 +1,5 @@
 package com.vtc.vtctube.category;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
