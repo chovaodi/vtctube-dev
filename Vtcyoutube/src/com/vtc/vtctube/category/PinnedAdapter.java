@@ -3,6 +3,7 @@ package com.vtc.vtctube.category;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -177,7 +178,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 				}
 			});
 
-			holder.txtTitle.setText(item.getTitle());
+			holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
 			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
 					Utils.getOptions(context, R.drawable.img_erorrs),
 					new SimpleImageLoadingListener() {

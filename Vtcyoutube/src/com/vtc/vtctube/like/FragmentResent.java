@@ -3,15 +3,14 @@ package com.vtc.vtctube.like;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.PageIndicator;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.category.PinnedAdapter;
@@ -19,12 +18,13 @@ import com.vtc.vtctube.category.PinnedSectionListView;
 import com.vtc.vtctube.category.SliderTopFragmentAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemPost;
+import com.vtc.vtctube.utils.GridView;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
-public class LikeVideoActivity extends SherlockFragmentActivity {
+public class FragmentResent extends Fragment {
 	private PinnedAdapter adapter;
 	private ListView listvideo;
 	private View header;
@@ -38,40 +38,64 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 	private List<ItemPost> listData = new ArrayList<ItemPost>();
 	private int key;
 
+	int mNum;
+	private GridView list;
+	private View v;
+
+	// private PullToRefreshLayout mPullToRefreshLayout;
+	public static String[] cateName;
+
+	/**
+	 * Create a new instance of CountingFragment, providing "num" as an
+	 * argument.
+	 */
+	public static FragmentResent newInstance(int num) {
+		FragmentResent f = new FragmentResent();
+
+		// Supply num input as an argument.
+		Bundle args = new Bundle();
+		args.putInt("num", num);
+		f.setArguments(args);
+
+		return f;
+	}
+
+	/**
+	 * When creating, retrieve this instance's number from its arguments.
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Intent intent = getIntent();
-		key = intent.getIntExtra("key", 0);
+		key = getArguments() != null ? getArguments().getInt("num") : 1;
+	}
 
-		setContentView(R.layout.category_layout);
-		overridePendingTransition(R.anim.slide_in_bottom,
-				R.anim.slide_out_bottom);
+	/**
+	 * The Fragment's UI is just a simple text view showing its instance number.
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setIcon(
-				getResources().getDrawable(R.drawable.logo));
-		if (key == R.id.menu_video_yeuthich) {
-			getSupportActionBar().setTitle("Video yêu thích");
-		} else {
-			getSupportActionBar().setTitle("Video đã xem");
-		}
-		getSupportActionBar().setBackgroundDrawable(
-				getResources().getDrawable(R.drawable.bgr_tasktop));
+		v = inflater.inflate(R.layout.category_layout, container, false);
 
-		smooth = (SmoothProgressBar) findViewById(R.id.google_now);
+		// if (key == R.id.menu_video_yeuthich) {
+		// getSupportActionBar().setTitle("Video yêu thích");
+		// } else {
+		// getSupportActionBar().setTitle("Video đã xem");
+		// }
+
+		smooth = (SmoothProgressBar)v. findViewById(R.id.google_now);
 		smooth.setVisibility(View.GONE);
 		callBackOnlick = new ResultOnclickTab();
-		adapter = new PinnedAdapter(LikeVideoActivity.this, callBackOnlick);
-		listvideo = (ListView) findViewById(R.id.listvideo);
+		adapter = new PinnedAdapter(getActivity(), callBackOnlick);
+		listvideo = (ListView) v.findViewById(R.id.listvideo);
 		listvideo.setAdapter(null);
-		header = getLayoutInflater().inflate(R.layout.header_cate, null);
+		header = getActivity().getLayoutInflater().inflate(R.layout.header_cate, null);
 		listvideo.addHeaderView(header);
 
 		pager = (ViewPager) header.findViewById(R.id.pager);
 		SliderTopFragmentAdapter adapterPg = new SliderTopFragmentAdapter(
-				getSupportFragmentManager());
+				getActivity().getSupportFragmentManager());
 
 		pager.setAdapter(adapterPg);
 
@@ -82,6 +106,7 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
 		addViewPost();
+		return v;
 
 	}
 
@@ -113,26 +138,9 @@ public class LikeVideoActivity extends SherlockFragmentActivity {
 
 		@Override
 		public void onCLickView(int type, String idYoutube) {
-			Utils.getVideoView(idYoutube, LikeVideoActivity.this);
+			Utils.getVideoView(idYoutube,getActivity());
 
 		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			finish();
-			overridePendingTransition(R.anim.slide_in_bottom,
-					R.anim.slide_out_bottom);
-		}
-		return false;
-	}
-
-	@Override
-	public void onBackPressed() {
-		finish();
-		overridePendingTransition(R.anim.slide_in_bottom,
-				R.anim.slide_out_bottom);
 	}
 
 	public void addViewPost() {
