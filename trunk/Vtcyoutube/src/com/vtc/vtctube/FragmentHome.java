@@ -33,10 +33,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayer.Provider;
-import com.google.android.youtube.player.YouTubePlayerView;
 import com.vtc.vtctube.adpter.MenuHomeAdapter;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.services.AysnRequestHttp;
@@ -44,12 +40,10 @@ import com.vtc.vtctube.utils.GridView;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
-public class FragmentHome extends SherlockFragment implements
-		YouTubePlayer.OnInitializedListener {
+public class FragmentHome extends SherlockFragment {
 	int mNum;
 	private GridView list;
 	private View v;
-	private YouTubePlayerView youTubeView;
 
 	// private PullToRefreshLayout mPullToRefreshLayout;
 	ResultCallBack callBack = null;
@@ -99,7 +93,6 @@ public class FragmentHome extends SherlockFragment implements
 						.readJsonFile(Utils.GET_CATE_INDEX);
 				showView(GlobalApplication.dataCate);
 			} else {
-
 				new AysnRequestHttp(Utils.LOAD_FIRST_DATA, MainActivity.smooth,
 						callBack).execute(url);
 			}
@@ -198,10 +191,6 @@ public class FragmentHome extends SherlockFragment implements
 			View header = getActivity().getLayoutInflater().inflate(
 					R.layout.header, null);
 
-			// youTubeView = (YouTubePlayerView) header
-			// .findViewById(R.id.youtube_view);
-			// youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
-
 			list.addHeaderView(header);
 			list.setNumColumns(2);
 			list.setPadding(Utils.convertDpToPixel(20, getActivity()), 0,
@@ -229,38 +218,7 @@ public class FragmentHome extends SherlockFragment implements
 
 	}
 
-	// @Override
-	// public void onRefreshStarted(View view) {
-	// // Hide the list
-	//
-	// /**
-	// * Simulate Refresh with 4 seconds sleep
-	// */
-	// new AsyncTask<String, Integer, String>() {
-	//
-	// @Override
-	// protected String doInBackground(String... params) {
-	// String json = "";
-	// JSONParser jsonParser = new JSONParser();
-	// try {
-	// json = jsonParser.makeHttpRequest(Utils.getUrlHttp(
-	// Utils.host, Utils.GET_CATE_INDEX));
-	// } catch (NetworkErrorException e) {
-	// e.printStackTrace();
-	// }
-	// return json;
-	// }
-	//
-	// @Override
-	// protected void onPostExecute(String result) {
-	// super.onPostExecute(result);
-	//
-	// // Notify PullToRefreshLayout that the refresh has finished
-	// mPullToRefreshLayout.setRefreshComplete();
-	//
-	// }
-	// }.execute();
-	// }
+
 
 	public class ResultCallBack implements IResult {
 
@@ -287,18 +245,4 @@ public class FragmentHome extends SherlockFragment implements
 		}
 	}
 
-	@Override
-	public void onInitializationFailure(Provider arg0,
-			YouTubeInitializationResult arg1) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onInitializationSuccess(YouTubePlayer.Provider provider,
-			YouTubePlayer player, boolean wasRestored) {
-		if (!wasRestored) {
-			player.cueVideo("wKJ9KzGQq0w");
-		}
-	}
 }

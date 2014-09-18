@@ -54,7 +54,7 @@ import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
 import com.vtc.vtctube.category.FragmentCategory;
 import com.vtc.vtctube.database.DatabaseHelper;
-import com.vtc.vtctube.like.LikeVideoActivity;
+import com.vtc.vtctube.like.FragmentResent;
 import com.vtc.vtctube.menu.MenuDrawer;
 import com.vtc.vtctube.menu.MenuDrawer.OnDrawerStateChangeListener;
 import com.vtc.vtctube.menu.Position;
@@ -84,6 +84,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private TextView lblUserName;
 	private TextView lblAccountId;
 	private TextView lblTitle;
+	public static TextView lblError;
 	private ImageView imgLogo;
 
 	private ImageView imgAvata;
@@ -106,6 +107,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private GlobalApplication globalApp;
 
 	private boolean isMenuCate = false;
+	private FragmentManager fragmentManager;
+	private FragmentTransaction ft;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +116,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		myDbHelper = new DatabaseHelper(MainActivity.this);
 		callBackCLick = new ResultCallBackCLick();
 		callBackCLickCate = new ResultCallBackCate();
-
+		fragmentManager = getSupportFragmentManager();
+		ft = fragmentManager.beginTransaction();
 		try {
 			myDbHelper.createDataBase();
 			myDbHelper.openDataBase();
@@ -160,6 +164,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		lblUserName = (TextView) header.findViewById(R.id.lblName);
 		lblAccountId = (TextView) header.findViewById(R.id.lblEmail);
+		lblError = (TextView) findViewById(R.id.lblError);
 		imgAvata = (ImageView) header.findViewById(R.id.imgAvata);
 
 		leftMenu.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
@@ -223,30 +228,39 @@ public class MainActivity extends SherlockFragmentActivity implements
 		getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 		Fragment newFragment = FragmentHome.newInstance(1);
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		FragmentTransaction ft = fragmentManager.beginTransaction();
 		ft.add(R.id.container, newFragment).commit();
 	}
 
 	public void clickMenu(int position) {
 		int id = listItemMenu.get(position - 1).getRegId();
 		switch (id) {
+		case R.id.menu_trangchu:
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			fragmentManager.popBackStack();
+			FragmentCategory.frament = null;
+			MainActivity.callBackCLick.onClick(false, "");
+			break;
+
 		case R.id.menu_video_yeuthich:
-			Intent intent = new Intent(MainActivity.this,
-					LikeVideoActivity.class);
-			intent.putExtra("key", R.id.menu_video_yeuthich);
-			startActivity(intent);
+
+			addFragmentResent(R.id.menu_video_yeuthich, "Video yêu thích");
+			// Intent intent = new Intent(MainActivity.this,
+			// FragmentResent.class);
+			// intent.putExtra("key", R.id.menu_video_yeuthich);
+			// startActivity(intent);
 
 			break;
 		case R.id.menu_video_daxem:
-			Intent intent1 = new Intent(MainActivity.this,
-					LikeVideoActivity.class);
-			intent1.putExtra("key", R.id.menu_video_daxem);
-			startActivity(intent1);
+			addFragmentResent(R.id.menu_video_daxem, "Video đã xem");
+//			
+//			Intent intent1 = new Intent(MainActivity.this, FragmentResent.class);
+//			intent1.putExtra("key", R.id.menu_video_daxem);
+//			startActivity(intent1);
 
 			break;
-
+		
 		}
+		leftMenu.toggleMenu();
 	}
 
 	public ArrayList<String> getQuerySearch(String sql) {
@@ -394,10 +408,28 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
+	public void addFragmentResent(int id, String title) {
+		MainActivity.callBackCLick.onClick(true, title);
+		FragmentTransaction ft = fragmentManager.beginTransaction();
+		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+		FragmentResent fragment = null;
+		fragment = (FragmentResent) fragmentManager
+				.findFragmentByTag(Utils.TAG_CATE);
+		if (fragment == null) {
+			fragment = FragmentResent.newInstance(id);
+			ft.addToBackStack(null);
+			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
+		} else {
+			ft.show(fragment);
+		}
+
+		ft.commit();
+
+	}
+
 	public void addFragment(String title, String cate) {
 		MainActivity.callBackCLick.onClick(true, title);
-		FragmentManager fragmentManager = MainActivity.this
-				.getSupportFragmentManager();
+
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		FragmentCategory fragment = null;
@@ -458,7 +490,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		searchView.setSuggestionsAdapter(mSuggestionsAdapter);
 
-		menu.add(1, 100, Menu.NONE, "Search")
+		menu.add(1, 10000, Menu.NONE, "Search")
 				.setIcon(
 						isLight ? R.drawable.icon_search
 								: R.drawable.icon_search)
@@ -487,7 +519,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
 			leftMenu.toggleMenu();
-		} else if (id != 1 && id != 0) {
+		} else if (id != 0 && id != 10000) {
 			lblTitle.setText(item.getTitle());
 			addFragment(item.getTitle().toString(), String.valueOf(id));
 		}

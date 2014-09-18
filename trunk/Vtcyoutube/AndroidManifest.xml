@@ -39,7 +39,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.vtc.vtctube.like.LikeVideoActivity"
+            android:name="com.vtc.vtctube.like.FragmentResent"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity

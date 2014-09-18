@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     android:background="@android:color/white" >
 
+    <com.vtc.vtctube.font.RobotoLightTextView
+        android:id="@+id/lblError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="15dp"
+        android:visibility="gone"
+        android:text="@string/lblErorrs" />
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
