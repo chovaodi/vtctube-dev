@@ -409,7 +409,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void addFragmentResent(int id, String title) {
-		MainActivity.callBackCLick.onClick(true, title);
+		MainActivity.callBackCLick.onClick(false, title);
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		FragmentResent fragment = null;
@@ -420,6 +420,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
 		} else {
+			FragmentResent fResent=new FragmentResent();
+			fResent.onResumeData(id);
 			ft.show(fragment);
 		}
 

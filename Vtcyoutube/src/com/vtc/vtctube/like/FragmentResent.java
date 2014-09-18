@@ -6,6 +6,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import com.vtc.vtctube.category.PinnedSectionListView;
 import com.vtc.vtctube.category.SliderTopFragmentAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemPost;
-import com.vtc.vtctube.utils.GridView;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
@@ -26,7 +26,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class FragmentResent extends Fragment {
 	private PinnedAdapter adapter;
-	private ListView listvideo;
+	private static  ListView listvideo;
 	private View header;
 
 	private ViewPager pager;
@@ -39,18 +39,20 @@ public class FragmentResent extends Fragment {
 	private int key;
 
 	int mNum;
-	private GridView list;
 	private View v;
+	private static FragmentResent f = null;
 
 	// private PullToRefreshLayout mPullToRefreshLayout;
 	public static String[] cateName;
 
-	/**
-	 * Create a new instance of CountingFragment, providing "num" as an
-	 * argument.
-	 */
+	public void onResumeData(int key) {
+		this.key = key;
+		addViewPost();
+	}
+
 	public static FragmentResent newInstance(int num) {
-		FragmentResent f = new FragmentResent();
+		if (f == null)
+			f = new FragmentResent();
 
 		// Supply num input as an argument.
 		Bundle args = new Bundle();
@@ -84,13 +86,13 @@ public class FragmentResent extends Fragment {
 		// getSupportActionBar().setTitle("Video đã xem");
 		// }
 
-		smooth = (SmoothProgressBar)v. findViewById(R.id.google_now);
+		smooth = (SmoothProgressBar) v.findViewById(R.id.google_now);
 		smooth.setVisibility(View.GONE);
 		callBackOnlick = new ResultOnclickTab();
 		adapter = new PinnedAdapter(getActivity(), callBackOnlick);
 		listvideo = (ListView) v.findViewById(R.id.listvideo);
-		listvideo.setAdapter(null);
-		header = getActivity().getLayoutInflater().inflate(R.layout.header_cate, null);
+		header = getActivity().getLayoutInflater().inflate(
+				R.layout.header_cate, null);
 		listvideo.addHeaderView(header);
 
 		pager = (ViewPager) header.findViewById(R.id.pager);
@@ -138,7 +140,7 @@ public class FragmentResent extends Fragment {
 
 		@Override
 		public void onCLickView(int type, String idYoutube) {
-			Utils.getVideoView(idYoutube,getActivity());
+			Utils.getVideoView(idYoutube, getActivity());
 
 		}
 	}
@@ -149,6 +151,7 @@ public class FragmentResent extends Fragment {
 			listData = Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH);
 
 		} else {
+			Log.d("1111111111","222222222222222");
 			queryResent = "SELECT * FROM " + DatabaseHelper.TB_RESENT;
 			listData = Utils.getVideoLocal(queryResent, PinnedAdapter.MOINHAT);
 			listData = Utils.checkLikeVideo(listData,
@@ -161,7 +164,7 @@ public class FragmentResent extends Fragment {
 				adapter.add(listData.get(i));
 			}
 		}
-
+		
 		listvideo.setAdapter(adapter);
 	}
 
