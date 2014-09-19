@@ -61,7 +61,6 @@ public class FragmentCategory extends SherlockFragment implements
 	private List<ItemPost> listVideoLike = new ArrayList<ItemPost>();
 	private ResultOnclikTab callBackOnlick = null;
 	public static FragmentCategory frament = null;
-	private boolean isLoad = true;
 
 	public FragmentCategory() {
 		if (callBack == null)
@@ -169,7 +168,6 @@ public class FragmentCategory extends SherlockFragment implements
 	}
 
 	public void onLoadData(boolean isLoad) {
-		this.isLoad = isLoad;
 		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 				+ " WHERE cateId='" + MainActivity.currentCate + "'";
 		Log.d("queryLikeVideo", queryLikeVideo);
@@ -373,6 +371,7 @@ public class FragmentCategory extends SherlockFragment implements
 						ItemPost item = new ItemPost();
 						JSONObject json = (JSONObject) jsonArray.get(i);
 						item.setIdPost(json.getInt("id"));
+						item.setStatus(json.getString("slug"));
 						item.setCateId(MainActivity.currentCate);
 						item.setPageCount(pageCount);
 						item.setTitle(json.getString("title"));
@@ -387,7 +386,7 @@ public class FragmentCategory extends SherlockFragment implements
 								DatabaseHelper.TB_LISTVIDEO, item.getCateId(),
 								item.getTitle(), item.getVideoId(),
 								item.getUrl(), item.getStatus(),
-								item.getPageCount(), item.getIdPost());
+								item.getPageCount(), item.getIdPost(), item.getSlug());
 
 					}
 

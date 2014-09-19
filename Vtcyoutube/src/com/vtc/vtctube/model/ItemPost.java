@@ -12,7 +12,16 @@ public class ItemPost {
 	private String status;
 	private int pageCount;
 	private int option = PinnedAdapter.MOINHAT;
+	private String slug;
 	private boolean isLike = false;
+
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
+	public String getSlug() {
+		return slug;
+	}
 
 	public boolean isLike() {
 		return isLike;
