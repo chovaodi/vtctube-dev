@@ -316,7 +316,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 	public void addViewPost(boolean isClearCache, List<ItemPost> listData,
 			int currentTab) {
-
+		adapter.clear();
 		ItemPost section = new ItemPost();
 		section.setType(PinnedAdapter.SECTION);
 		section.setOption(currentTab);
@@ -339,17 +339,21 @@ public class FragmentCategory extends SherlockFragment implements
 			MainActivity.smooth.setVisibility(View.GONE);
 			isLoadding = false;
 			if (type == Utils.REFRESH) {
-				for (int i = 0; i < listViewNew.size(); i++) {
-					adapter.remove(listViewNew.get(i));
-				}
-				MainActivity.myDbHelper.deleteAccount(
-						DatabaseHelper.TB_LISTVIDEO, MainActivity.currentCate);
+				if (result.length() > 0) {
+					for (int i = 0; i < listViewNew.size(); i++) {
+						adapter.remove(listViewNew.get(i));
+					}
+					MainActivity.myDbHelper.deleteAccount(
+							DatabaseHelper.TB_LISTVIDEO,
+							MainActivity.currentCate);
 
-				adapter.notifyDataSetChanged();
-				listViewNew = new ArrayList<ItemPost>();
+					adapter.notifyDataSetChanged();
+					listViewNew = new ArrayList<ItemPost>();
+				}
+
 				mPullToRefreshLayout.setRefreshComplete();
 			}
-			
+
 			try {
 				if (listViewNew == null)
 					listViewNew = new ArrayList<ItemPost>();
@@ -388,9 +392,6 @@ public class FragmentCategory extends SherlockFragment implements
 					}
 
 					if (type == Utils.LOAD_FIRST_DATA) {
-						if (!isLoad) {
-							adapter.clear();
-						}
 						addViewPost(true, listViewNew, PinnedAdapter.MOINHAT);
 					} else if (tabIndex == PinnedAdapter.MOINHAT) {
 						removeFotter();
@@ -406,7 +407,7 @@ public class FragmentCategory extends SherlockFragment implements
 						}
 						adapter.notifyDataSetChanged();
 					}
-					
+
 				}
 
 			} catch (Exception e) {
@@ -426,16 +427,23 @@ public class FragmentCategory extends SherlockFragment implements
 
 		}
 	}
-	public void showMessage(){
-		if (adapter==null||adapter.getCount()==0) {
+
+	public void showMessage() {
+		if (adapter == null || adapter.getCount() == 0) {
 			MainActivity.lblError.setVisibility(View.VISIBLE);
 		} else {
 			MainActivity.lblError.setVisibility(View.GONE);
 		}
 	}
+
 	public void removeFotter() {
 		if (listvideo.getFooterViewsCount() > 0)
 			listvideo.removeFooterView(fotter);
+	}
+
+	public void removeHeader() {
+		if (listvideo.getHeaderViewsCount() > 0)
+			listvideo.removeHeaderView(fotter);
 	}
 
 	public String getIdVideo(String content) {
@@ -479,7 +487,8 @@ public class FragmentCategory extends SherlockFragment implements
 			if (page >= pageCount)
 				isLoadding = true;
 
-			if (!isLoadding & tabIndex == PinnedAdapter.MOINHAT) {
+			if (!isLoadding & tabIndex == PinnedAdapter.MOINHAT
+					& Utils.isOnline(getActivity())) {
 				isLoadding = true;
 				if (listvideo.getFooterViewsCount() == 0)
 					listvideo.addFooterView(fotter);

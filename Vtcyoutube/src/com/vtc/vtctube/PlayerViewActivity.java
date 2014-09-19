@@ -39,7 +39,10 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		super.onCreate(savedInstanceState);
 		overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);
+		getActionBar().setTitle("Xem video");
+		
 		setContentView(R.layout.playerview_demo);
+		
 		Intent intent = getIntent();
 		videoId=intent.getStringExtra("videoId");
 

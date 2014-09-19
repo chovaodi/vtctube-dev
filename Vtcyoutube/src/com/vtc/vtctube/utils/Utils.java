@@ -17,6 +17,8 @@ import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -43,7 +45,9 @@ public class Utils {
 	public static String ADMOB_ID = "ca-app-pub-2988392623334504/4148633672";
 
 	public static String TAG_CATE = "TAG_CATE";
+	public static String TAG_RESENT = "TAG_RESENT";
 	public static String TAG_SEARCH = "TAG_SEARCH";
+
 	public static String getUrlHttp(String host, String funtionName) {
 		return host + funtionName;
 
@@ -58,22 +62,39 @@ public class Utils {
 		return pixels;
 	}
 
+	public static boolean isOnline(Activity activity) {
+		if (activity != null) {
+			ConnectivityManager connectivity = (ConnectivityManager) activity
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
+			if (connectivity != null) {
+				NetworkInfo[] info = connectivity.getAllNetworkInfo();
+				if (info != null)
+					for (int i = 0; i < info.length; i++)
+						if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+							return true;
+						}
+			}
+		}
+		return false;
+
+	}
+
 	public static void getVideoView(String videoId, Activity activity) {
-		Intent intent=new Intent(activity, PlayerViewActivity.class);
+		Intent intent = new Intent(activity, PlayerViewActivity.class);
 		intent.putExtra("videoId", videoId);
 		activity.startActivity(intent);
 
-//		Intent intent = null;
-//		intent = YouTubeStandalonePlayer.createVideoIntent(activity,
-//				Utils.DEVELOPER_KEY_YOUTUBE, videoId);
-//		if (intent != null) {
-//			if (canResolveIntent(intent, activity)) {
-//				activity.startActivityForResult(intent, 102);
-//			} else {
-//				YouTubeInitializationResult.SERVICE_MISSING.getErrorDialog(
-//						activity, 102).show();
-//			}
-//		}
+		// Intent intent = null;
+		// intent = YouTubeStandalonePlayer.createVideoIntent(activity,
+		// Utils.DEVELOPER_KEY_YOUTUBE, videoId);
+		// if (intent != null) {
+		// if (canResolveIntent(intent, activity)) {
+		// activity.startActivityForResult(intent, 102);
+		// } else {
+		// YouTubeInitializationResult.SERVICE_MISSING.getErrorDialog(
+		// activity, 102).show();
+		// }
+		// }
 
 	}
 
@@ -96,9 +117,9 @@ public class Utils {
 
 	public static List<ItemPost> checkLikeVideo(List<ItemPost> list,
 			List<ItemPost> listVideoLike) {
-		if(listVideoLike==null)
+		if (listVideoLike == null)
 			return list;
-		
+
 		for (int i = 0; i < list.size(); i++) {
 			for (int j = 0; j < listVideoLike.size(); j++) {
 				if (list.get(i).getIdPost() == listVideoLike.get(j).getIdPost()) {
@@ -156,6 +177,7 @@ public class Utils {
 				.showImageOnLoading(draw).resetViewBeforeLoading(true)
 				.cacheOnDisc(true).imageScaleType(ImageScaleType.EXACTLY)
 				.bitmapConfig(Bitmap.Config.RGB_565)
+				.resetViewBeforeLoading(false)
 				.displayer(new FadeInBitmapDisplayer(300)).build();
 		return options;
 	}

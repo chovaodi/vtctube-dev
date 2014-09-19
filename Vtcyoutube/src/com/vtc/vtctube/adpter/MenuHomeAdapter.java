@@ -72,24 +72,32 @@ public class MenuHomeAdapter extends BaseAdapter {
 		}
 
 		holder.text.setText(arr.get(position).getTitle());
-		imageLoader.displayImage("http://vtctube.vn/category-thumbs/"
-				+ arr.get(position).getSlug() + ".png", holder.icon,
-				Utils.getOptions(mContext,R.drawable.bgr_icon_category), new SimpleImageLoadingListener() {
-					@Override
-					public void onLoadingStarted(String imageUri, View view) {
-					}
+		Bitmap bmp = imageLoader
+				.loadImageSync("http://vtctube.vn/category-thumbs/"
+						+ arr.get(position).getSlug());
+		if (bmp != null) {
+			holder.icon.setImageBitmap(bmp);
+		} else {
+			imageLoader.displayImage("http://vtctube.vn/category-thumbs/"
+					+ arr.get(position).getSlug() + ".png", holder.icon,
+					Utils.getOptions(mContext, R.drawable.bgr_icon_category),
+					new SimpleImageLoadingListener() {
+						@Override
+						public void onLoadingStarted(String imageUri, View view) {
+						}
 
-					@Override
-					public void onLoadingFailed(String imageUri, View view,
-							FailReason failReason) {
-					
-					}
+						@Override
+						public void onLoadingFailed(String imageUri, View view,
+								FailReason failReason) {
 
-					@Override
-					public void onLoadingComplete(String imageUri, View view,
-							Bitmap loadedImage) {
-					}
-				});
+						}
+
+						@Override
+						public void onLoadingComplete(String imageUri,
+								View view, Bitmap loadedImage) {
+						}
+					});
+		}
 		return convertView;
 	}
 

@@ -252,13 +252,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 		case R.id.menu_video_daxem:
 			addFragmentResent(R.id.menu_video_daxem, "Video đã xem");
-//			
-//			Intent intent1 = new Intent(MainActivity.this, FragmentResent.class);
-//			intent1.putExtra("key", R.id.menu_video_daxem);
-//			startActivity(intent1);
+			//
+			// Intent intent1 = new Intent(MainActivity.this,
+			// FragmentResent.class);
+			// intent1.putExtra("key", R.id.menu_video_daxem);
+			// startActivity(intent1);
 
 			break;
-		
+
 		}
 		leftMenu.toggleMenu();
 	}
@@ -412,15 +413,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 		MainActivity.callBackCLick.onClick(false, title);
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-		FragmentResent fragment = null;
-		fragment = (FragmentResent) fragmentManager
-				.findFragmentByTag(Utils.TAG_CATE);
+		fragmentManager = getSupportFragmentManager();
+
+		FragmentResent fragment = (FragmentResent) fragmentManager
+				.findFragmentByTag(Utils.TAG_RESENT);
 		if (fragment == null) {
 			fragment = FragmentResent.newInstance(id);
 			ft.addToBackStack(null);
-			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
+			ft.replace(R.id.container, fragment, Utils.TAG_RESENT);
 		} else {
-			FragmentResent fResent=new FragmentResent();
+			FragmentResent fResent = new FragmentResent();
 			fResent.onResumeData(id);
 			ft.show(fragment);
 		}
@@ -578,24 +580,33 @@ public class MainActivity extends SherlockFragmentActivity implements
 		Fragment myFragment = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_CATE);
 		if (myFragment != null && myFragment.isVisible()) {
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.popBackStack();
-			FragmentCategory.frament = null;
-			MainActivity.callBackCLick.onClick(false, "");
+			onBackView();
 			return;
 		}
 
 		Fragment myFragmentSearch = getSupportFragmentManager()
 				.findFragmentByTag(Utils.TAG_SEARCH);
 		if (myFragmentSearch != null && myFragmentSearch.isVisible()) {
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.popBackStack();
-			MainActivity.callBackCLick.onClick(false, "");
+			onBackView();
+			return;
+		}
+		Fragment myFragmentResent = getSupportFragmentManager().findFragmentByTag(
+				Utils.TAG_RESENT);
+		if (myFragmentResent != null && myFragmentResent.isVisible()) {
+			onBackView();
 			return;
 		}
 
+		
 		finish();
 		System.exit(0);
+	}
+
+	public void onBackView() {
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.popBackStack();
+		MainActivity.callBackCLick.onClick(false, "");
+
 	}
 
 	@Override

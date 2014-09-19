@@ -64,6 +64,12 @@ public final class SlideTopFragment extends Fragment {
 
 			}
 		});
+		
+		Bitmap bmp = imageLoader
+				.loadImageSync(mContent);
+		if (bmp != null) {
+			imageView.setImageBitmap(bmp);
+		} else {
 		imageLoader.displayImage(mContent, imageView,
 				Utils.getOptions(getActivity(),R.drawable.img_erorrs),
 				new SimpleImageLoadingListener() {
@@ -90,6 +96,7 @@ public final class SlideTopFragment extends Fragment {
 						// holder.spinner.setVisibility(View.GONE);
 					}
 				});
+		}
 		return view;
 
 	}
