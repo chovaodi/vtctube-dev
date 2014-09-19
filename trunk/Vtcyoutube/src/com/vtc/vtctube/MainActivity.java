@@ -49,9 +49,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sromku.simple.fb.Permission.Type;
 import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.entities.Feed;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
+import com.sromku.simple.fb.listeners.OnPublishListener;
 import com.vtc.vtctube.category.FragmentCategory;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.like.FragmentResent;
@@ -63,6 +65,7 @@ import com.vtc.vtctube.model.ItemMeu;
 import com.vtc.vtctube.search.FragmentSearchResult;
 import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IClickCate;
+import com.vtc.vtctube.utils.IRShareFeed;
 import com.vtc.vtctube.utils.IRclickTocate;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
@@ -99,6 +102,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private ResultSearchCallBack callBackSearch;
 	public static ResultCallBackCLick callBackCLick;
 	public static ResultCallBackCate callBackCLickCate;
+	public static ResultClickShare callClickShare;
 
 	private List<ItemMeu> listItemMenu;
 	private List<String> listQuerySearch;
@@ -116,7 +120,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		myDbHelper = new DatabaseHelper(MainActivity.this);
 		callBackCLick = new ResultCallBackCLick();
 		callBackCLickCate = new ResultCallBackCate();
+		callClickShare = new ResultClickShare();
+
 		fragmentManager = getSupportFragmentManager();
+
 		ft = fragmentManager.beginTransaction();
 		try {
 			myDbHelper.createDataBase();
@@ -317,6 +324,83 @@ public class MainActivity extends SherlockFragmentActivity implements
 					data);
 
 	}
+
+	public class ResultClickShare implements IRShareFeed {
+
+		@Override
+		public void onShare(String title, String thumnail, String slug) {
+			if (mSimpleFacebook.isLogin()) {
+				setPostShare(title, thumnail, slug);
+			} else {
+				mSimpleFacebook.login(new OnLoginListener() {
+
+					@Override
+					public void onFail(String reason) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onException(Throwable throwable) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onThinking() {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onNotAcceptingPermissions(Type type) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onLogin() {
+						// TODO Auto-generated method stub
+
+					}
+				});
+			}
+
+		}
+	}
+
+	public void setPostShare(String title, String thumnail, String slug) {
+
+		String shareLink = "http://vtctube.vn/" + slug + "-" + ".html";
+		Feed feed = new Feed.Builder().setMessage(title)
+				.setName("VTCTube-Xem thỏa thích. Chỉ cần Click")
+				.setCaption("").setDescription("Trải nghiệm mới với VTCTube")
+				.setPicture(thumnail).setLink(shareLink).build();
+		SimpleFacebook.getInstance().publish(feed, true, onPublishListener);
+	}
+
+	OnPublishListener onPublishListener = new OnPublishListener() {
+		@Override
+		public void onComplete(String postId) {
+			Toast.makeText(MainActivity.this, "Chia sẽ thành công",
+					Toast.LENGTH_LONG).show();
+		}
+
+		public void onException(Throwable throwable) {
+			Toast.makeText(MainActivity.this, "onException", Toast.LENGTH_LONG)
+					.show();
+		};
+
+		@Override
+		public void onThinking() {
+
+		};
+
+		/*
+		 * You can override other methods here: onThinking(), onFail(String
+		 * reason), onException(Throwable throwable)
+		 */
+	};
 
 	OnLoginListener onLoginListener = new OnLoginListener() {
 
@@ -590,14 +674,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 			onBackView();
 			return;
 		}
-		Fragment myFragmentResent = getSupportFragmentManager().findFragmentByTag(
-				Utils.TAG_RESENT);
+		Fragment myFragmentResent = getSupportFragmentManager()
+				.findFragmentByTag(Utils.TAG_RESENT);
 		if (myFragmentResent != null && myFragmentResent.isVisible()) {
 			onBackView();
 			return;
 		}
 
-		
 		finish();
 		System.exit(0);
 	}

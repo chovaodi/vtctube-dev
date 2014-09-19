@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.internal.bm;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -173,7 +172,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 								DatabaseHelper.TB_RESENT, item.getCateId(),
 								item.getTitle(), item.getVideoId(),
 								item.getUrl(), item.getStatus(),
-								item.getPageCount(), item.getIdPost());
+								item.getPageCount(), item.getIdPost(), item.getSlug());
 					}
 					callBack.onCLickView(item.getOption(), item.getVideoId());
 				}
@@ -208,7 +207,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 							}
 						});
 			}
-			
+
 			holder.btnLike.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -228,12 +227,20 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 							MainActivity.myDbHelper.insertVideoLike(
 									item.getIdPost(), item.getCateId(),
 									item.getVideoId(), item.getUrl(),
-									item.getStatus(), item.getTitle());
+									item.getStatus(), item.getTitle(), item.getSlug());
 							callBack.pushResutClickItem(item.getOption(),
 									getPosition(item), true);
 						}
 
 					}
+				}
+			});
+			holder.btnShare.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					MainActivity.callClickShare.onShare(item.getTitle(),
+							item.getUrl(), item.getSlug());
 				}
 			});
 

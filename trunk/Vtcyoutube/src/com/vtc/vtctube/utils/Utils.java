@@ -200,6 +200,7 @@ public class Utils {
 					item.setUrl(c.getString(3));
 					item.setStatus(c.getString(4));
 					item.setTitle(c.getString(5));
+					item.setSlug(c.getString(6));
 					item.setLike(true);
 					item.setOption(tabIndex);
 					listAccount.add(item);
@@ -228,6 +229,7 @@ public class Utils {
 				item.setStatus(c.getString(4));
 				item.setPageCount(c.getInt(5));
 				item.setIdPost(c.getInt(6));
+				item.setSlug(c.getString(7));
 				item.setOption(tabidex);
 
 				listAccount.add(item);
