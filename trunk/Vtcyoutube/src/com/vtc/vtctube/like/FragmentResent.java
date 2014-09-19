@@ -25,17 +25,17 @@ import com.vtc.vtctube.utils.Utils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class FragmentResent extends Fragment {
-	private PinnedAdapter adapter;
-	private static  ListView listvideo;
+	private static PinnedAdapter adapter = null;
+	private static ListView listvideo;
 	private View header;
 
 	private ViewPager pager;
 
 	public static SmoothProgressBar smooth;
 	private String queryResent;
-	private ResultOnclickTab callBackOnlick;
+	private ResultOnclickTab callBackOnlick = null;
 
-	private List<ItemPost> listData = new ArrayList<ItemPost>();
+	private List<ItemPost> listData = null;
 	private int key;
 
 	int mNum;
@@ -45,9 +45,23 @@ public class FragmentResent extends Fragment {
 	// private PullToRefreshLayout mPullToRefreshLayout;
 	public static String[] cateName;
 
+	
 	public void onResumeData(int key) {
 		this.key = key;
+		init();
+		adapter.clear();
 		addViewPost();
+	}
+
+	public void init() {
+		if (callBackOnlick == null) {
+			callBackOnlick = new ResultOnclickTab();
+		}
+
+
+		if (listData == null) {
+			listData = new ArrayList<ItemPost>();
+		}
 	}
 
 	public static FragmentResent newInstance(int num) {
@@ -77,9 +91,9 @@ public class FragmentResent extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		init();
 		v = inflater.inflate(R.layout.category_layout, container, false);
-
+		adapter = new PinnedAdapter(getActivity(), callBackOnlick);
 		// if (key == R.id.menu_video_yeuthich) {
 		// getSupportActionBar().setTitle("Video yêu thích");
 		// } else {
@@ -88,7 +102,7 @@ public class FragmentResent extends Fragment {
 
 		smooth = (SmoothProgressBar) v.findViewById(R.id.google_now);
 		smooth.setVisibility(View.GONE);
-		callBackOnlick = new ResultOnclickTab();
+
 		adapter = new PinnedAdapter(getActivity(), callBackOnlick);
 		listvideo = (ListView) v.findViewById(R.id.listvideo);
 		header = getActivity().getLayoutInflater().inflate(
@@ -151,7 +165,7 @@ public class FragmentResent extends Fragment {
 			listData = Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH);
 
 		} else {
-			Log.d("1111111111","222222222222222");
+			Log.d("1111111111", "222222222222222");
 			queryResent = "SELECT * FROM " + DatabaseHelper.TB_RESENT;
 			listData = Utils.getVideoLocal(queryResent, PinnedAdapter.MOINHAT);
 			listData = Utils.checkLikeVideo(listData,
@@ -164,7 +178,7 @@ public class FragmentResent extends Fragment {
 				adapter.add(listData.get(i));
 			}
 		}
-		
+
 		listvideo.setAdapter(adapter);
 	}
 
