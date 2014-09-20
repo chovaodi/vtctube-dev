@@ -16,6 +16,22 @@
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
     <string name="playerview_text">This is a YouTubePlayerView!</string>
     <string name="lblErorrs">Có lổi trong quá trình xử lý. Vui lòng thử lại sau!</string>
+    <string name="lblThongbao">Thông báo</string>
+    <string name="lblXacnha">Đóng</string>
+    <string name="lblmenu_trangchu">Trang chủ</string>
+    <string name="lblmenu_videomoi">Video mới nhất</string>
+    <string name="lblmenu_hotinday">Hot trong ngày</string>
+    <string name="lblmenu_hotinwek">Hot trong tuần</string>
+    <string name="lblmenu_hotinmonth">Hot trong tháng</string>
+    <string name="lblmenu_xemnhieu">Video xem nhiều</string>
+    <string name="lblmenu_yeuthich">Video yêu thích</string>
+    <string name="lblmenu_daxem">Video đã xem</string>
+    <string name="lblmenu_tivi">Xem tivi trực tuyến</string>
+    <string name="lblmenu_setting">Cài đặt</string>
+    <string name="lblmenu_taitro">Nhà tài trợ</string>
+    
+    <string name="lblMsgrong">Không tìm thấy nội dung này. Vui lòng thử lại sau</string>
+    
     <string name="help_lienhe">
 <![CDATA[  
 

@@ -9,7 +9,9 @@ import java.util.Scanner;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -20,15 +22,23 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.PlayerViewActivity;
+import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemMeu;
 import com.vtc.vtctube.model.ItemPost;
@@ -41,13 +51,20 @@ public class Utils {
 	public final static int LOAD_MORE = 3;
 	public final static int AYSN_LOAD = 2;
 	public final static int REFRESH = 4;
+
+	public final static int LOAD_SEARCH = 5;
+	public final static int LOAD_NEWVIDEO = 6;
+	public final static int LOAD_XEMNHIEU = 7;
+	
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyBOIqSHxSY2pRqPdJaCwjDQ9FBzkNQmXhE";
-	public static String ADMOB_ID = "ca-app-pub-2988392623334504/4148633672";
+	public static String ADMOB_ID = "ca-app-pub-8362644350234649/3664611615";
 
 	public static String TAG_CATE = "TAG_CATE";
 	public static String TAG_RESENT = "TAG_RESENT";
 	public static String TAG_SEARCH = "TAG_SEARCH";
-
+	public static String TAG_NEWVIDEO = "TAG_NEWVIDEO";
+	public static String TAG_XEMNHIEU = "TAG_XEMNHIEU";
+	
 	public static String getUrlHttp(String host, String funtionName) {
 		return host + funtionName;
 
@@ -95,6 +112,37 @@ public class Utils {
 		// activity, 102).show();
 		// }
 		// }
+
+	}
+
+	public static void getDialogMessges(Activity activity, String mes) {
+		final Dialog dialog = new Dialog(activity);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.getWindow().setBackgroundDrawableResource(
+				R.drawable.background_card);
+		dialog.setCanceledOnTouchOutside(true);
+		dialog.setContentView(R.layout.dialognote);
+
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay()
+				.getMetrics(displaymetrics);
+		int width = displaymetrics.widthPixels;
+		dialog.getWindow().setLayout(5 * width / 6, LayoutParams.WRAP_CONTENT);
+
+		dialog.show();
+		TextView lblMess = (TextView) dialog.findViewById(R.id.lblMessage);
+		lblMess.setText(Html.fromHtml(mes));
+
+		Button btnAccept = (Button) dialog.findViewById(R.id.btnAccept);
+
+		btnAccept.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				dialog.dismiss();
+
+			}
+		});
 
 	}
 
@@ -169,6 +217,20 @@ public class Utils {
 		}
 		return menuItems;
 
+	}
+
+	public static void disableEnableControls(boolean enable, ViewGroup vg) {
+		try {
+			for (int i = 0; i < vg.getChildCount(); i++) {
+				View child = vg.getChildAt(i);
+				child.setEnabled(enable);
+				if (child instanceof ViewGroup) {
+					disableEnableControls(enable, (ViewGroup) child);
+				}
+			}
+		} catch (Exception e) {
+
+		}
 	}
 
 	public static DisplayImageOptions getOptions(Context activity, int draw) {

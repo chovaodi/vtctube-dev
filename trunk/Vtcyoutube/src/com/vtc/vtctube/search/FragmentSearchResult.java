@@ -47,14 +47,15 @@ public class FragmentSearchResult extends SherlockFragment implements
 
 	private boolean isLoadding = false;
 
-	private List<ItemPost> listData =null;
+	private List<ItemPost> listData = null;
 	private ResultCallBack callBack = new ResultCallBack();
 	private List<ItemPost> listVideoLike = new ArrayList<ItemPost>();
+	private View view;
 
 	public void setCate(String json, String keyword) {
 		if (!FragmentSearchResult.json.equals(json)) {
 			Log.d("chovaodi", "11111111111");
-			this.keyword=keyword;
+			this.keyword = keyword;
 			pageCount = 0;
 			FragmentSearchResult.json = json;
 			adapter.clear();
@@ -66,7 +67,7 @@ public class FragmentSearchResult extends SherlockFragment implements
 	public static FragmentSearchResult newInstance(String num, String keyword) {
 		if (frament == null)
 			frament = new FragmentSearchResult();
-		
+
 		// Supply num input as an argument.
 		Bundle args = new Bundle();
 		args.putString("num", num);
@@ -95,9 +96,8 @@ public class FragmentSearchResult extends SherlockFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater
-				.inflate(R.layout.category_layout, container, false);
-		listData= new ArrayList<ItemPost>();
+		view = inflater.inflate(R.layout.category_layout, container, false);
+		listData = new ArrayList<ItemPost>();
 		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 		// setContentView(R.layout.category_layout);
 		// overridePendingTransition(R.anim.slide_in_bottom,
@@ -161,7 +161,7 @@ public class FragmentSearchResult extends SherlockFragment implements
 				String status = jsonObj.getString("status");
 				pageCount = jsonObj.getInt("pages");
 				pageSize = jsonObj.getInt("count");
-				if (status.equals("ok")&&pageSize>0) {
+				if (status.equals("ok") && pageSize > 0) {
 					List<ItemPost> listTmp = new ArrayList<ItemPost>();
 					JSONArray jsonArray = jsonObj.getJSONArray("posts");
 					for (int i = 0; i < jsonArray.length(); i++) {
@@ -173,8 +173,8 @@ public class FragmentSearchResult extends SherlockFragment implements
 						item.setStatus(json.getString("status"));
 						item.setVideoId(getIdVideo(json.getString("content")));
 						item.setUrl(json.getString("thumbnail"));
-						
-						
+						item.setStatus(json.getString("slug"));
+
 						listData.add(item);
 						listTmp.add(item);
 
@@ -245,10 +245,9 @@ public class FragmentSearchResult extends SherlockFragment implements
 
 				String url = Utils.host + "get_search_results?search="
 						+ keyword + "&count=" + pageSize + "&page=" + page;
-				Log.d("urlurl", url);
 
-				new AysnRequestHttp(Utils.LOAD_MORE, MainActivity.smooth,
-						callBack).execute(url);
+				new AysnRequestHttp((ViewGroup) view, Utils.LOAD_MORE,
+						MainActivity.smooth, callBack).execute(url);
 			}
 		}
 	}

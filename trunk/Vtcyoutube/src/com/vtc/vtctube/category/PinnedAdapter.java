@@ -180,10 +180,10 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 			holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
 
-			Bitmap bmp = imageLoader.loadImageSync(item.getUrl());
-			if (bmp != null) {
-				holder.imgIcon.setImageBitmap(bmp);
-			} else {
+//			Bitmap bmp = imageLoader.loadImageSync(item.getUrl());
+//			if (bmp != null) {
+//				holder.imgIcon.setImageBitmap(bmp);
+//			} else {
 
 				imageLoader.displayImage(item.getUrl(), holder.imgIcon,
 						Utils.getOptions(context, R.drawable.img_erorrs),
@@ -206,7 +206,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 								// holder.loadingBanner.setVisibility(View.GONE);
 							}
 						});
-			}
+			//}
 
 			holder.btnLike.setOnClickListener(new OnClickListener() {
 
