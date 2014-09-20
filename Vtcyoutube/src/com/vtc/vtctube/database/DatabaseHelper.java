@@ -19,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	String DB_PATH = null;
 
 	public static String DB_NAME = "vtctube.sqlite";
+	public static String TB_LISTXEMNHIEU = "tblListXemnhieu";
 	public static String TB_LISTVIDEO = "tblListVideo";
 	public static String TB_QUERY_SEARCH = "tblQuerySearch";
 	public static String TB_LIKE = "tblYeuthich";

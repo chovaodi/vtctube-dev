@@ -93,11 +93,11 @@ public class FragmentHome extends SherlockFragment {
 						.readJsonFile(Utils.GET_CATE_INDEX);
 				showView(GlobalApplication.dataCate);
 			} else {
-				new AysnRequestHttp(Utils.LOAD_FIRST_DATA, MainActivity.smooth,
+				new AysnRequestHttp((ViewGroup)v,Utils.LOAD_FIRST_DATA, MainActivity.smooth,
 						callBack).execute(url);
 			}
 		}
-		new AysnRequestHttp(Utils.REFRESH, null, callBack).execute(url);
+		new AysnRequestHttp((ViewGroup)v,Utils.REFRESH, null, callBack).execute(url);
 		return v;
 	}
 

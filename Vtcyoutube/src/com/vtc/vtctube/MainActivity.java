@@ -1,8 +1,11 @@
 package com.vtc.vtctube;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.json.JSONObject;
 
@@ -113,10 +116,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private boolean isMenuCate = false;
 	private FragmentManager fragmentManager;
 	private FragmentTransaction ft;
+	public static ViewGroup mainView;
+	private Random random = new Random();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mainView = (ViewGroup) getWindow().getDecorView().findViewById(
+				android.R.id.content);
+
 		myDbHelper = new DatabaseHelper(MainActivity.this);
 		callBackCLick = new ResultCallBackCLick();
 		callBackCLickCate = new ResultCallBackCate();
@@ -248,22 +256,34 @@ public class MainActivity extends SherlockFragmentActivity implements
 			MainActivity.callBackCLick.onClick(false, "");
 			break;
 
+		case R.id.menu_video_moinhat:
+			actionNewvideo();
+			break;
+		case R.id.menu_video_xemnhieu:
+			actionXemnhieu();
+			break;
+			
 		case R.id.menu_video_yeuthich:
-
-			addFragmentResent(R.id.menu_video_yeuthich, "Video yêu thích");
-			// Intent intent = new Intent(MainActivity.this,
-			// FragmentResent.class);
-			// intent.putExtra("key", R.id.menu_video_yeuthich);
-			// startActivity(intent);
+			String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
+			if (myDbHelper.getCountRow(DatabaseHelper.TB_LIKE, sqlLike) > 0) {
+				addFragmentResent(R.id.menu_video_yeuthich, getResources()
+						.getString(R.string.lblmenu_yeuthich));
+			} else {
+				Utils.getDialogMessges(MainActivity.this, getResources()
+						.getString(R.string.lblMsgrong));
+			}
 
 			break;
 		case R.id.menu_video_daxem:
-			addFragmentResent(R.id.menu_video_daxem, "Video đã xem");
-			//
-			// Intent intent1 = new Intent(MainActivity.this,
-			// FragmentResent.class);
-			// intent1.putExtra("key", R.id.menu_video_daxem);
-			// startActivity(intent1);
+			String sqlDaxem = "SELECT * FROM " + DatabaseHelper.TB_RESENT;
+			if (myDbHelper.getCountRow(DatabaseHelper.TB_RESENT, sqlDaxem) > 0) {
+				addFragmentResent(R.id.menu_video_daxem, getResources()
+						.getString(R.string.lblmenu_daxem));
+			} else {
+				Utils.getDialogMessges(MainActivity.this, getResources()
+						.getString(R.string.lblMsgrong));
+			}
+
 
 			break;
 
@@ -465,10 +485,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
-	public void addFragmentSearch(String json) {
-		searchView.onActionViewCollapsed();
-		searchView.setQuery("", false);
-		searchView.clearFocus();
+	public void addFragmentSearch(String json, String tag) {
 		Utils.hideSoftKeyboard(MainActivity.this);
 
 		MainActivity.callBackCLick.onClick(false, "Tìm kiếm");
@@ -478,11 +495,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		FragmentSearchResult fragment = null;
 		fragment = (FragmentSearchResult) fragmentManager
-				.findFragmentByTag(Utils.TAG_SEARCH);
+				.findFragmentByTag(tag);
 		if (fragment == null) {
 			fragment = FragmentSearchResult.newInstance(json, queryCurent);
 			ft.addToBackStack(null);
-			ft.replace(R.id.container, fragment, Utils.TAG_SEARCH);
+			ft.replace(R.id.container, fragment, tag);
 		} else {
 			FragmentSearchResult fragmentTmp = new FragmentSearchResult();
 			fragmentTmp.setCate(json, queryCurent);
@@ -622,26 +639,36 @@ public class MainActivity extends SherlockFragmentActivity implements
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
 				int count_total = jsonObj.getInt("count_total");
-				if (status.equals("ok") & count_total > 0) {
-					String sqlCheck = "SELECT * FROM "
-							+ DatabaseHelper.TB_QUERY_SEARCH + " WHERE query='"
-							+ queryCurent + "'";
+				if (status.equals("ok") && count_total > 0) {
+					switch (type) {
+					case Utils.LOAD_SEARCH:
+						String sqlCheck = "SELECT * FROM "
+								+ DatabaseHelper.TB_QUERY_SEARCH
+								+ " WHERE query='" + queryCurent + "'";
 
-					if (myDbHelper.getCountRow(DatabaseHelper.TB_QUERY_SEARCH,
-							sqlCheck) == 0) {
-						myDbHelper.insertQuerySearch(queryCurent);
+						if (myDbHelper.getCountRow(
+								DatabaseHelper.TB_QUERY_SEARCH, sqlCheck) == 0) {
+							myDbHelper.insertQuerySearch(queryCurent);
+						}
+						addFragmentSearch(result, Utils.TAG_SEARCH);
+
+						break;
+					case Utils.LOAD_NEWVIDEO:
+						addFragmentSearch(result, Utils.TAG_NEWVIDEO);
+						break;
+					case Utils.LOAD_XEMNHIEU:
+						addFragmentSearch(result, Utils.TAG_XEMNHIEU);
+						break;
 					}
-					addFragmentSearch(result);
 
 				} else {
-					Toast.makeText(MainActivity.this,
-							"Không tìm thấy nội dụng này", Toast.LENGTH_LONG)
-							.show();
+					Utils.getDialogMessges(MainActivity.this, getResources()
+							.getString(R.string.lblMsgrong));
+
 				}
 			} catch (Exception e) {
-				Toast.makeText(MainActivity.this,
-						"Không tìm thấy nội dụng này", Toast.LENGTH_LONG)
-						.show();
+				Utils.getDialogMessges(MainActivity.this, getResources()
+						.getString(R.string.lblMsgrong));
 			}
 		}
 
@@ -720,7 +747,28 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void actionSearch(String query) {
 		String url = Utils.host + "get_search_results?search=" + query;
 		Log.d("searchUrl", url);
-		new AysnRequestHttp(1, smooth, callBackSearch).execute(url);
+		new AysnRequestHttp(mainView, Utils.LOAD_SEARCH, smooth, callBackSearch)
+				.execute(url);
+	}
+
+	public void actionNewvideo() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		String currentDateandTime = sdf.format(new Date());
+		String url = Utils.host + "get_date_posts?date=" + currentDateandTime;
+		Log.d("searchUrl", url);
+		new AysnRequestHttp(mainView, Utils.LOAD_NEWVIDEO, smooth,
+				callBackSearch).execute(url);
+	}
+
+	public void actionXemnhieu() {
+		String cate = FragmentHome.listData.get(
+				random.nextInt(FragmentHome.listData.size() - 1))
+				.getIdCategory();
+		String url = Utils.host + "get_posts?count=5&page=1&cat="
+				+cate;
+
+		new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
+				MainActivity.smooth, callBackSearch).execute(url);
 	}
 
 	@Override
