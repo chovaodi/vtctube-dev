@@ -104,11 +104,6 @@ public class FragmentCategory extends SherlockFragment implements
 			if (listvideo != null) {
 				removeFotter();
 			}
-			
-			MainActivity.myDbHelper.deleteAccount(
-					DatabaseHelper.TB_LISTXEMNHIEU,
-					MainActivity.currentCate);
-			
 			onLoadData(false);
 		}
 	}
@@ -255,7 +250,7 @@ public class FragmentCategory extends SherlockFragment implements
 				queryVideoLocal = "SELECT * FROM tblListXemnhieu where cateId='"
 						+ MainActivity.currentCate + "'";
 
-				listVideoXemnhieu = Utils.getVideoLocal(DatabaseHelper.TB_LISTXEMNHIEU,
+				listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTXEMNHIEU,
 						queryVideoLocal, tabIndex);
 				
 				resetTab();
