@@ -241,7 +241,6 @@ public class FragmentSearchResult extends SherlockFragment implements
 		int lastInScreen = firstVisibleItem + visibleItemCount;
 		if ((lastInScreen == totalItemCount)) {
 			page = 1 + (listData.size() / pageSize);
-			Log.d("page", page + " " + listData.size());
 			if (page >= pageCount)
 				isLoadding = true;
 
@@ -250,15 +249,16 @@ public class FragmentSearchResult extends SherlockFragment implements
 				if (listvideo.getFooterViewsCount() == 0)
 					listvideo.addFooterView(fotter);
 				String url = "";
-				if (keyOption == Utils.LOAD_XEMNHIEU) {
-					url = Utils.host + "get_posts?count=5&page=" + page
-							+ "&cat=" + MainActivity.currentCate;
-				} else if (keyOption == Utils.LOAD_SEARCH) {
+				if (keyOption == Utils.LOAD_SEARCH) {
 					url = Utils.host + "get_search_results?search=" + keyword
 							+ "&count=" + pageSize + "&page=" + page;
+				} else {
+					url = Utils.host + "get_posts?count=5&page=" + page
+							+ "&cat=" + MainActivity.currentCate;
 				}
 				new AysnRequestHttp((ViewGroup) view, Utils.LOAD_MORE,
 						MainActivity.smooth, callBack).execute(url);
+
 			}
 		}
 	}

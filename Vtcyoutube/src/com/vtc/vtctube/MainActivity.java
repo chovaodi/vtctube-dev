@@ -1,6 +1,7 @@
 package com.vtc.vtctube;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -656,12 +657,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 						break;
 					case Utils.LOAD_NEWVIDEO:
-						Log.d("22222222222", "11111111");
+
 						addFragmentSearch(result, Utils.TAG_NEWVIDEO,
 								Utils.LOAD_NEWVIDEO);
 						break;
 					case Utils.LOAD_XEMNHIEU:
-						Log.d("22222222222", "2222222222");
+
 						addFragmentSearch(result, Utils.TAG_XEMNHIEU,
 								Utils.LOAD_XEMNHIEU);
 						break;
@@ -673,6 +674,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				Utils.getDialogMessges(MainActivity.this, getResources()
 						.getString(R.string.lblMsgrong));
 			}
@@ -713,7 +715,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 			onBackView();
 			return;
 		}
+		Fragment myFragmentXemnhieu = getSupportFragmentManager()
+				.findFragmentByTag(Utils.TAG_XEMNHIEU);
+		if (myFragmentXemnhieu != null && myFragmentXemnhieu.isVisible()) {
+			onBackView();
+			return;
+		}
 
+		Fragment myFragmentNew = getSupportFragmentManager().findFragmentByTag(
+				Utils.TAG_NEWVIDEO);
+		if (myFragmentNew != null && myFragmentNew.isVisible()) {
+			onBackView();
+			return;
+		}
 		finish();
 		System.exit(0);
 	}
@@ -758,8 +772,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void actionNewvideo() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
-		String currentDateandTime = sdf.format(new Date());
+
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateobj = new Date();
+		String currentDateandTime = df.format(dateobj).toString();
 		String url = Utils.host + "get_date_posts?date=" + currentDateandTime;
 		Log.d("searchUrl", url);
 		new AysnRequestHttp(mainView, Utils.LOAD_NEWVIDEO, smooth,
