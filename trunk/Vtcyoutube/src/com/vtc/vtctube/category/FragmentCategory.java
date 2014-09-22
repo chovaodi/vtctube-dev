@@ -63,8 +63,7 @@ public class FragmentCategory extends SherlockFragment implements
 	private ResultOnclikTab callBackOnlick = null;
 	public static FragmentCategory frament = null;
 	private Random random = new Random();
-	private List<ItemPost> listVideoXemnhieu = new ArrayList<ItemPost>();
-
+	private List<ItemPost> listVideoXemnhieu=null;
 	public FragmentCategory() {
 		if (callBack == null)
 			callBack = new ResultCallBack();
@@ -72,7 +71,9 @@ public class FragmentCategory extends SherlockFragment implements
 		if (callBackOnlick == null)
 			callBackOnlick = new ResultOnclikTab();
 		listVideoLike = new ArrayList<ItemPost>();
+		listVideoXemnhieu = new ArrayList<ItemPost>();
 
+		
 		page = 1;
 		pageCount = 0;
 
@@ -96,9 +97,18 @@ public class FragmentCategory extends SherlockFragment implements
 				listVideoLike.removeAll(listVideoLike);
 				listVideoLike = null;
 			}
+			if(listVideoXemnhieu!=null){
+				listVideoXemnhieu=new ArrayList<ItemPost>();
+			}
+			
 			if (listvideo != null) {
 				removeFotter();
 			}
+			
+			MainActivity.myDbHelper.deleteAccount(
+					DatabaseHelper.TB_LISTXEMNHIEU,
+					MainActivity.currentCate);
+			
 			onLoadData(false);
 		}
 	}
@@ -229,7 +239,7 @@ public class FragmentCategory extends SherlockFragment implements
 			queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 					+ " WHERE cateId='" + MainActivity.currentCate + "'";
 			listVideoLike = Utils.getVideoLike(queryLikeVideo, type);
-			Log.d("type1", type + " "+listVideoLike.size());
+			
 			switch (type) {
 			case PinnedAdapter.MOINHAT:
 				queryVideoLocal = "SELECT * FROM tblListVideo where cateId='"
@@ -239,8 +249,15 @@ public class FragmentCategory extends SherlockFragment implements
 						queryVideoLocal, tabIndex);
 				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
 				setViewTab(listViewNew);
+				
 				break;
 			case PinnedAdapter.XEMNHIEU:
+				queryVideoLocal = "SELECT * FROM tblListXemnhieu where cateId='"
+						+ MainActivity.currentCate + "'";
+
+				listVideoXemnhieu = Utils.getVideoLocal(DatabaseHelper.TB_LISTXEMNHIEU,
+						queryVideoLocal, tabIndex);
+				
 				resetTab();
 				if (listVideoXemnhieu != null && listVideoXemnhieu.size() > 0) {
 					for (int i = 0; i < listVideoXemnhieu.size(); i++) {
@@ -257,6 +274,7 @@ public class FragmentCategory extends SherlockFragment implements
 					new AysnRequestHttp((ViewGroup) v, Utils.LOAD_MORE,
 							MainActivity.smooth, callBack).execute(url);
 				}
+				
 
 				break;
 			case PinnedAdapter.YEUTHICH:
@@ -417,7 +435,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 							saveData(item, DatabaseHelper.TB_LISTVIDEO);
 						} else if (tabIndex == PinnedAdapter.XEMNHIEU) {
-							listVideoXemnhieu.add(item);
+							saveData(item, DatabaseHelper.TB_LISTXEMNHIEU);
 						}
 
 					}
