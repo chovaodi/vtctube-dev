@@ -173,7 +173,6 @@ public class FragmentCategory extends SherlockFragment implements
 	public void onLoadData(boolean isLoad) {
 		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 				+ " WHERE cateId='" + MainActivity.currentCate + "'";
-		Log.d("queryLikeVideo", queryLikeVideo);
 
 		listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
 
@@ -182,9 +181,12 @@ public class FragmentCategory extends SherlockFragment implements
 
 		countDataLocal = MainActivity.myDbHelper.getCountRow(
 				DatabaseHelper.TB_LISTVIDEO, queryVideoLocal);
+		Log.d("queryLikeVideo", countDataLocal + "");
+
 		if (countDataLocal > 0) {
+
 			isLoadLocal = true;
-			listViewNew = Utils.getVideoLocal(queryVideoLocal, tabIndex);
+			listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,queryVideoLocal, tabIndex);
 			if (listViewNew != null && listViewNew.size() > 0) {
 				pageCount = listViewNew.get(0).getPageCount();
 				Log.d("pageCount", pageCount + "");
@@ -234,7 +236,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 				queryVideoLocal = "SELECT * FROM tblListVideo where cateId='"
 						+ MainActivity.currentCate + "'";
-				listViewNew = Utils.getVideoLocal(queryVideoLocal, tabIndex);
+				listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,queryVideoLocal, tabIndex);
 				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
 
 				setViewTab(listViewNew);
@@ -273,13 +275,13 @@ public class FragmentCategory extends SherlockFragment implements
 			queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 					+ " WHERE cateId='" + MainActivity.currentCate + "'";
 			listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
-
+			Log.d("type",type+"");
 			switch (type) {
 			case PinnedAdapter.MOINHAT:
 
 				queryVideoLocal = "SELECT * FROM tblListVideo where cateId='"
 						+ MainActivity.currentCate + "'";
-				listViewNew = Utils.getVideoLocal(queryVideoLocal, tabIndex);
+				listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,queryVideoLocal, tabIndex);
 
 				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
 
@@ -287,13 +289,15 @@ public class FragmentCategory extends SherlockFragment implements
 
 				break;
 			case PinnedAdapter.XEMNHIEU:
-				String xemnhieu = "SELECT * FROM tblListXemnhieu where cateId='"
-						+ MainActivity.currentCate + "'";
-				listVideoXemnhieu = Utils.getVideoLocal(xemnhieu,
-						tabIndex);
-				Log.d("listVideoXemnhieu",listVideoXemnhieu.size()+" sfsf");
-				setViewTab(Utils.checkLikeVideo(listVideoXemnhieu,
-						listVideoLike));
+				// String xemnhieu =
+				// "SELECT * FROM tblListXemnhieu where cateId='"
+				// + MainActivity.currentCate + "'";
+				// listVideoXemnhieu =
+				// Utils.getVideoLocal(DatabaseHelper.TB_LISTXEMNHIEU,xemnhieu,
+				// tabIndex);
+				// Log.d("listVideoXemnhieu",listVideoXemnhieu.size()+"jsjsj");
+				//setViewTab(Utils.checkLikeVideo(listVideoXemnhieu,
+					//	listVideoLike));
 				break;
 			case PinnedAdapter.YEUTHICH:
 				adapter.clear();
@@ -334,7 +338,7 @@ public class FragmentCategory extends SherlockFragment implements
 		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 				+ " WHERE cateId='" + MainActivity.currentCate + "'";
 		listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
-		listData=Utils.checkLikeVideo(listData, listVideoLike);
+		listData = Utils.checkLikeVideo(listData, listVideoLike);
 		adapter.clear();
 		ItemPost section = new ItemPost();
 		section.setType(PinnedAdapter.SECTION);
@@ -372,7 +376,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 				mPullToRefreshLayout.setRefreshComplete();
 			}
-			if(type==PinnedAdapter.XEMNHIEU){
+			if (type == PinnedAdapter.XEMNHIEU) {
 				MainActivity.myDbHelper.deleteAccount(
 						DatabaseHelper.TB_LISTXEMNHIEU,
 						MainActivity.currentCate);
@@ -404,11 +408,12 @@ public class FragmentCategory extends SherlockFragment implements
 						item.setUrl(json.getString("thumbnail"));
 						listTmp.add(item);
 						listViewNew.add(item);
+						
+						if (tabIndex == PinnedAdapter.MOINHAT) {
 
-						if (type == PinnedAdapter.MOINHAT) {
 							saveData(item, DatabaseHelper.TB_LISTVIDEO);
-						} else if (type == PinnedAdapter.XEMNHIEU) {
-							Log.d("chovaodi","chovaodi");
+						} else if (tabIndex == PinnedAdapter.XEMNHIEU) {
+							
 							saveData(item, DatabaseHelper.TB_LISTXEMNHIEU);
 						}
 
@@ -422,8 +427,7 @@ public class FragmentCategory extends SherlockFragment implements
 								tabIndex);
 						listTmp = Utils.checkLikeVideo(listTmp, listVideoLike);
 						for (int i = 0; i < listTmp.size(); i++) {
-							if (listTmp.get(i).getStatus()
-									.equals("publish")) {
+							if (listTmp.get(i).getStatus().equals("publish")) {
 								listTmp.get(i).setType(PinnedAdapter.ITEM);
 								adapter.add(listTmp.get(i));
 							}
@@ -434,6 +438,7 @@ public class FragmentCategory extends SherlockFragment implements
 				}
 
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			showMessage();
 		}

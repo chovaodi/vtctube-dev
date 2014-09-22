@@ -635,11 +635,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void getResult(int type, String result) {
+	
 			try {
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
 				int count_total = jsonObj.getInt("count_total");
 				if (status.equals("ok") && count_total > 0) {
+					Log.d("result111",result);
 					switch (type) {
 					case Utils.LOAD_SEARCH:
 						String sqlCheck = "SELECT * FROM "
@@ -766,6 +768,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 				.getIdCategory();
 		String url = Utils.host + "get_posts?count=5&page=1&cat="
 				+cate;
+		
+		Log.d("url",url);
 
 		new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
 				MainActivity.smooth, callBackSearch).execute(url);

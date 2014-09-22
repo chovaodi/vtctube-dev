@@ -51,7 +51,6 @@ public class AysnRequestHttp extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		//Utils.disableEnableControls(true, viewgruop);
-		Log.d("result", result);
 		if (process != null)
 			process.setVisibility(View.GONE);
 		this.iResult.getResult(keyOption, result);

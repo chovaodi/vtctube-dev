@@ -274,8 +274,8 @@ public class Utils {
 		return listAccount;
 	}
 
-	public static ArrayList<ItemPost> getVideoLocal(String sql, int tabidex) {
-		Cursor c = MainActivity.myDbHelper.query(DatabaseHelper.TB_LISTVIDEO,
+	public static ArrayList<ItemPost> getVideoLocal(String tableName,String sql, int tabidex) {
+		Cursor c = MainActivity.myDbHelper.query(tableName,
 				null, null, null, null, null, null);
 		c = MainActivity.myDbHelper.rawQuery(sql);
 		ArrayList<ItemPost> listAccount = new ArrayList<ItemPost>();
