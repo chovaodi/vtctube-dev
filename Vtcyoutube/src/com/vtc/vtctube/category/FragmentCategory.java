@@ -87,7 +87,7 @@ public class FragmentCategory extends SherlockFragment implements
 	public void setCate(String cate) {
 		if (!cate.equals(MainActivity.currentCate)) {
 			MainActivity.currentCate = cate;
-
+			tabIndex = PinnedAdapter.MOINHAT;
 			if (listViewNew != null) {
 				listViewNew.removeAll(listViewNew);
 				listViewNew = null;
@@ -186,10 +186,10 @@ public class FragmentCategory extends SherlockFragment implements
 		if (countDataLocal > 0) {
 
 			isLoadLocal = true;
-			listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,queryVideoLocal, tabIndex);
+			listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,
+					queryVideoLocal, tabIndex);
 			if (listViewNew != null && listViewNew.size() > 0) {
 				pageCount = listViewNew.get(0).getPageCount();
-				Log.d("pageCount", pageCount + "");
 				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
 				addViewPost(false, listViewNew, PinnedAdapter.MOINHAT);
 			}
@@ -225,34 +225,31 @@ public class FragmentCategory extends SherlockFragment implements
 
 		@Override
 		public void getResult(int type, String result) {
+			tabIndex = type;
 			queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 					+ " WHERE cateId='" + MainActivity.currentCate + "'";
-			listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
-
-			tabIndex = type;
-
+			listVideoLike = Utils.getVideoLike(queryLikeVideo, type);
+			Log.d("type1", type + " "+listVideoLike.size());
 			switch (type) {
 			case PinnedAdapter.MOINHAT:
-
 				queryVideoLocal = "SELECT * FROM tblListVideo where cateId='"
 						+ MainActivity.currentCate + "'";
-				listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,queryVideoLocal, tabIndex);
-				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
 
+				listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,
+						queryVideoLocal, tabIndex);
+				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
 				setViewTab(listViewNew);
 				break;
 			case PinnedAdapter.XEMNHIEU:
-				if (!isLoadding) {
+				resetTab();
+				if (listVideoXemnhieu != null && listVideoXemnhieu.size() > 0) {
+					for (int i = 0; i < listVideoXemnhieu.size(); i++) {
+						listVideoXemnhieu.get(i).setType(PinnedAdapter.ITEM);
+						adapter.add(listVideoXemnhieu.get(i));
+					}
+					adapter.notifyDataSetChanged();
+				} else if (!isLoadding) {
 					isLoadding = true;
-					listViewNew.remove(listViewNew);
-					listViewNew = new ArrayList<ItemPost>();
-
-					adapter.clear();
-					ItemPost section = new ItemPost();
-					section.setType(PinnedAdapter.SECTION);
-					section.setOption(tabIndex);
-					adapter.add(section);
-
 					int page = random.nextInt(pageCount);
 					String url = Utils.host + "get_posts?count=5&page=" + page
 							+ "&cat=" + MainActivity.currentCate;
@@ -260,9 +257,11 @@ public class FragmentCategory extends SherlockFragment implements
 					new AysnRequestHttp((ViewGroup) v, Utils.LOAD_MORE,
 							MainActivity.smooth, callBack).execute(url);
 				}
+
 				break;
 			case PinnedAdapter.YEUTHICH:
 				removeFotter();
+				resetTab();
 				mPullToRefreshLayout.setRefreshComplete();
 				setViewTab(listVideoLike);
 				break;
@@ -274,30 +273,25 @@ public class FragmentCategory extends SherlockFragment implements
 		public void pushResutClickItem(int type, int position, boolean isLike) {
 			queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 					+ " WHERE cateId='" + MainActivity.currentCate + "'";
-			listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
-			Log.d("type",type+"");
+			listVideoLike = Utils.getVideoLike(queryLikeVideo, type);
 			switch (type) {
 			case PinnedAdapter.MOINHAT:
-
+				isLoadding=true;
 				queryVideoLocal = "SELECT * FROM tblListVideo where cateId='"
 						+ MainActivity.currentCate + "'";
-				listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,queryVideoLocal, tabIndex);
 
+				listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,
+						queryVideoLocal, tabIndex);
+				
 				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
-
 				setViewTab(listViewNew);
 
 				break;
 			case PinnedAdapter.XEMNHIEU:
-				// String xemnhieu =
-				// "SELECT * FROM tblListXemnhieu where cateId='"
-				// + MainActivity.currentCate + "'";
-				// listVideoXemnhieu =
-				// Utils.getVideoLocal(DatabaseHelper.TB_LISTXEMNHIEU,xemnhieu,
-				// tabIndex);
-				// Log.d("listVideoXemnhieu",listVideoXemnhieu.size()+"jsjsj");
-				//setViewTab(Utils.checkLikeVideo(listVideoXemnhieu,
-					//	listVideoLike));
+				listVideoXemnhieu = Utils.checkLikeVideo(listVideoXemnhieu,
+						listVideoLike);
+				setViewTab(Utils.checkLikeVideo(listVideoXemnhieu,
+						listVideoLike));
 				break;
 			case PinnedAdapter.YEUTHICH:
 				adapter.clear();
@@ -314,6 +308,14 @@ public class FragmentCategory extends SherlockFragment implements
 		public void onCLickView(int type, String idYoutube) {
 			Utils.getVideoView(idYoutube, getActivity());
 		}
+	}
+
+	public void resetTab() {
+		adapter.clear();
+		ItemPost section = new ItemPost();
+		section.setType(PinnedAdapter.SECTION);
+		section.setOption(tabIndex);
+		adapter.add(section);
 	}
 
 	public void setViewTab(List<ItemPost> list) {
@@ -358,6 +360,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 		@Override
 		public void getResult(int type, String result) {
+			Log.d("tabIndex1", tabIndex + "");
 			showMessage();
 			MainActivity.smooth.setVisibility(View.GONE);
 			isLoadding = false;
@@ -406,15 +409,15 @@ public class FragmentCategory extends SherlockFragment implements
 						item.setStatus(json.getString("status"));
 						item.setVideoId(getIdVideo(json.getString("content")));
 						item.setUrl(json.getString("thumbnail"));
+						item.setOption(tabIndex);
 						listTmp.add(item);
 						listViewNew.add(item);
-						
+
 						if (tabIndex == PinnedAdapter.MOINHAT) {
 
 							saveData(item, DatabaseHelper.TB_LISTVIDEO);
 						} else if (tabIndex == PinnedAdapter.XEMNHIEU) {
-							
-							saveData(item, DatabaseHelper.TB_LISTXEMNHIEU);
+							listVideoXemnhieu.add(item);
 						}
 
 					}

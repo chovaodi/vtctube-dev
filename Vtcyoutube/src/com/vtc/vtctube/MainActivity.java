@@ -109,7 +109,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private List<ItemMeu> listItemMenu;
 	private List<String> listQuerySearch;
-	private String queryCurent;
+	private String queryCurent = "";
 
 	private GlobalApplication globalApp;
 
@@ -262,7 +262,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		case R.id.menu_video_xemnhieu:
 			actionXemnhieu();
 			break;
-			
+
 		case R.id.menu_video_yeuthich:
 			String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 			if (myDbHelper.getCountRow(DatabaseHelper.TB_LIKE, sqlLike) > 0) {
@@ -283,7 +283,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 				Utils.getDialogMessges(MainActivity.this, getResources()
 						.getString(R.string.lblMsgrong));
 			}
-
 
 			break;
 
@@ -485,7 +484,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
-	public void addFragmentSearch(String json, String tag) {
+	public void addFragmentSearch(String json, String tag, int keyOption) {
 		Utils.hideSoftKeyboard(MainActivity.this);
 
 		MainActivity.callBackCLick.onClick(false, "Tìm kiếm");
@@ -497,12 +496,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		fragment = (FragmentSearchResult) fragmentManager
 				.findFragmentByTag(tag);
 		if (fragment == null) {
-			fragment = FragmentSearchResult.newInstance(json, queryCurent);
+			fragment = FragmentSearchResult.newInstance(json, queryCurent,
+					keyOption);
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, tag);
 		} else {
 			FragmentSearchResult fragmentTmp = new FragmentSearchResult();
-			fragmentTmp.setCate(json, queryCurent);
+			fragmentTmp.setCate(json, queryCurent, keyOption);
 			ft.show(fragment);
 		}
 
@@ -635,13 +635,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void getResult(int type, String result) {
-	
+
 			try {
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
 				int count_total = jsonObj.getInt("count_total");
 				if (status.equals("ok") && count_total > 0) {
-					Log.d("result111",result);
 					switch (type) {
 					case Utils.LOAD_SEARCH:
 						String sqlCheck = "SELECT * FROM "
@@ -652,14 +651,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 								DatabaseHelper.TB_QUERY_SEARCH, sqlCheck) == 0) {
 							myDbHelper.insertQuerySearch(queryCurent);
 						}
-						addFragmentSearch(result, Utils.TAG_SEARCH);
+						addFragmentSearch(result, Utils.TAG_SEARCH,
+								Utils.LOAD_SEARCH);
 
 						break;
 					case Utils.LOAD_NEWVIDEO:
-						addFragmentSearch(result, Utils.TAG_NEWVIDEO);
+						Log.d("22222222222", "11111111");
+						addFragmentSearch(result, Utils.TAG_NEWVIDEO,
+								Utils.LOAD_NEWVIDEO);
 						break;
 					case Utils.LOAD_XEMNHIEU:
-						addFragmentSearch(result, Utils.TAG_XEMNHIEU);
+						Log.d("22222222222", "2222222222");
+						addFragmentSearch(result, Utils.TAG_XEMNHIEU,
+								Utils.LOAD_XEMNHIEU);
 						break;
 					}
 
@@ -763,13 +767,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void actionXemnhieu() {
-		String cate = FragmentHome.listData.get(
+		currentCate = FragmentHome.listData.get(
 				random.nextInt(FragmentHome.listData.size() - 1))
 				.getIdCategory();
-		String url = Utils.host + "get_posts?count=5&page=1&cat="
-				+cate;
-		
-		Log.d("url",url);
+		String url = Utils.host + "get_posts?count=5&page=1&cat=" + currentCate;
+
+		Log.d("urlXemnhieu", url);
 
 		new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
 				MainActivity.smooth, callBackSearch).execute(url);
