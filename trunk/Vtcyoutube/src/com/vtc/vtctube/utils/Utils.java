@@ -169,6 +169,7 @@ public class Utils {
 			return list;
 
 		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setLike(false);
 			for (int j = 0; j < listVideoLike.size(); j++) {
 				if (list.get(i).getIdPost() == listVideoLike.get(j).getIdPost()) {
 					list.get(i).setLike(true);

@@ -51,20 +51,21 @@ public class FragmentSearchResult extends SherlockFragment implements
 	private ResultCallBack callBack = new ResultCallBack();
 	private List<ItemPost> listVideoLike = new ArrayList<ItemPost>();
 	private View view;
+	private int keyOption;
 
-	public void setCate(String json, String keyword) {
+	public void setCate(String json, String keyword, int keyOption) {
+		this.keyOption = keyOption;
 		if (!FragmentSearchResult.json.equals(json)) {
-			Log.d("chovaodi", "11111111111");
 			this.keyword = keyword;
 			pageCount = 0;
 			FragmentSearchResult.json = json;
 			adapter.clear();
 			adapter.notifyDataSetChanged();
-
 		}
 	}
 
-	public static FragmentSearchResult newInstance(String num, String keyword) {
+	public static FragmentSearchResult newInstance(String num, String keyword,
+			int keyOtion) {
 		if (frament == null)
 			frament = new FragmentSearchResult();
 
@@ -72,6 +73,8 @@ public class FragmentSearchResult extends SherlockFragment implements
 		Bundle args = new Bundle();
 		args.putString("num", num);
 		args.putString("keyword", keyword);
+		args.putInt("keyOtion", keyOtion);
+
 		frament.setArguments(args);
 
 		return frament;
@@ -87,6 +90,9 @@ public class FragmentSearchResult extends SherlockFragment implements
 				"num") : 1);
 		keyword = (String) (getArguments() != null ? getArguments().getString(
 				"keyword") : 1);
+		keyOption = (int) (getArguments() != null ? getArguments().getInt(
+				"keyOtion") : 1);
+
 		callBack = new ResultCallBack();
 	}
 
@@ -138,23 +144,24 @@ public class FragmentSearchResult extends SherlockFragment implements
 	}
 
 	public void addViewPost() {
-		listVideoLike = Utils.getVideoLike(queryLikeVideo, 0);
-		listData = Utils.checkLikeVideo(listData, listVideoLike);
+		// listVideoLike = Utils.getVideoLike(queryLikeVideo, 0);
+		// listData = Utils.checkLikeVideo(listData, listVideoLike);
 
 		for (int i = 0; i < listData.size(); i++) {
-			if (listData.get(i).getStatus().equals("publish")) {
-				listData.get(i).setType(PinnedAdapter.ITEM);
-				adapter.add(listData.get(i));
-			}
+			Log.d("listData.get(i).getStatus()", listData.get(i).getStatus());
+			// if (listData.get(i).getStatus().equals("publish")) {
+			listData.get(i).setType(PinnedAdapter.ITEM);
+			adapter.add(listData.get(i));
 		}
 		listvideo.setAdapter(adapter);
+
 	}
 
 	public class ResultCallBack implements IResult {
 
 		@Override
 		public void getResult(int type, String result) {
-			Log.d("result", "result" + result);
+			Log.d("getResult", result);
 			isLoadding = false;
 			try {
 				JSONObject jsonObj = new JSONObject(result);
@@ -173,7 +180,7 @@ public class FragmentSearchResult extends SherlockFragment implements
 						item.setStatus(json.getString("status"));
 						item.setVideoId(getIdVideo(json.getString("content")));
 						item.setUrl(json.getString("thumbnail"));
-						item.setStatus(json.getString("slug"));
+						item.setSlug(json.getString("slug"));
 
 						listData.add(item);
 						listTmp.add(item);
@@ -242,10 +249,14 @@ public class FragmentSearchResult extends SherlockFragment implements
 				isLoadding = true;
 				if (listvideo.getFooterViewsCount() == 0)
 					listvideo.addFooterView(fotter);
-
-				String url = Utils.host + "get_search_results?search="
-						+ keyword + "&count=" + pageSize + "&page=" + page;
-
+				String url = "";
+				if (keyOption == Utils.LOAD_XEMNHIEU) {
+					url = Utils.host + "get_posts?count=5&page=" + page
+							+ "&cat=" + MainActivity.currentCate;
+				} else if (keyOption == Utils.LOAD_SEARCH) {
+					url = Utils.host + "get_search_results?search=" + keyword
+							+ "&count=" + pageSize + "&page=" + page;
+				}
 				new AysnRequestHttp((ViewGroup) view, Utils.LOAD_MORE,
 						MainActivity.smooth, callBack).execute(url);
 			}
