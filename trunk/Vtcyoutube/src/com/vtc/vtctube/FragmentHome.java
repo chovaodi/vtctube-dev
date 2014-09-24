@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.vtc.vtctube.adpter.MenuHomeAdapter;
 import com.vtc.vtctube.model.ItemCategory;
+import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.GridView;
 import com.vtc.vtctube.utils.IResult;
@@ -239,7 +240,7 @@ public class FragmentHome extends SherlockFragment {
 		}
 
 		@Override
-		public void onCLickView(int type, String idYoutube) {
+		public void onCLickView(ItemPost item) {
 			// TODO Auto-generated method stub
 
 		}

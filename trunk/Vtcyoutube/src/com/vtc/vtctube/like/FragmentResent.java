@@ -153,8 +153,8 @@ public class FragmentResent extends Fragment {
 		}
 
 		@Override
-		public void onCLickView(int type, String idYoutube) {
-			Utils.getVideoView(idYoutube, getActivity());
+		public void onCLickView(ItemPost item) {
+			Utils.getVideoView(item, getActivity());
 
 		}
 	}

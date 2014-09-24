@@ -66,6 +66,7 @@ import com.vtc.vtctube.menu.MenuDrawer.OnDrawerStateChangeListener;
 import com.vtc.vtctube.menu.Position;
 import com.vtc.vtctube.model.AccountModel;
 import com.vtc.vtctube.model.ItemMeu;
+import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.search.FragmentSearchResult;
 import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IClickCate;
@@ -687,7 +688,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
-		public void onCLickView(int type, String idYoutube) {
+		public void onCLickView(ItemPost item) {
 			// TODO Auto-generated method stub
 
 		}
