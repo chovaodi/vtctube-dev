@@ -217,8 +217,8 @@ public class FragmentSearchResult extends SherlockFragment implements
 		}
 
 		@Override
-		public void onCLickView(int type, String idYoutube) {
-			Utils.getVideoView(idYoutube, getActivity());
+		public void onCLickView(ItemPost item) {
+			Utils.getVideoView(item, getActivity());
 
 		}
 	}

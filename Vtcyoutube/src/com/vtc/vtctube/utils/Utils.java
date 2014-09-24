@@ -96,9 +96,10 @@ public class Utils {
 
 	}
 
-	public static void getVideoView(String videoId, Activity activity) {
+	public static void getVideoView(ItemPost item, Activity activity) {
 		Intent intent = new Intent(activity, PlayerViewActivity.class);
-		intent.putExtra("videoId", videoId);
+		intent.putExtra("videoId",item.getVideoId());
+		intent.putExtra("title", item.getTitle());
 		activity.startActivity(intent);
 
 		// Intent intent = null;

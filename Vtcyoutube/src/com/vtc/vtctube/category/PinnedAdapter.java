@@ -70,7 +70,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 				convertView = mInflater.inflate(R.layout.header_pinned, null);
 				holder.btnMoinhat = (Button) convertView
-						.findViewById(R.id.button1);
+						.findViewById(R.id.btnChitiet);
 				holder.btnXemnhieu = (Button) convertView
 						.findViewById(R.id.button2);
 				holder.btnYeuthich = (Button) convertView
@@ -174,7 +174,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 								item.getUrl(), item.getStatus(),
 								item.getPageCount(), item.getIdPost(), item.getSlug());
 					}
-					callBack.onCLickView(item.getOption(), item.getVideoId());
+					callBack.onCLickView(item);
 				}
 			});
 

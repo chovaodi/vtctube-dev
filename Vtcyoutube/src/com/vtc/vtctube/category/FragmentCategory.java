@@ -318,8 +318,8 @@ public class FragmentCategory extends SherlockFragment implements
 		}
 
 		@Override
-		public void onCLickView(int type, String idYoutube) {
-			Utils.getVideoView(idYoutube, getActivity());
+		public void onCLickView(ItemPost item) {
+			Utils.getVideoView(item, getActivity());
 		}
 	}
 
@@ -466,7 +466,7 @@ public class FragmentCategory extends SherlockFragment implements
 		}
 
 		@Override
-		public void onCLickView(int type, String idYoutube) {
+		public void onCLickView(ItemPost item) {
 			// TODO Auto-generated method stub
 
 		}
