@@ -37,7 +37,7 @@ public class RobotoBoldButton extends Button {
 
 	@Override
 	public void setText(CharSequence text, BufferType type) {
-		super.setText(text.toString().toUpperCase(), type);
+		super.setText(text.toString(), type);
 	}
 
 }

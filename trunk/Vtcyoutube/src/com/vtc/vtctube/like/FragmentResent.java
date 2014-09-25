@@ -93,7 +93,7 @@ public class FragmentResent extends Fragment {
 			Bundle savedInstanceState) {
 		init();
 		v = inflater.inflate(R.layout.category_layout, container, false);
-		adapter = new PinnedAdapter(getActivity(), callBackOnlick);
+		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,getActivity(), callBackOnlick);
 		// if (key == R.id.menu_video_yeuthich) {
 		// getSupportActionBar().setTitle("Video yêu thích");
 		// } else {
@@ -103,7 +103,7 @@ public class FragmentResent extends Fragment {
 		smooth = (SmoothProgressBar) v.findViewById(R.id.google_now);
 		smooth.setVisibility(View.GONE);
 
-		adapter = new PinnedAdapter(getActivity(), callBackOnlick);
+		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,getActivity(), callBackOnlick);
 		listvideo = (ListView) v.findViewById(R.id.listvideo);
 		header = getActivity().getLayoutInflater().inflate(
 				R.layout.header_cate, null);
