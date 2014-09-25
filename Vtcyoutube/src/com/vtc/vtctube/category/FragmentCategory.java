@@ -163,7 +163,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
-		adapter = new PinnedAdapter(getActivity(), callBackOnlick);
+		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE, getActivity(), callBackOnlick);
 
 		mPullToRefreshLayout = new PullToRefreshLayout(getActivity());
 		ActionBarPullToRefresh.from(getActivity())

@@ -136,7 +136,7 @@ public class FragmentSearchResult extends SherlockFragment implements
 		pager.setAdapter(adapterPg);
 		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
-		adapter = new PinnedAdapter(getActivity(), callBack);
+		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,getActivity(), callBack);
 
 		callBack.getResult(Utils.LOAD_FIRST_DATA, json);
 		listvideo.setOnScrollListener(this);

@@ -35,6 +35,10 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 	private LayoutInflater mInflater;
 	public static final int ITEM = 0;
 	public static final int SECTION = 1;
+	
+	public static final int TYPE_VIEW_CATE=0;
+	public static final int TYPE_VIEW_DETAIL=1;
+	
 
 	public static final int MOINHAT = 1;
 	public static final int XEMNHIEU = 2;
@@ -44,12 +48,14 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 	public static ImageLoader imageLoader = null;
 	private IResult callBack;
+	private int typeView;
 
-	public PinnedAdapter(Context context, IResult callBack) {
+	public PinnedAdapter(int type,Context context, IResult callBack) {
 		super(context, 0);
 		mInflater = LayoutInflater.from(context);
 		this.context = context;
 		this.callBack = callBack;
+		this.typeView=type; 
 
 		if (imageLoader == null) {
 			imageLoader = ImageLoader.getInstance();
