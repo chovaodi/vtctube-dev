@@ -21,6 +21,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.JsResult;
@@ -53,15 +54,25 @@ import com.vtc.vtctube.utils.Utils;
 public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	String videoId = "";
 	private String title;
+	private String countview;
+	private String url = "";
+	private String slug;
+	private String cate;
+
+	private int id;
+	private String status;
+
 	private Button btnLienquan;
 	private Button btnChitiet;
 	private LinearLayout lineChitiet;
 	private LinearLayout lineBack;
-	
+
+	private TextView lblYeuthich;
 	private TextView lblTitle;
 	private TextView lblTaskTitle;
-	
-	
+	private TextView lblCountView;
+	private TextView lblShare;
+
 	private ListView listvideo;
 	private WebView webview_fbview;
 	private ProgressBar loaddingcmt;
@@ -76,27 +87,49 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 				R.anim.slide_out_bottom);
 
 		getActionBar().hide();
-		
+
 		setContentView(R.layout.playerview_demo);
 
-		Intent intent = getIntent();
-		videoId = intent.getStringExtra("videoId");
-		title = intent.getStringExtra("title");
-
+		
 		getActionBar().setTitle(title);
-		youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
-		youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
-
+	
 		btnLienquan = (Button) findViewById(R.id.btnLienquan);
 		btnChitiet = (Button) findViewById(R.id.btnChitiet);
 		listvideo = (ListView) findViewById(R.id.listvideo);
 		lblTitle = (TextView) findViewById(R.id.lblTitle);
 		lblTaskTitle = (TextView) findViewById(R.id.lblTaskTitle);
-		lblTaskTitle.setText(title);
+		lblCountView = (TextView) findViewById(R.id.lblLuotxem);
+		lblShare = (TextView) findViewById(R.id.btnShareDetailt);
+		lblYeuthich = (TextView) findViewById(R.id.btnShareDetailt);
+		lblShare.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				MainActivity.callClickShare.onShare(title, url, slug);
+			}
+		});
+
+		lblYeuthich = (TextView) findViewById(R.id.lblYeuthich);
+		lblYeuthich.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
+						+ " WHERE id='" + id + "'";
+				if (MainActivity.myDbHelper.getCountRow(DatabaseHelper.TB_LIKE,
+						sqlCheck) == 0) {
+					MainActivity.myDbHelper.insertVideoLike(id, cate, videoId,
+							url, status, title, slug, countview);
+				}
+				Utils.getDialogMessges(PlayerViewActivity.this, "Video vừa được thêm vào danh sách yêu thích");
+				
+			}
+		});
+
 		lineChitiet = (LinearLayout) findViewById(R.id.lineChitiet);
 		lineBack = (LinearLayout) findViewById(R.id.lineBack);
 		lineBack.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				finish();
@@ -104,7 +137,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 						R.anim.slide_out_bottom);
 			}
 		});
-	
+
 		lblTitle.setText(title);
 
 		listvideo.setVisibility(View.VISIBLE);
@@ -121,7 +154,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 				btnChitiet.setSelected(false);
 				listvideo.setVisibility(View.VISIBLE);
 				lineChitiet.setVisibility(View.GONE);
-				
+
 			}
 		});
 
@@ -160,7 +193,25 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		loaddingcmt = (ProgressBar) findViewById(R.id.loading);
 		webview_fbview = (WebView) findViewById(R.id.contentView);
 		settingWebView();
+		setDataview(Utils.itemCurrent);
+		youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+		youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
 
+	}
+
+	public void setDataview(ItemPost item) {
+		cate=item.getCateId();
+		slug = item.getSlug();
+		url = item.getUrl();
+		title = item.getTitle();
+		id = item.getIdPost();
+		countview = item.getCountview();
+		status = item.getStatus();
+		videoId=item.getVideoId();
+		
+		lblTaskTitle.setText(Html.fromHtml(item.getTitle()));
+		lblTitle.setText(Html.fromHtml(item.getTitle()));
+		lblCountView.setText("Lượt xem: " + item.getCountview());
 	}
 
 	public class ResultOnclikTab implements IResult {
@@ -179,8 +230,14 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 		@Override
 		public void onCLickView(ItemPost item) {
-			player.cueVideo(item.getVideoId());
-
+			try {
+				if (!item.getVideoId().equals(title)) {
+					player.cueVideo(item.getVideoId());
+					setDataview(item);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}

@@ -8,13 +8,13 @@
     <com.vtc.vtctube.category.PinnedSectionListView
         android:id="@+id/listvideo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="45dp"
         android:cacheColorHint="@android:color/transparent"
         android:divider="#503f3f3f"
         android:dividerHeight="0dp"
         android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
-         />
+        android:headerDividersEnabled="false" />
 
     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
         android:id="@+id/google_now"

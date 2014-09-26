@@ -35,10 +35,9 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 	private LayoutInflater mInflater;
 	public static final int ITEM = 0;
 	public static final int SECTION = 1;
-	
-	public static final int TYPE_VIEW_CATE=0;
-	public static final int TYPE_VIEW_DETAIL=1;
-	
+
+	public static final int TYPE_VIEW_CATE = 0;
+	public static final int TYPE_VIEW_DETAIL = 1;
 
 	public static final int MOINHAT = 1;
 	public static final int XEMNHIEU = 2;
@@ -50,12 +49,12 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 	private IResult callBack;
 	private int typeView;
 
-	public PinnedAdapter(int type,Context context, IResult callBack) {
+	public PinnedAdapter(int type, Context context, IResult callBack) {
 		super(context, 0);
 		mInflater = LayoutInflater.from(context);
 		this.context = context;
 		this.callBack = callBack;
-		this.typeView=type; 
+		this.typeView = type;
 
 		if (imageLoader == null) {
 			imageLoader = ImageLoader.getInstance();
@@ -89,6 +88,8 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 				convertView = mInflater.inflate(R.layout.item_post, null);
 				holder.txtTitle = (TextView) convertView
 						.findViewById(R.id.lblTitlePost);
+				holder.lblCountview = (TextView) convertView
+						.findViewById(R.id.lblCountview);
 				holder.iconLike = (ImageButton) convertView
 						.findViewById(R.id.ic_like);
 
@@ -160,11 +161,22 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 		} else {
 			final ItemPost item = getItem(position);
+			if (typeView == TYPE_VIEW_DETAIL) {
+				holder.btnLike.setVisibility(View.GONE);
+				holder.btnShare.setVisibility(View.GONE);
+				holder.lblCountview.setText("Lượt xem: "+item.getCountview());
+			}else{
+				holder.lblCountview.setText(item.getCountview());
+				holder.lblCountview.setCompoundDrawablesWithIntrinsicBounds(R.drawable.eye,0, 0, 0);
+			}
+
+			
 			if (item.isLike()) {
 				holder.iconLike.setSelected(true);
 			} else {
 				holder.iconLike.setSelected(false);
 			}
+			
 			holder.lineClick.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -178,7 +190,8 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 								DatabaseHelper.TB_RESENT, item.getCateId(),
 								item.getTitle(), item.getVideoId(),
 								item.getUrl(), item.getStatus(),
-								item.getPageCount(), item.getIdPost(), item.getSlug());
+								item.getPageCount(), item.getIdPost(),
+								item.getSlug(), item.getCountview());
 					}
 					callBack.onCLickView(item);
 				}
@@ -186,33 +199,32 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 			holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
 
-//			Bitmap bmp = imageLoader.loadImageSync(item.getUrl());
-//			if (bmp != null) {
-//				holder.imgIcon.setImageBitmap(bmp);
-//			} else {
+			// Bitmap bmp = imageLoader.loadImageSync(item.getUrl());
+			// if (bmp != null) {
+			// holder.imgIcon.setImageBitmap(bmp);
+			// } else {
 
-				imageLoader.displayImage(item.getUrl(), holder.imgIcon,
-						Utils.getOptions(context, R.drawable.img_erorrs),
-						new SimpleImageLoadingListener() {
-							@Override
-							public void onLoadingStarted(String imageUri,
-									View view) {
-								// holder.loadingBanner.setVisibility(View.VISIBLE);
-							}
+			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
+					Utils.getOptions(context, R.drawable.img_erorrs),
+					new SimpleImageLoadingListener() {
+						@Override
+						public void onLoadingStarted(String imageUri, View view) {
+							// holder.loadingBanner.setVisibility(View.VISIBLE);
+						}
 
-							@Override
-							public void onLoadingFailed(String imageUri,
-									View view, FailReason failReason) {
-								// holder.spinner.setVisibility(View.GONE);
-							}
+						@Override
+						public void onLoadingFailed(String imageUri, View view,
+								FailReason failReason) {
+							// holder.spinner.setVisibility(View.GONE);
+						}
 
-							@Override
-							public void onLoadingComplete(String imageUri,
-									View view, Bitmap loadedImage) {
-								// holder.loadingBanner.setVisibility(View.GONE);
-							}
-						});
-			//}
+						@Override
+						public void onLoadingComplete(String imageUri,
+								View view, Bitmap loadedImage) {
+							// holder.loadingBanner.setVisibility(View.GONE);
+						}
+					});
+			// }
 
 			holder.btnLike.setOnClickListener(new OnClickListener() {
 
@@ -233,7 +245,8 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 							MainActivity.myDbHelper.insertVideoLike(
 									item.getIdPost(), item.getCateId(),
 									item.getVideoId(), item.getUrl(),
-									item.getStatus(), item.getTitle(), item.getSlug());
+									item.getStatus(), item.getTitle(),
+									item.getSlug(), item.getCountview());
 							callBack.pushResutClickItem(item.getOption(),
 									getPosition(item), true);
 						}
@@ -282,6 +295,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 
 	public class ViewHolder {
 		public TextView txtTitle;
+		public TextView lblCountview;
 		public ImageView imgIcon;
 		public ImageView submenu;
 

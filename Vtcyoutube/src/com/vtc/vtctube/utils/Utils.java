@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.app.ActionBar.LayoutParams;
@@ -55,7 +56,8 @@ public class Utils {
 	public final static int LOAD_SEARCH = 5;
 	public final static int LOAD_NEWVIDEO = 6;
 	public final static int LOAD_XEMNHIEU = 7;
-	
+	public static ItemPost itemCurrent = null;
+
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyBOIqSHxSY2pRqPdJaCwjDQ9FBzkNQmXhE";
 	public static String ADMOB_ID = "ca-app-pub-8362644350234649/3664611615";
 
@@ -64,7 +66,7 @@ public class Utils {
 	public static String TAG_SEARCH = "TAG_SEARCH";
 	public static String TAG_NEWVIDEO = "TAG_NEWVIDEO";
 	public static String TAG_XEMNHIEU = "TAG_XEMNHIEU";
-	
+
 	public static String getUrlHttp(String host, String funtionName) {
 		return host + funtionName;
 
@@ -97,9 +99,8 @@ public class Utils {
 	}
 
 	public static void getVideoView(ItemPost item, Activity activity) {
+		itemCurrent=item;
 		Intent intent = new Intent(activity, PlayerViewActivity.class);
-		intent.putExtra("videoId",item.getVideoId());
-		intent.putExtra("title", item.getTitle());
 		activity.startActivity(intent);
 
 		// Intent intent = null;
@@ -166,9 +167,6 @@ public class Utils {
 
 	public static List<ItemPost> checkLikeVideo(List<ItemPost> list,
 			List<ItemPost> listVideoLike) {
-		if (listVideoLike == null)
-			return list;
-
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setLike(false);
 			for (int j = 0; j < listVideoLike.size(); j++) {
@@ -177,6 +175,7 @@ public class Utils {
 				}
 			}
 		}
+
 		return list;
 	}
 
@@ -265,6 +264,7 @@ public class Utils {
 					item.setStatus(c.getString(4));
 					item.setTitle(c.getString(5));
 					item.setSlug(c.getString(6));
+					item.setCountview(c.getInt(7) + "");
 					item.setLike(true);
 					item.setOption(tabIndex);
 					listAccount.add(item);
@@ -276,13 +276,48 @@ public class Utils {
 		return listAccount;
 	}
 
-	public static ArrayList<ItemPost> getVideoLocal(String tableName,String sql, int tabidex) {
-		Cursor c = MainActivity.myDbHelper.query(tableName,
-				null, null, null, null, null, null);
+	public static ItemPost getItemPost(JSONObject json, int pageCount,
+			int tabIndex) {
+		ItemPost item = new ItemPost();
+		try {
+			item.setIdPost(json.getInt("id"));
+			item.setStatus(json.getString("slug"));
+			item.setCateId(MainActivity.currentCate);
+			item.setPageCount(pageCount);
+			item.setTitle(json.getString("title"));
+			item.setStatus(json.getString("status"));
+			item.setVideoId(getIdVideo(json.getString("content")));
+			item.setUrl(json.getString("thumbnail"));
+			item.setOption(tabIndex);
+			item.setCountview(json.getJSONObject("custom_fields")
+					.getJSONArray("post_views_count").get(0).toString());
+
+		} catch (Exception e) {
+
+		}
+		return item;
+	}
+
+	public static String getIdVideo(String content) {
+		String[] value;
+		try {
+			value = content.split("data-video_id=");
+			String[] data1 = value[1].split(" ");
+			return data1[0].replace("\"", "");
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
+
+	public static ArrayList<ItemPost> getVideoLocal(String tableName,
+			String sql, int tabidex) {
+		Cursor c = MainActivity.myDbHelper.query(tableName, null, null, null,
+				null, null, null);
 		c = MainActivity.myDbHelper.rawQuery(sql);
 		ArrayList<ItemPost> listAccount = new ArrayList<ItemPost>();
 
-		if (c.moveToFirst()) {
+		if (c.moveToLast()) {
 
 			do {
 				ItemPost item = new ItemPost();
@@ -294,10 +329,11 @@ public class Utils {
 				item.setPageCount(c.getInt(5));
 				item.setIdPost(c.getInt(6));
 				item.setSlug(c.getString(7));
+				item.setCountview(c.getInt(8) + "");
 				item.setOption(tabidex);
 
 				listAccount.add(item);
-			} while (c.moveToNext());
+			} while (c.moveToPrevious());
 		}
 		return listAccount;
 	}

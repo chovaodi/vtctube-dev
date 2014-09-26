@@ -11,10 +11,19 @@ public class ItemPost {
 	private String videoId;
 	private String status;
 	private int pageCount;
+	private String countview;
 	private int option = PinnedAdapter.MOINHAT;
 	private String slug;
 	private boolean isLike = false;
 
+	public String getCountview() {
+		return countview;
+	}
+	
+	public void setCountview(String countview) {
+		this.countview = countview;
+	}
+	
 	public void setSlug(String slug) {
 		this.slug = slug;
 	}
