@@ -47,9 +47,9 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.6"
                     android:orientation="vertical" >
 
                     <com.vtc.vtctube.font.RobotoLightTextView
@@ -65,8 +65,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="bottom" >
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical|left" >
 
                     <LinearLayout
                         android:id="@+id/btnComment"
@@ -76,14 +76,14 @@
                         android:gravity="center_vertical|left"
                         android:orientation="vertical" >
 
-                        <ImageButton
-                            android:id="@+id/Button02"
+                        <com.vtc.vtctube.font.RobotoLightTextView
+                            android:id="@+id/lblCountview"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@android:color/transparent"
                             android:clickable="false"
                             android:focusable="false"
+                            android:text="12"
                             android:focusableInTouchMode="false"
                             android:src="@drawable/video_comment" />
                     </LinearLayout>

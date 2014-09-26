@@ -162,7 +162,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		DisplayMetrics displaymetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 		int width = displaymetrics.widthPixels;
-		leftMenu.setMenuSize(2 * width / 3);
+		leftMenu.setMenuSize(5 * width / 6);
 		leftMenu.setMenuView(R.layout.leftmenu);
 
 		setContentView(R.layout.fragment_content);
@@ -767,18 +767,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public void actionSearch(String query) {
 		String url = Utils.host + "get_search_results?search=" + query;
-		Log.d("searchUrl", url);
 		new AysnRequestHttp(mainView, Utils.LOAD_SEARCH, smooth, callBackSearch)
 				.execute(url);
 	}
 
 	public void actionNewvideo() {
-
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Date dateobj = new Date();
 		String currentDateandTime = df.format(dateobj).toString();
 		String url = Utils.host + "get_date_posts?date=" + currentDateandTime;
-		Log.d("searchUrl", url);
 		new AysnRequestHttp(mainView, Utils.LOAD_NEWVIDEO, smooth,
 				callBackSearch).execute(url);
 	}
@@ -788,9 +785,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 				random.nextInt(FragmentHome.listData.size() - 1))
 				.getIdCategory();
 		String url = Utils.host + "get_posts?count=5&page=1&cat=" + currentCate;
-
-		Log.d("urlXemnhieu", url);
-
 		new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
 				MainActivity.smooth, callBackSearch).execute(url);
 	}
@@ -804,16 +798,23 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
-		List<String> listTmp = new ArrayList<String>();
+		listQuerySearch = getQuerySearch("SELECT * FROM "
+				+ DatabaseHelper.TB_QUERY_SEARCH);
+		
 		for (int i = 0; i < listQuerySearch.size(); i++) {
 			if (listQuerySearch.get(i).contains(newText)) {
-				listTmp.add(listQuerySearch.get(i));
+				String valueTmp = listQuerySearch.get(i);
+				listQuerySearch.set(i, listQuerySearch.get(0));
+				listQuerySearch.set(0, valueTmp);
+				
+				break;
 			}
 		}
 
 		MatrixCursor cursor = new MatrixCursor(COLUMNS);
-		for (int i = 0; i < listTmp.size(); i++) {
-			cursor.addRow(new String[] { String.valueOf(i), listTmp.get(i) });
+		for (int i = 0; i < listQuerySearch.size(); i++) {
+			cursor.addRow(new String[] { String.valueOf(i),
+					listQuerySearch.get(i) });
 		}
 		mSuggestionsAdapter.changeCursor(cursor);
 		mSuggestionsAdapter.notifyDataSetChanged();

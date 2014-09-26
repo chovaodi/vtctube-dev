@@ -109,6 +109,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
+        android:background="@android:color/white"
+        
         android:layout_height="match_parent" >
 
         <com.vtc.vtctube.category.PinnedSectionListView
@@ -146,7 +148,7 @@
                 android:layout_marginRight="10dp" >
 
                 <com.vtc.vtctube.font.RobotoLightTextView
-                    android:id="@+id/RobotoLightTextView03"
+                    android:id="@+id/lblLuotxem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -155,7 +157,7 @@
                     android:textSize="14dp" />
 
                 <com.vtc.vtctube.font.RobotoLightTextView
-                    android:id="@+id/RobotoLightTextView02"
+                    android:id="@+id/lblYeuthich"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -167,7 +169,7 @@
                     android:textSize="14dp" />
 
                 <com.vtc.vtctube.font.RobotoLightTextView
-                    android:id="@+id/RobotoLightTextView01"
+                    android:id="@+id/btnShareDetailt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

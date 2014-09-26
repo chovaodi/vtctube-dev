@@ -28,6 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static String COLLUM_COUNT = "count";
 	public static String COLLUM_ID = "id";
 	public static String COLLUM_SLUG = "slug";
+	public static String COLLUM_COUNTVIEW = "countview";
 
 	public static String COLLUM_CATID = "cateId";
 	public static String COLLUM_TITLE = "title";
@@ -215,7 +216,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public long insertVideoLike(int id, String cateId, String videoId,
-			String url, String status, String title, String slug) {
+			String url, String status, String title, String slug, String countview) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(COLLUM_ID, id);
 		initialValues.put(COLLUM_CATID, cateId);
@@ -224,13 +225,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		initialValues.put(COLLUM_STATUS, status);
 		initialValues.put(COLLUM_TITLE, title);
 		initialValues.put(COLLUM_SLUG, slug);
-		
+		initialValues.put(COLLUM_COUNTVIEW, countview);
 
 		return myDataBase.insert(TB_LIKE, null, initialValues);
 	}
 
 	public long insertListVideo(String table, String cateId, String title,
-			String videoId, String url, String status, int pageCount, int postId, String slug) {
+			String videoId, String url, String status, int pageCount, int postId, String slug, String countview) {
 		ContentValues initialValues = new ContentValues();
 
 		initialValues.put(COLLUM_CATID, cateId);
@@ -241,6 +242,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		initialValues.put(COLLUM_PAGECOUNT, pageCount);
 		initialValues.put(COLLUM_ID, postId);
 		initialValues.put(COLLUM_SLUG, slug);
+		initialValues.put(COLLUM_COUNTVIEW, countview);
+		
 		
 		return myDataBase.insert(table, null, initialValues);
 	}

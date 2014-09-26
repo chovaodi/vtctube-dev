@@ -30,7 +30,7 @@ import com.vtc.vtctube.utils.Utils;
 
 public class FragmentSearchResult extends SherlockFragment implements
 		OnScrollListener {
-	private PinnedAdapter adapter;
+	private static  PinnedAdapter adapter;
 	private ListView listvideo;
 	private View header;
 	private View fotter;
@@ -59,7 +59,8 @@ public class FragmentSearchResult extends SherlockFragment implements
 			this.keyword = keyword;
 			pageCount = 0;
 			FragmentSearchResult.json = json;
-			adapter.clear();
+			if (adapter != null)
+				adapter.clear();
 			adapter.notifyDataSetChanged();
 		}
 	}
@@ -136,7 +137,8 @@ public class FragmentSearchResult extends SherlockFragment implements
 		pager.setAdapter(adapterPg);
 		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
-		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,getActivity(), callBack);
+		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,
+				getActivity(), callBack);
 
 		callBack.getResult(Utils.LOAD_FIRST_DATA, json);
 		listvideo.setOnScrollListener(this);
@@ -174,14 +176,7 @@ public class FragmentSearchResult extends SherlockFragment implements
 					for (int i = 0; i < jsonArray.length(); i++) {
 						ItemPost item = new ItemPost();
 						JSONObject json = (JSONObject) jsonArray.get(i);
-						item.setIdPost(json.getInt("id"));
-						item.setPageCount(pageCount);
-						item.setTitle(json.getString("title"));
-						item.setStatus(json.getString("status"));
-						item.setVideoId(getIdVideo(json.getString("content")));
-						item.setUrl(json.getString("thumbnail"));
-						item.setSlug(json.getString("slug"));
-
+						item = Utils.getItemPost(json, pageCount, 0);
 						listData.add(item);
 						listTmp.add(item);
 
