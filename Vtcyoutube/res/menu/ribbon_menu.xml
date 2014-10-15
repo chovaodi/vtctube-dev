@@ -11,7 +11,7 @@
         android:icon="@drawable/video_moinhat"
         android:title="Video mới nhất">
     </item>
-    <item
+   <!--  <item
         android:id="@+id/menu_video_hotinday"
         android:icon="@drawable/video_trongngay"
         android:title="Hot trong ngày">
@@ -25,7 +25,7 @@
         android:id="@+id/menu_video_hotinmonth"
         android:icon="@drawable/video_trongthang"
         android:title="Hot trong tháng">
-    </item>
+    </item> -->
     <item
         android:id="@+id/menu_video_xemnhieu"
         android:icon="@drawable/video_xemnhieu"

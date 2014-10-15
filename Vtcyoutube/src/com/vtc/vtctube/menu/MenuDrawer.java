@@ -70,7 +70,7 @@ public abstract class MenuDrawer extends ViewGroup {
     /**
      * The time between each frame when animating the drawer.
      */
-    protected static final int ANIMATION_DELAY = 1000 / 60;
+    protected static final int ANIMATION_DELAY =300;
 
     /**
      * The default touch bezel size of the drawer in dp.

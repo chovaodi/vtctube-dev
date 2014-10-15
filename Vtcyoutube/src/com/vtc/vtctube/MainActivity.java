@@ -26,7 +26,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -120,6 +119,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private FragmentTransaction ft;
 	public static ViewGroup mainView;
 	private Random random = new Random();
+	private int positionActive = 1;
+	private int positionPreview = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +160,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 				Position.LEFT);
 		leftMenu.setDropShadowColor(Color.parseColor("#503f3f3f"));
 		leftMenu.setDropShadowSize(8);
+		leftMenu.setAnimationCacheEnabled(true);
+
 		DisplayMetrics displaymetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 		int width = displaymetrics.widthPixels;
@@ -217,10 +220,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				clickMenu(position);
+				positionActive = position;
+				leftMenu.toggleMenu();
+
+				// /clickMenu(position);
 
 			}
 
+		});
+		leftMenu.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
+
+			@Override
+			public void onDrawerStateChange(int oldState, int newState) {
+				if (newState == MenuDrawer.STATE_CLOSED
+						&& positionActive != positionPreview) {
+
+					clickMenu(positionActive);
+				}
+			}
 		});
 
 		smooth = (SmoothProgressBar) findViewById(R.id.google_now);
@@ -246,9 +263,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		Fragment newFragment = FragmentHome.newInstance(1);
 		ft.add(R.id.container, newFragment).commit();
+
 	}
 
 	public void clickMenu(int position) {
+		positionPreview = position;
 		int id = listItemMenu.get(position - 1).getRegId();
 		switch (id) {
 		case R.id.menu_trangchu:
@@ -271,6 +290,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				addFragmentResent(R.id.menu_video_yeuthich, getResources()
 						.getString(R.string.lblmenu_yeuthich));
 			} else {
+				positionActive = 1;
 				Utils.getDialogMessges(MainActivity.this, getResources()
 						.getString(R.string.lblMsgrong));
 			}
@@ -282,6 +302,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				addFragmentResent(R.id.menu_video_daxem, getResources()
 						.getString(R.string.lblmenu_daxem));
 			} else {
+				positionActive = 1;
 				Utils.getDialogMessges(MainActivity.this, getResources()
 						.getString(R.string.lblMsgrong));
 			}
@@ -289,7 +310,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 
 		}
-		leftMenu.toggleMenu();
 	}
 
 	public ArrayList<String> getQuerySearch(String sql) {
@@ -670,12 +690,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 					}
 
 				} else {
+					positionActive = 1;
 					Utils.getDialogMessges(MainActivity.this, getResources()
 							.getString(R.string.lblMsgrong));
 
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				positionActive = 1;
 				Utils.getDialogMessges(MainActivity.this, getResources()
 						.getString(R.string.lblMsgrong));
 			}
@@ -800,13 +822,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onQueryTextChange(String newText) {
 		listQuerySearch = getQuerySearch("SELECT * FROM "
 				+ DatabaseHelper.TB_QUERY_SEARCH);
-		
+
 		for (int i = 0; i < listQuerySearch.size(); i++) {
 			if (listQuerySearch.get(i).contains(newText)) {
 				String valueTmp = listQuerySearch.get(i);
 				listQuerySearch.set(i, listQuerySearch.get(0));
 				listQuerySearch.set(0, valueTmp);
-				
+
 				break;
 			}
 		}
