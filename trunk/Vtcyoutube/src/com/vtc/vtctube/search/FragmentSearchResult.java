@@ -30,7 +30,7 @@ import com.vtc.vtctube.utils.Utils;
 
 public class FragmentSearchResult extends SherlockFragment implements
 		OnScrollListener {
-	private static  PinnedAdapter adapter;
+	private static PinnedAdapter adapter;
 	private ListView listvideo;
 	private View header;
 	private View fotter;
@@ -235,7 +235,8 @@ public class FragmentSearchResult extends SherlockFragment implements
 			int visibleItemCount, int totalItemCount) {
 		int lastInScreen = firstVisibleItem + visibleItemCount;
 		if ((lastInScreen == totalItemCount)) {
-			page = 1 + (listData.size() / pageSize);
+			if (listData != null)
+				page = 1 + (listData.size() / pageSize);
 			if (page >= pageCount)
 				isLoadding = true;
 
