@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -120,7 +121,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public static ViewGroup mainView;
 	private Random random = new Random();
 	private int positionActive = 1;
-	private int positionPreview = 1;
+	private int positionPreview = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -220,6 +221,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
+				Log.d("positionActive", positionActive+""); 
 				positionActive = position;
 				leftMenu.toggleMenu();
 
@@ -581,10 +583,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public void onClick(boolean isShowTitle, String title) {
 			isMenuCate = isShowTitle;
+		
 			if (isShowTitle) {
 				lblTitle.setVisibility(View.VISIBLE);
 				imgLogo.setVisibility(View.GONE);
 				lblTitle.setText(title);
+				positionPreview=0;
 			} else {
 				lblTitle.setVisibility(View.GONE);
 				imgLogo.setVisibility(View.VISIBLE);
@@ -719,6 +723,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
+		final int left = leftMenu.getDrawerState();
+		if (left == MenuDrawer.STATE_OPEN || left == MenuDrawer.STATE_OPENING) {
+			leftMenu.closeMenu();
+			return;
+		}
+
 		Fragment myFragment = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_CATE);
 		if (myFragment != null && myFragment.isVisible()) {
