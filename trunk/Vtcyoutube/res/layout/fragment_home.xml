@@ -1,11 +1,37 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <com.vtc.vtctube.utils.GridView
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/banner_home" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_play" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <GridView
         android:id="@+id/list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -13,6 +39,8 @@
         android:background="@android:color/transparent"
         android:horizontalSpacing="30dp"
         android:listSelector="@android:color/transparent"
-        android:scrollbars="none" />
+        android:numColumns="3"
+        android:scrollbars="none" >
+    </GridView>
 
-</RelativeLayout>
+</LinearLayout>

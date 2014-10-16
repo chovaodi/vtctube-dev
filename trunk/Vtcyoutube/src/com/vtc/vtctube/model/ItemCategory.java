@@ -1,5 +1,7 @@
 package com.vtc.vtctube.model;
 
+import android.graphics.Bitmap;
+
 public class ItemCategory {
 	private int icon;
 	private String title;
@@ -8,6 +10,15 @@ public class ItemCategory {
 	private String slug;
 	private int postcount;
 	private int idPost;
+	private Bitmap thumnail=null;
+
+	public void setThumnail(Bitmap thumnail) {
+		this.thumnail = thumnail;
+	}
+
+	public Bitmap getThumnail() {
+		return thumnail;
+	}
 
 	public int getIdPost() {
 		return idPost;
