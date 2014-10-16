@@ -19,7 +19,6 @@ package com.vtc.vtctube;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -29,6 +28,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -90,9 +90,8 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 		setContentView(R.layout.playerview_demo);
 
-		
 		getActionBar().setTitle(title);
-	
+
 		btnLienquan = (Button) findViewById(R.id.btnLienquan);
 		btnChitiet = (Button) findViewById(R.id.btnChitiet);
 		listvideo = (ListView) findViewById(R.id.listvideo);
@@ -114,18 +113,19 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 			@Override
 			public void onClick(View v) {
-				String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
-						+ " WHERE id='" + id + "'";
-				if (MainActivity.myDbHelper.getCountRow(DatabaseHelper.TB_LIKE,
-						sqlCheck) == 0) {
-					MainActivity.myDbHelper.insertVideoLike(id, cate, videoId,
-							url, status, title, slug, countview);
-				}
-				Utils.getDialogMessges(PlayerViewActivity.this, "Video vừa được thêm vào danh sách yêu thích");
-				
+				actionLike();
 			}
 		});
 
+		ImageButton imgLike = (ImageButton) findViewById(R.id.btnLike);
+		imgLike.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				actionLike();
+
+			}
+		});
 		lineChitiet = (LinearLayout) findViewById(R.id.lineChitiet);
 		lineBack = (LinearLayout) findViewById(R.id.lineBack);
 		lineBack.setOnClickListener(new OnClickListener() {
@@ -199,16 +199,29 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 	}
 
+	public void actionLike() {
+		String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
+				+ " WHERE id='" + id + "'";
+		if (MainActivity.myDbHelper.getCountRow(DatabaseHelper.TB_LIKE,
+				sqlCheck) == 0) {
+			MainActivity.myDbHelper.insertVideoLike(id, cate, videoId, url,
+					status, title, slug, countview);
+		}
+		Utils.getDialogMessges(PlayerViewActivity.this,
+				"Video vừa được thêm vào danh sách yêu thích");
+
+	}
+
 	public void setDataview(ItemPost item) {
-		cate=item.getCateId();
+		cate = item.getCateId();
 		slug = item.getSlug();
 		url = item.getUrl();
 		title = item.getTitle();
 		id = item.getIdPost();
 		countview = item.getCountview();
 		status = item.getStatus();
-		videoId=item.getVideoId();
-		
+		videoId = item.getVideoId();
+
 		lblTaskTitle.setText(Html.fromHtml(item.getTitle()));
 		lblTitle.setText(Html.fromHtml(item.getTitle()));
 		lblCountView.setText("Lượt xem: " + item.getCountview());
