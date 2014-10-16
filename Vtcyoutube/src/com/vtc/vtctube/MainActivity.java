@@ -221,7 +221,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				Log.d("positionActive", positionActive+""); 
+				Log.d("positionActive", positionActive + "");
 				positionActive = position;
 				leftMenu.toggleMenu();
 
@@ -269,6 +269,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu(int position) {
+		if (positionActive == Integer.MAX_VALUE) {
+			return;
+		}
 		positionPreview = position;
 		int id = listItemMenu.get(position - 1).getRegId();
 		switch (id) {
@@ -292,7 +295,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 				addFragmentResent(R.id.menu_video_yeuthich, getResources()
 						.getString(R.string.lblmenu_yeuthich));
 			} else {
-				positionActive = 1;
+				positionPreview = 0;
+				positionActive = Integer.MAX_VALUE;
 				Utils.getDialogMessges(MainActivity.this, getResources()
 						.getString(R.string.lblMsgrong));
 			}
@@ -304,7 +308,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 				addFragmentResent(R.id.menu_video_daxem, getResources()
 						.getString(R.string.lblmenu_daxem));
 			} else {
-				positionActive = 1;
+				positionPreview = 0;
+				positionActive = Integer.MAX_VALUE;
 				Utils.getDialogMessges(MainActivity.this, getResources()
 						.getString(R.string.lblMsgrong));
 			}
@@ -583,12 +588,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public void onClick(boolean isShowTitle, String title) {
 			isMenuCate = isShowTitle;
-		
+
 			if (isShowTitle) {
 				lblTitle.setVisibility(View.VISIBLE);
 				imgLogo.setVisibility(View.GONE);
 				lblTitle.setText(title);
-				positionPreview=0;
+				positionPreview = 0;
+				positionActive = Integer.MAX_VALUE;
 			} else {
 				lblTitle.setVisibility(View.GONE);
 				imgLogo.setVisibility(View.VISIBLE);
@@ -694,14 +700,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 					}
 
 				} else {
-					positionActive = 1;
+					positionPreview = 0;
+					positionActive = Integer.MAX_VALUE;
 					Utils.getDialogMessges(MainActivity.this, getResources()
 							.getString(R.string.lblMsgrong));
 
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				positionActive = 1;
+				positionPreview = 0;
+				positionActive = Integer.MAX_VALUE;
 				Utils.getDialogMessges(MainActivity.this, getResources()
 						.getString(R.string.lblMsgrong));
 			}
@@ -816,6 +824,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		currentCate = FragmentHome.listData.get(
 				random.nextInt(FragmentHome.listData.size() - 1))
 				.getIdCategory();
+		if (currentCate.equals(1)) {
+			FragmentHome.listData.get(0).getIdCategory();
+		}
 		String url = Utils.host + "get_posts?count=5&page=1&cat=" + currentCate;
 		new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
 				MainActivity.smooth, callBackSearch).execute(url);

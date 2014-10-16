@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -37,13 +38,12 @@ import com.vtc.vtctube.adpter.MenuHomeAdapter;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
-import com.vtc.vtctube.utils.GridView;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
 public class FragmentHome extends SherlockFragment {
 	int mNum;
-	private GridView list;
+	private GridView gridView;
 	private View v;
 
 	// private PullToRefreshLayout mPullToRefreshLayout;
@@ -188,19 +188,19 @@ public class FragmentHome extends SherlockFragment {
 				}
 			}
 
-			list = (GridView) v.findViewById(R.id.list);
-			View header = getActivity().getLayoutInflater().inflate(
-					R.layout.header, null);
+			gridView = (GridView) v.findViewById(R.id.list);
+//			View header = getActivity().getLayoutInflater().inflate(
+//					R.layout.header, null);
 
-			list.addHeaderView(header);
-			list.setNumColumns(2);
-			list.setPadding(Utils.convertDpToPixel(20, getActivity()), 0,
+			//list.addHeaderView(header);
+			gridView.setNumColumns(2);
+			gridView.setPadding(Utils.convertDpToPixel(20, getActivity()), 0,
 					Utils.convertDpToPixel(20, getActivity()), 0);
 
 			MenuHomeAdapter adapter = new MenuHomeAdapter(getActivity(),
 					listData);
-			list.setAdapter(adapter);
-			list.setOnItemClickListener(new OnItemClickListener() {
+			gridView.setAdapter(adapter);
+			gridView.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,

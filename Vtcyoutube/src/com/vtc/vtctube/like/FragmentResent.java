@@ -165,7 +165,6 @@ public class FragmentResent extends Fragment {
 			listData = Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH);
 
 		} else {
-			Log.d("1111111111", "222222222222222");
 			queryResent = "SELECT * FROM " + DatabaseHelper.TB_RESENT;
 			listData = Utils.getVideoLocal( DatabaseHelper.TB_RESENT,queryResent, PinnedAdapter.MOINHAT);
 			listData = Utils.checkLikeVideo(listData,
