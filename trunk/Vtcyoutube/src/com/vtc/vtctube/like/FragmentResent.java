@@ -5,18 +5,14 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.viewpagerindicator.PageIndicator;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.category.PinnedAdapter;
-import com.vtc.vtctube.category.PinnedSectionListView;
-import com.vtc.vtctube.category.SliderTopFragmentAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.utils.IResult;
@@ -27,9 +23,6 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 public class FragmentResent extends Fragment {
 	private static PinnedAdapter adapter = null;
 	private static ListView listvideo;
-	private View header;
-
-	private ViewPager pager;
 
 	public static SmoothProgressBar smooth;
 	private String queryResent;
@@ -45,7 +38,6 @@ public class FragmentResent extends Fragment {
 	// private PullToRefreshLayout mPullToRefreshLayout;
 	public static String[] cateName;
 
-	
 	public void onResumeData(int key) {
 		this.key = key;
 		init();
@@ -57,7 +49,6 @@ public class FragmentResent extends Fragment {
 		if (callBackOnlick == null) {
 			callBackOnlick = new ResultOnclickTab();
 		}
-
 
 		if (listData == null) {
 			listData = new ArrayList<ItemPost>();
@@ -93,7 +84,8 @@ public class FragmentResent extends Fragment {
 			Bundle savedInstanceState) {
 		init();
 		v = inflater.inflate(R.layout.category_layout, container, false);
-		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,getActivity(), callBackOnlick);
+		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,
+				getActivity(), callBackOnlick);
 		// if (key == R.id.menu_video_yeuthich) {
 		// getSupportActionBar().setTitle("Video yêu thích");
 		// } else {
@@ -103,24 +95,8 @@ public class FragmentResent extends Fragment {
 		smooth = (SmoothProgressBar) v.findViewById(R.id.google_now);
 		smooth.setVisibility(View.GONE);
 
-		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,getActivity(), callBackOnlick);
 		listvideo = (ListView) v.findViewById(R.id.listvideo);
-		header = getActivity().getLayoutInflater().inflate(
-				R.layout.header_cate, null);
-		listvideo.addHeaderView(header);
-
-		pager = (ViewPager) header.findViewById(R.id.pager);
-		SliderTopFragmentAdapter adapterPg = new SliderTopFragmentAdapter(
-				getActivity().getSupportFragmentManager());
-
-		pager.setAdapter(adapterPg);
-
-		PageIndicator mIndicator = (PageIndicator) header
-				.findViewById(R.id.indicator);
-		mIndicator.setViewPager(pager);
-
-		((PinnedSectionListView) listvideo).setShadowVisible(false);
-
+		Log.d("chvoaoid", "sssssssss");
 		addViewPost();
 		return v;
 
@@ -166,7 +142,8 @@ public class FragmentResent extends Fragment {
 
 		} else {
 			queryResent = "SELECT * FROM " + DatabaseHelper.TB_RESENT;
-			listData = Utils.getVideoLocal( DatabaseHelper.TB_RESENT,queryResent, PinnedAdapter.MOINHAT);
+			listData = Utils.getVideoLocal(DatabaseHelper.TB_RESENT,
+					queryResent, PinnedAdapter.MOINHAT);
 			listData = Utils.checkLikeVideo(listData,
 					Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH));
 		}
@@ -174,6 +151,7 @@ public class FragmentResent extends Fragment {
 		for (int i = 0; i < listData.size(); i++) {
 			if (listData.get(i).getStatus().equals("publish")) {
 				listData.get(i).setType(PinnedAdapter.ITEM);
+				Log.d("demo", "demo" + i);
 				adapter.add(listData.get(i));
 			}
 		}

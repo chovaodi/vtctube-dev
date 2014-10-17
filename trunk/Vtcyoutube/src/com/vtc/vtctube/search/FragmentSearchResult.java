@@ -20,8 +20,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.category.PinnedAdapter;
-import com.vtc.vtctube.category.PinnedSectionListView;
-import com.vtc.vtctube.category.SliderTopFragmentAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
@@ -32,7 +30,6 @@ public class FragmentSearchResult extends SherlockFragment implements
 		OnScrollListener {
 	private static PinnedAdapter adapter;
 	private ListView listvideo;
-	private View header;
 	private View fotter;
 	private ViewPager pager;
 
@@ -124,18 +121,9 @@ public class FragmentSearchResult extends SherlockFragment implements
 
 		listvideo = (ListView) view.findViewById(R.id.listvideo);
 		listvideo.setAdapter(null);
-		header = getActivity().getLayoutInflater().inflate(
-				R.layout.header_cate, null);
-		listvideo.addHeaderView(header);
 		fotter = getActivity().getLayoutInflater().inflate(
 				R.layout.fotter_loadmore, null);
 
-		pager = (ViewPager) header.findViewById(R.id.pager);
-		SliderTopFragmentAdapter adapterPg = new SliderTopFragmentAdapter(
-				getActivity().getSupportFragmentManager());
-
-		pager.setAdapter(adapterPg);
-		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
 		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,
 				getActivity(), callBack);

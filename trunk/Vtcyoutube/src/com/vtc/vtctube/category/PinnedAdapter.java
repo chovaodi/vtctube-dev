@@ -22,19 +22,16 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
-import com.vtc.vtctube.category.PinnedSectionListView.PinnedSectionListAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.like.CommentAcitivity;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
-public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
-		PinnedSectionListAdapter {
+public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 	ViewHolder holder = null;
 	private LayoutInflater mInflater;
 	public static final int ITEM = 0;
-	public static final int SECTION = 1;
 
 	public static final int TYPE_VIEW_CATE = 0;
 	public static final int TYPE_VIEW_DETAIL = 1;
@@ -67,214 +64,147 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		holder = null;
-		int type = getItemViewType(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
-			switch (type) {
-			case SECTION:
 
-				convertView = mInflater.inflate(R.layout.header_pinned, null);
-				holder.btnMoinhat = (Button) convertView
-						.findViewById(R.id.btnChitiet);
-				holder.btnXemnhieu = (Button) convertView
-						.findViewById(R.id.button2);
-				holder.btnYeuthich = (Button) convertView
-						.findViewById(R.id.button3);
+			convertView = mInflater.inflate(R.layout.item_post, null);
+			holder.txtTitle = (TextView) convertView
+					.findViewById(R.id.lblTitlePost);
+			holder.lblCountview = (TextView) convertView
+					.findViewById(R.id.lblCountview);
+			holder.iconLike = (ImageButton) convertView
+					.findViewById(R.id.ic_like);
 
-				break;
+			holder.imgIcon = (ImageView) convertView
+					.findViewById(R.id.imageView1);
 
-			case ITEM:
+			holder.btnComment = (LinearLayout) convertView
+					.findViewById(R.id.btnComment);
 
-				convertView = mInflater.inflate(R.layout.item_post, null);
-				holder.txtTitle = (TextView) convertView
-						.findViewById(R.id.lblTitlePost);
-				holder.lblCountview = (TextView) convertView
-						.findViewById(R.id.lblCountview);
-				holder.iconLike = (ImageButton) convertView
-						.findViewById(R.id.ic_like);
+			holder.btnLike = (LinearLayout) convertView
+					.findViewById(R.id.btnLike);
+			holder.btnShare = (LinearLayout) convertView
+					.findViewById(R.id.btnShare);
+			holder.lineClick = (LinearLayout) convertView
+					.findViewById(R.id.onClickItem);
+			holder.loadingBanner = (ProgressBar) convertView
+					.findViewById(R.id.loadingBanner);
 
-				holder.imgIcon = (ImageView) convertView
-						.findViewById(R.id.imageView1);
-
-				holder.btnComment = (LinearLayout) convertView
-						.findViewById(R.id.btnComment);
-
-				holder.btnLike = (LinearLayout) convertView
-						.findViewById(R.id.btnLike);
-				holder.btnShare = (LinearLayout) convertView
-						.findViewById(R.id.btnShare);
-				holder.lineClick = (LinearLayout) convertView
-						.findViewById(R.id.onClickItem);
-				holder.loadingBanner = (ProgressBar) convertView
-						.findViewById(R.id.loadingBanner);
-
-				break;
-			}
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		if (type == SECTION) {
-			final ItemPost item = getItem(position);
-			if (item.getOption() == MOINHAT) {
-				holder.btnMoinhat.setSelected(true);
-				holder.btnXemnhieu.setSelected(false);
-				holder.btnYeuthich.setSelected(false);
-			} else if (item.getOption() == XEMNHIEU) {
-				holder.btnMoinhat.setSelected(false);
-				holder.btnXemnhieu.setSelected(true);
-				holder.btnYeuthich.setSelected(false);
-			} else {
-				holder.btnMoinhat.setSelected(false);
-				holder.btnXemnhieu.setSelected(false);
-				holder.btnYeuthich.setSelected(true);
-			}
-
-			holder.btnMoinhat.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					if (item.getOption() != MOINHAT) {
-						callBack.getResult(PinnedAdapter.MOINHAT, "");
-					}
-				}
-			});
-			holder.btnXemnhieu.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					if (item.getOption() != XEMNHIEU) {
-						callBack.getResult(PinnedAdapter.XEMNHIEU, "");
-					}
-				}
-			});
-
-			holder.btnYeuthich.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					if (item.getOption() != YEUTHICH) {
-						callBack.getResult(PinnedAdapter.YEUTHICH, "");
-					}
-				}
-			});
-
+		final ItemPost item = getItem(position);
+		if (typeView == TYPE_VIEW_DETAIL) {
+			holder.btnLike.setVisibility(View.GONE);
+			holder.btnShare.setVisibility(View.GONE);
+			holder.lblCountview.setText("Lượt xem: " + item.getCountview());
 		} else {
-			final ItemPost item = getItem(position);
-			if (typeView == TYPE_VIEW_DETAIL) {
-				holder.btnLike.setVisibility(View.GONE);
-				holder.btnShare.setVisibility(View.GONE);
-				holder.lblCountview.setText("Lượt xem: "+item.getCountview());
-			}else{
-				holder.lblCountview.setText(item.getCountview());
-				holder.lblCountview.setCompoundDrawablesWithIntrinsicBounds(R.drawable.eye,0, 0, 0);
-			}
-
-			
-			if (item.isLike()) {
-				holder.iconLike.setSelected(true);
-			} else {
-				holder.iconLike.setSelected(false);
-			}
-			
-			holder.lineClick.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					String sqlCheck = "SELECT * FROM "
-							+ DatabaseHelper.TB_RESENT + " WHERE id='"
-							+ item.getIdPost() + "'";
-					if (MainActivity.myDbHelper.getCountRow(
-							DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
-						MainActivity.myDbHelper.insertListVideo(
-								DatabaseHelper.TB_RESENT, item.getCateId(),
-								item.getTitle(), item.getVideoId(),
-								item.getUrl(), item.getStatus(),
-								item.getPageCount(), item.getIdPost(),
-								item.getSlug(), item.getCountview());
-					}
-					callBack.onCLickView(item);
-				}
-			});
-
-			holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
-
-			// Bitmap bmp = imageLoader.loadImageSync(item.getUrl());
-			// if (bmp != null) {
-			// holder.imgIcon.setImageBitmap(bmp);
-			// } else {
-
-			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
-					Utils.getOptions(context, R.drawable.img_erorrs),
-					new SimpleImageLoadingListener() {
-						@Override
-						public void onLoadingStarted(String imageUri, View view) {
-							// holder.loadingBanner.setVisibility(View.VISIBLE);
-						}
-
-						@Override
-						public void onLoadingFailed(String imageUri, View view,
-								FailReason failReason) {
-							// holder.spinner.setVisibility(View.GONE);
-						}
-
-						@Override
-						public void onLoadingComplete(String imageUri,
-								View view, Bitmap loadedImage) {
-							// holder.loadingBanner.setVisibility(View.GONE);
-						}
-					});
-			// }
-
-			holder.btnLike.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-
-					if (item.isLike()) {
-						MainActivity.myDbHelper.deleteLikeVideo(
-								DatabaseHelper.TB_LIKE, item.getIdPost());
-						callBack.pushResutClickItem(item.getOption(),
-								getPosition(item), false);
-					} else {
-						String sqlCheck = "SELECT * FROM "
-								+ DatabaseHelper.TB_LIKE + " WHERE id='"
-								+ item.getIdPost() + "'";
-						if (MainActivity.myDbHelper.getCountRow(
-								DatabaseHelper.TB_LIKE, sqlCheck) == 0) {
-							MainActivity.myDbHelper.insertVideoLike(
-									item.getIdPost(), item.getCateId(),
-									item.getVideoId(), item.getUrl(),
-									item.getStatus(), item.getTitle(),
-									item.getSlug(), item.getCountview());
-							callBack.pushResutClickItem(item.getOption(),
-									getPosition(item), true);
-						}
-
-					}
-				}
-			});
-			holder.btnShare.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					MainActivity.callClickShare.onShare(item.getTitle(),
-							item.getUrl(), item.getSlug());
-				}
-			});
-
-			holder.btnComment.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					Intent intent = new Intent(context, CommentAcitivity.class);
-					intent.putExtra("link",
-							"http://www.haivl.com/photo/4530297");
-					context.startActivity(intent);
-				}
-			});
-
+			holder.lblCountview.setText(item.getCountview());
+			holder.lblCountview.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.eye, 0, 0, 0);
 		}
+
+		if (item.isLike()) {
+			holder.iconLike.setSelected(true);
+		} else {
+			holder.iconLike.setSelected(false);
+		}
+
+		holder.lineClick.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_RESENT
+						+ " WHERE id='" + item.getIdPost() + "'";
+				if (MainActivity.myDbHelper.getCountRow(
+						DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
+					MainActivity.myDbHelper.insertListVideo(
+							DatabaseHelper.TB_RESENT, item.getCateId(),
+							item.getTitle(), item.getVideoId(), item.getUrl(),
+							item.getStatus(), item.getPageCount(),
+							item.getIdPost(), item.getSlug(),
+							item.getCountview());
+				}
+				callBack.onCLickView(item);
+			}
+		});
+
+		holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
+
+		// Bitmap bmp = imageLoader.loadImageSync(item.getUrl());
+		// if (bmp != null) {
+		// holder.imgIcon.setImageBitmap(bmp);
+		// } else {
+
+		imageLoader.displayImage(item.getUrl(), holder.imgIcon,
+				Utils.getOptions(context, R.drawable.img_erorrs),
+				new SimpleImageLoadingListener() {
+					@Override
+					public void onLoadingStarted(String imageUri, View view) {
+						// holder.loadingBanner.setVisibility(View.VISIBLE);
+					}
+
+					@Override
+					public void onLoadingFailed(String imageUri, View view,
+							FailReason failReason) {
+						// holder.spinner.setVisibility(View.GONE);
+					}
+
+					@Override
+					public void onLoadingComplete(String imageUri, View view,
+							Bitmap loadedImage) {
+						// holder.loadingBanner.setVisibility(View.GONE);
+					}
+				});
+		// }
+
+		holder.btnLike.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+
+				if (item.isLike()) {
+					MainActivity.myDbHelper.deleteLikeVideo(
+							DatabaseHelper.TB_LIKE, item.getIdPost());
+					callBack.pushResutClickItem(item.getOption(),
+							getPosition(item), false);
+				} else {
+					String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
+							+ " WHERE id='" + item.getIdPost() + "'";
+					if (MainActivity.myDbHelper.getCountRow(
+							DatabaseHelper.TB_LIKE, sqlCheck) == 0) {
+						MainActivity.myDbHelper.insertVideoLike(
+								item.getIdPost(), item.getCateId(),
+								item.getVideoId(), item.getUrl(),
+								item.getStatus(), item.getTitle(),
+								item.getSlug(), item.getCountview());
+						callBack.pushResutClickItem(item.getOption(),
+								getPosition(item), true);
+					}
+
+				}
+			}
+		});
+		holder.btnShare.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				MainActivity.callClickShare.onShare(item.getTitle(),
+						item.getUrl(), item.getSlug());
+			}
+		});
+
+		holder.btnComment.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(context, CommentAcitivity.class);
+				intent.putExtra("link", "http://www.haivl.com/photo/4530297");
+				context.startActivity(intent);
+			}
+		});
+
 		return convertView;
 	}
 
@@ -288,10 +218,10 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> implements
 		return getItem(position).type;
 	}
 
-	@Override
-	public boolean isItemViewTypePinned(int viewType) {
-		return viewType == SECTION;
-	}
+	// @Override
+	// public boolean isItemViewTypePinned(int viewType) {
+	// //return viewType == SECTION;
+	// }
 
 	public class ViewHolder {
 		public TextView txtTitle;

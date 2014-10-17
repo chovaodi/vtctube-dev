@@ -113,7 +113,7 @@
         
         android:layout_height="match_parent" >
 
-        <com.vtc.vtctube.category.PinnedSectionListView
+        <ListView
             android:id="@+id/listvideo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
