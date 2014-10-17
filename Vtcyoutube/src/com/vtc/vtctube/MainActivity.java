@@ -548,6 +548,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentResent fragment = (FragmentResent) fragmentManager
 				.findFragmentByTag(Utils.TAG_RESENT);
 		if (fragment == null) {
+			Log.d("Video yeuthich","111111111");
 			fragment = FragmentResent.newInstance(id);
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_RESENT);

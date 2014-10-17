@@ -15,14 +15,17 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.PageIndicator;
+import com.google.android.gms.internal.ad;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
@@ -37,12 +40,16 @@ public class FragmentCategory extends SherlockFragment implements
 		OnRefreshListener, OnScrollListener {
 	private View v;
 	List<ItemCategory> listData = null;
-	private View header;
+	// private View header;
 	private View fotter;
 
-	private ViewPager pager;
 	public static PinnedAdapter adapter;
 	private PullToRefreshLayout mPullToRefreshLayout;
+	private static Button btnMoinhat;
+	private static Button btnXemnhieu;
+	private static Button btnYeuthich;
+	private static LinearLayout lineTab;
+
 	public static ListView listvideo;
 
 	private int page = 1;
@@ -63,7 +70,7 @@ public class FragmentCategory extends SherlockFragment implements
 	private ResultOnclikTab callBackOnlick = null;
 	public static FragmentCategory frament = null;
 	private Random random = new Random();
-	private List<ItemPost> listVideoXemnhieu = new ArrayList<ItemPost>();;
+	private List<ItemPost> listVideoXemnhieu = new ArrayList<ItemPost>();
 
 	public FragmentCategory() {
 		if (callBack == null)
@@ -101,13 +108,14 @@ public class FragmentCategory extends SherlockFragment implements
 				listVideoXemnhieu = new ArrayList<ItemPost>();
 			}
 
-			if (listvideo != null) {
-				removeFotter();
-			}
+			// if (listvideo != null) {
+			// removeFotter();
+			// }
 			if (adapter != null) {
 				adapter.clear();
 			}
-			
+
+			resetTab();
 			onLoadData(false);
 		}
 	}
@@ -116,7 +124,7 @@ public class FragmentCategory extends SherlockFragment implements
 		if (adapter != null) {
 			adapter.clear();
 		}
-		
+
 		if (frament == null)
 			frament = new FragmentCategory();
 
@@ -147,26 +155,14 @@ public class FragmentCategory extends SherlockFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		v = inflater.inflate(R.layout.category_layout, container, false);
-
+		lineTab=(LinearLayout)v.findViewById(R.id.lineTab);
+		lineTab.setVisibility(View.VISIBLE);
+		
 		listvideo = (ListView) v.findViewById(R.id.listvideo);
-		header = getActivity().getLayoutInflater().inflate(
-				R.layout.header_cate, null);
 		fotter = getActivity().getLayoutInflater().inflate(
 				R.layout.fotter_loadmore, null);
 
-		listvideo.addHeaderView(header);
 		listvideo.setOnScrollListener(this);
-		pager = (ViewPager) header.findViewById(R.id.pager);
-		SliderTopFragmentAdapter adapterPg = new SliderTopFragmentAdapter(
-				getActivity().getSupportFragmentManager());
-
-		pager.setAdapter(adapterPg);
-
-		PageIndicator mIndicator = (PageIndicator) header
-				.findViewById(R.id.indicator);
-		mIndicator.setViewPager(pager);
-
-		((PinnedSectionListView) listvideo).setShadowVisible(false);
 
 		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,
 				getActivity(), callBackOnlick);
@@ -178,7 +174,54 @@ public class FragmentCategory extends SherlockFragment implements
 				.listener(this).setup(mPullToRefreshLayout);
 		onLoadData(true);
 
+		btnMoinhat = (Button) v.findViewById(R.id.btnChitiet);
+		btnXemnhieu = (Button) v.findViewById(R.id.button2);
+		btnYeuthich = (Button) v.findViewById(R.id.button3);
+		resetTab();
+
+		btnMoinhat.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+
+				btnXemnhieu.setSelected(false);
+				btnYeuthich.setSelected(false);
+				if (!btnMoinhat.isSelected())
+					callBackOnlick.getResult(PinnedAdapter.MOINHAT, "");
+				btnMoinhat.setSelected(true);
+			}
+		});
+		btnXemnhieu.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				btnMoinhat.setSelected(false);
+				btnYeuthich.setSelected(false);
+				if (!btnXemnhieu.isSelected())
+					callBackOnlick.getResult(PinnedAdapter.XEMNHIEU, "");
+				btnXemnhieu.setSelected(true);
+			}
+		});
+
+		btnYeuthich.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				btnMoinhat.setSelected(false);
+				btnXemnhieu.setSelected(false);
+				if (!btnYeuthich.isSelected())
+					callBackOnlick.getResult(PinnedAdapter.YEUTHICH, "");
+				btnYeuthich.setSelected(true);
+			}
+		});
+
 		return v;
+	}
+
+	public void resetTab() {
+		btnMoinhat.setSelected(true);
+		btnXemnhieu.setSelected(false);
+		btnYeuthich.setSelected(false);
 	}
 
 	public void onLoadData(boolean isLoad) {
@@ -261,27 +304,27 @@ public class FragmentCategory extends SherlockFragment implements
 				listVideoXemnhieu = Utils.checkLikeVideo(listVideoXemnhieu,
 						listVideoLike);
 
-				resetTab();
-				if (listVideoXemnhieu != null && listVideoXemnhieu.size() > 0) {
-					for (int i = 0; i < listVideoXemnhieu.size(); i++) {
-						listVideoXemnhieu.get(i).setType(PinnedAdapter.ITEM);
-						adapter.add(listVideoXemnhieu.get(i));
-					}
-					adapter.notifyDataSetChanged();
-				} else if (!isLoadding) {
-					isLoadding = true;
-					int page = random.nextInt(pageCount);
-					String url = Utils.host + "get_posts?count=5&page=" + page
-							+ "&cat=" + MainActivity.currentCate;
+				// resetTab();
+				/*
+				 * if (listVideoXemnhieu != null && listVideoXemnhieu.size() >
+				 * 0) { for (int i = 0; i < listVideoXemnhieu.size(); i++) {
+				 * listVideoXemnhieu.get(i).setType(PinnedAdapter.ITEM);
+				 * adapter.add(listVideoXemnhieu.get(i)); }
+				 * adapter.notifyDataSetChanged(); } else
+				 */
+				adapter.clear();
+				adapter.notifyDataSetChanged();
 
-					new AysnRequestHttp((ViewGroup) v, Utils.LOAD_MORE,
-							MainActivity.smooth, callBack).execute(url);
-				}
+				Utils.disableEnableControls(false, (ViewGroup) v);
+				int page = random.nextInt(pageCount);
+				String url = Utils.host + "get_posts?count=5&page=" + page
+						+ "&cat=" + MainActivity.currentCate;
+
+				new AysnRequestHttp((ViewGroup) v, Utils.LOAD_MORE,
+						MainActivity.smooth, callBack).execute(url);
 
 				break;
 			case PinnedAdapter.YEUTHICH:
-				removeFotter();
-				resetTab();
 				mPullToRefreshLayout.setRefreshComplete();
 				setViewTab(listVideoLike);
 				break;
@@ -296,7 +339,6 @@ public class FragmentCategory extends SherlockFragment implements
 			listVideoLike = Utils.getVideoLike(queryLikeVideo, type);
 			switch (type) {
 			case PinnedAdapter.MOINHAT:
-				isLoadding = true;
 				queryVideoLocal = "SELECT * FROM tblListVideo where cateId='"
 						+ MainActivity.currentCate + "'";
 
@@ -315,8 +357,6 @@ public class FragmentCategory extends SherlockFragment implements
 				break;
 			case PinnedAdapter.YEUTHICH:
 				adapter.clear();
-				adapter.notifyDataSetChanged();
-
 				setViewTab(listVideoLike);
 
 				break;
@@ -330,22 +370,9 @@ public class FragmentCategory extends SherlockFragment implements
 		}
 	}
 
-	public void resetTab() {
-		adapter.clear();
-		ItemPost section = new ItemPost();
-		section.setType(PinnedAdapter.SECTION);
-		section.setOption(tabIndex);
-		adapter.add(section);
-	}
-
 	public void setViewTab(List<ItemPost> list) {
 		adapter.clear();
 		adapter.notifyDataSetChanged();
-
-		ItemPost section = new ItemPost();
-		section.setType(PinnedAdapter.SECTION);
-		section.setOption(tabIndex);
-		adapter.add(section);
 
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setType(PinnedAdapter.ITEM);
@@ -362,10 +389,6 @@ public class FragmentCategory extends SherlockFragment implements
 		listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
 		listData = Utils.checkLikeVideo(listData, listVideoLike);
 		adapter.clear();
-		ItemPost section = new ItemPost();
-		section.setType(PinnedAdapter.SECTION);
-		section.setOption(currentTab);
-		adapter.add(section);
 
 		for (int i = 0; i < listData.size(); i++) {
 			if (listData.get(i).getStatus().equals("publish")) {
@@ -380,10 +403,12 @@ public class FragmentCategory extends SherlockFragment implements
 
 		@Override
 		public void getResult(int type, String result) {
-			Log.d("tabIndex1", tabIndex + "");
+			isLoadding = false;
+			Utils.disableEnableControls(true, (ViewGroup) v);
+
 			showMessage();
 			MainActivity.smooth.setVisibility(View.GONE);
-			isLoadding = false;
+
 			if (type == Utils.REFRESH) {
 				if (result.length() > 0) {
 					for (int i = 0; i < listViewNew.size(); i++) {
@@ -437,7 +462,7 @@ public class FragmentCategory extends SherlockFragment implements
 					if (type == Utils.LOAD_FIRST_DATA) {
 						addViewPost(true, listViewNew, tabIndex);
 					} else {
-						removeFotter();
+						// removeFotter();
 						listVideoLike = Utils.getVideoLike(queryLikeVideo,
 								tabIndex);
 						listTmp = Utils.checkLikeVideo(listTmp, listVideoLike);
@@ -486,10 +511,10 @@ public class FragmentCategory extends SherlockFragment implements
 		}
 	}
 
-	public void removeFotter() {
-		if (listvideo.getFooterViewsCount() > 0)
-			listvideo.removeFooterView(fotter);
-	}
+	// public void removeFotter() {
+	// if (listvideo.getFooterViewsCount() > 0)
+	// listvideo.removeFooterView(fotter);
+	// }
 
 	public void removeHeader() {
 		if (listvideo.getHeaderViewsCount() > 0)
