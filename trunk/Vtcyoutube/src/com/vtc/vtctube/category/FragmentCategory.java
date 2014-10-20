@@ -282,8 +282,9 @@ public class FragmentCategory extends SherlockFragment implements
 				listViewNew = new ArrayList<ItemPost>();
 
 				Utils.disableEnableControls(false, (ViewGroup) v);
-
-				int page = random.nextInt(pageCount);
+				int page = 1;
+				if (pageCount != 0)
+					page = random.nextInt(pageCount);
 				String url = Utils.host + "get_posts?count=5&page=" + page
 						+ "&cat=" + MainActivity.currentCate;
 				Log.d("url", url);
@@ -430,7 +431,7 @@ public class FragmentCategory extends SherlockFragment implements
 							saveData(item, DatabaseHelper.TB_LISTVIDEO);
 						} else if (tabIndex == PinnedAdapter.XEMNHIEU) {
 							listVideoXemnhieu.add(item);
-							//saveData(item, DatabaseHelper.TB_LISTXEMNHIEU);
+							// saveData(item, DatabaseHelper.TB_LISTXEMNHIEU);
 						}
 
 					}
