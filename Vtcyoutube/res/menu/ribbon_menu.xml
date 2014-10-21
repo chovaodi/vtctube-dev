@@ -53,7 +53,7 @@
     </item>
     <item
         android:id="@+id/menu_nhataitro"
-        android:icon="@drawable/video_caidat"
+        android:icon="@drawable/ic_about"
         android:title="Giới thiệu">
     </item>
 

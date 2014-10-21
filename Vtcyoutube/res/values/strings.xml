@@ -29,9 +29,7 @@
     <string name="lblmenu_tivi">Xem tivi trực tuyến</string>
     <string name="lblmenu_setting">Cài đặt</string>
     <string name="lblmenu_taitro">Nhà tài trợ</string>
-    
     <string name="lblMsgrong">Không tìm thấy nội dung này. Vui lòng thử lại sau</string>
-    
     <string name="help_lienhe">
 <![CDATA[  
 
@@ -64,6 +62,19 @@
 		<p>Email:<font color="#26a3dd">Ngan.tong@vtc.vn</font></p>
 		<p>Di động: 0915391984</p>
 		]]>
+    </string>
+    <string name="aboutus">
+		<![CDATA[ 
+		      <p><b>  VTCTube</b> - Kênh truyền hình đầu tiên tại Việt Nam trên mạng xã hội</p> 
+		
+				<p><b> Địa chỉ:</b> 65 Lạc Trung, Quận Hai Bà Trưng, Hà Nội </p>
+				
+				<p><b> Điện thoại: </b>(04)44501303 </p>
+				
+			    <p><b> Email:</b> vtctube.vn@gmail.com </p>
+				
+			<p><b> Liên hệ quảng cáo:</b> 0935.225.253</p>
+			]]>
     </string>
 
 </resources>
