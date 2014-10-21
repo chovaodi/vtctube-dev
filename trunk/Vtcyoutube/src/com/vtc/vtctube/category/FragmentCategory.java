@@ -53,13 +53,13 @@ public class FragmentCategory extends SherlockFragment implements
 	private static int page = 1;
 	private static int pageCount = 0;
 	private int countDataLocal;
-	private int tabIndex = PinnedAdapter.MOINHAT;
+	private static int tabIndex = PinnedAdapter.MOINHAT;
 	private int pageSize = 5;
 
 	private String queryVideoLocal;
 	private String queryLikeVideo;
 
-	private boolean isLoadding = false;
+	private static boolean isLoadding = false;
 	private boolean isLoadLocal = true;
 
 	private ResultOnclikTab callBackOnlick = new ResultOnclikTab();
@@ -79,7 +79,7 @@ public class FragmentCategory extends SherlockFragment implements
 	public void setCate(String cate) {
 		if (!cate.equals(MainActivity.currentCate)) {
 			MainActivity.currentCate = cate;
-			tabIndex = PinnedAdapter.MOINHAT;
+
 			initData();
 
 			resetTab();
@@ -88,9 +88,11 @@ public class FragmentCategory extends SherlockFragment implements
 	}
 
 	public static void initData() {
+		isLoadding = false;
 		listVideoLike = new ArrayList<ItemPost>();
 		listVideoXemnhieu = new ArrayList<ItemPost>();
 		listViewNew = new ArrayList<ItemPost>();
+		tabIndex = PinnedAdapter.MOINHAT;
 		page = 1;
 		pageCount = 0;
 		if (adapter != null) {
@@ -379,6 +381,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 		@Override
 		public void getResult(int type, String result) {
+			Log.d("result",result);
 			isLoadding = false;
 			Utils.disableEnableControls(true, (ViewGroup) v);
 
@@ -431,7 +434,6 @@ public class FragmentCategory extends SherlockFragment implements
 							saveData(item, DatabaseHelper.TB_LISTVIDEO);
 						} else if (tabIndex == PinnedAdapter.XEMNHIEU) {
 							listVideoXemnhieu.add(item);
-							// saveData(item, DatabaseHelper.TB_LISTXEMNHIEU);
 						}
 
 					}
@@ -439,7 +441,6 @@ public class FragmentCategory extends SherlockFragment implements
 					if (type == Utils.LOAD_FIRST_DATA) {
 						addViewPost(listViewNew, tabIndex);
 					} else {
-						// removeFotter();
 						listVideoLike = Utils.getVideoLike(queryLikeVideo,
 								tabIndex);
 						listTmp = Utils.checkLikeVideo(listTmp, listVideoLike);
@@ -521,9 +522,12 @@ public class FragmentCategory extends SherlockFragment implements
 		if ((lastInScreen == totalItemCount)) {
 			page = 1 + (listViewNew.size() / pageSize);
 
-			if (page >= pageCount)
+			if (page >= pageCount) {
 				isLoadding = true;
-
+			} else {
+				isLoadding = false;
+			}
+			Log.d("tabIndex", pageCount + " " + page);
 			if (!isLoadding & tabIndex == PinnedAdapter.MOINHAT
 					& Utils.isOnline(getActivity())) {
 				isLoadding = true;
