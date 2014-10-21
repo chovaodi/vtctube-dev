@@ -211,7 +211,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				Log.d("positionActive", positionActive + "");
-				positionActive = position;
+				positionActive = position-1;
 				leftMenu.toggleMenu();
 
 				// /clickMenu(position);
@@ -267,7 +267,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			return;
 		}
 		positionPreview = position;
-		int id = listItemMenu.get(position - 1).getRegId();
+		int id = listItemMenu.get(position).getRegId();
 		switch (id) {
 		case R.id.menu_trangchu:
 			FragmentManager fragmentManager = getSupportFragmentManager();
@@ -277,6 +277,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 
 		case R.id.menu_video_moinhat:
+			Log.d("Chovaodi","Mới nhất");
 			actionNewvideo();
 			break;
 		case R.id.menu_video_xemnhieu:
@@ -683,7 +684,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void getResult(int type, String result) {
-
 			try {
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
@@ -747,11 +747,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
+		
 		final int left = leftMenu.getDrawerState();
 		if (left == MenuDrawer.STATE_OPEN || left == MenuDrawer.STATE_OPENING) {
 			leftMenu.closeMenu();
 			return;
 		}
+		positionPreview = 0;
+		positionActive = Integer.MAX_VALUE;
+		
 		Fragment myAbout = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_ABOUT);
 		if (myAbout != null && myAbout.isVisible()) {
@@ -838,6 +842,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		Date dateobj = new Date();
 		String currentDateandTime = df.format(dateobj).toString();
 		String url = Utils.host + "get_date_posts?date=" + currentDateandTime;
+		Log.d("actionNewvideo",url);
 		new AysnRequestHttp(mainView, Utils.LOAD_NEWVIDEO, smooth,
 				callBackSearch).execute(url);
 	}
