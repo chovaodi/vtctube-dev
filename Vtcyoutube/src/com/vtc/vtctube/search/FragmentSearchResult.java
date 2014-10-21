@@ -35,8 +35,8 @@ public class FragmentSearchResult extends SherlockFragment implements
 	private int page = 1;
 	private int pageSize = 5;
 	private int pageCount = 0;
-	public static String json;
-	private static FragmentSearchResult frament = null;
+	public static String json = "";
+	public static FragmentSearchResult frament = null;
 
 	private String keyword;
 	private String queryLikeVideo;
@@ -63,8 +63,8 @@ public class FragmentSearchResult extends SherlockFragment implements
 
 	public static FragmentSearchResult newInstance(String num, String keyword,
 			int keyOtion) {
-		if (frament == null)
-			frament = new FragmentSearchResult();
+		// if (frament == null)
+		frament = new FragmentSearchResult();
 
 		// Supply num input as an argument.
 		Bundle args = new Bundle();

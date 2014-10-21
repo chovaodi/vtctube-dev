@@ -23,7 +23,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.JsResult;
@@ -44,10 +43,10 @@ import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.category.RightLikeAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.menu.MenuDrawer;
+import com.vtc.vtctube.menu.MenuDrawer.OnDrawerStateChangeListener;
 import com.vtc.vtctube.menu.Position;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.utils.IResult;
-import com.vtc.vtctube.utils.IResultOnclick;
 import com.vtc.vtctube.utils.Utils;
 
 /**
@@ -90,7 +89,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	private RightLikeAdapter adapter = null;
 	private ListView listYeuthich;
 	private ResultItemClick callBackOnlick = new ResultItemClick();
-	private ItemPost itemActive=null;
+	private ItemPost itemActive = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,6 +114,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 		setContentView(R.layout.playerview_demo);
 		listYeuthich = (ListView) findViewById(R.id.listView1);
+		listYeuthich.setAdapter(adapter);
 		addViewPost();
 		getActionBar().setTitle(title);
 
@@ -191,7 +191,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 				btnLienquan.setSelected(false);
 				btnChitiet.setSelected(true);
 				if (btnChitiet.isSelected()) {
-					loadComment("http://vtctube.vn/"+itemActive.getSlug());
+					loadComment("http://vtctube.vn/" + itemActive.getSlug());
 				}
 
 				listvideo.setVisibility(View.GONE);
@@ -222,6 +222,17 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		setDataview(Utils.itemCurrent);
 		youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
 		youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
+
+		rightMenu
+				.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
+
+					@Override
+					public void onDrawerStateChange(int oldState, int newState) {
+						if (newState == MenuDrawer.STATE_OPEN) {
+							addViewPost();
+						}
+					}
+				});
 
 	}
 
@@ -255,6 +266,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	}
 
 	public void addViewPost() {
+		adapter.clear();
 		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
 				PinnedAdapter.YEUTHICH);
@@ -265,8 +277,8 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 				adapter.add(listData.get(i));
 			}
 		}
+		adapter.notifyDataSetChanged();
 
-		listYeuthich.setAdapter(adapter);
 	}
 
 	public void actionLike() {
@@ -283,7 +295,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	}
 
 	public void setDataview(ItemPost item) {
-		itemActive=item;
+		itemActive = item;
 		cate = item.getCateId();
 		slug = item.getSlug();
 		url = item.getUrl();
@@ -348,7 +360,6 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			return;
 		}
 
-		
 		finish();
 		overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);

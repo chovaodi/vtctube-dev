@@ -122,6 +122,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private Random random = new Random();
 	private int positionActive = 1;
 	private int positionPreview = 0;
+	private String tagActivie;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -511,6 +512,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void addFragmentSearch(String json, String tag, int keyOption) {
+		
 		Utils.hideSoftKeyboard(MainActivity.this);
 
 		MainActivity.callBackCLick.onClick(false, "Tìm kiếm");
@@ -824,7 +826,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (currentCate.equals(1)) {
 			FragmentHome.listData.get(0).getIdCategory();
 		}
-		String url = Utils.host + "get_posts?count=5&page=1&cat=" + currentCate;
+		String url = Utils.host + "get_posts?page=1&cat=" + currentCate;
+		Log.d("urlXemnhieu", url);
 		new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
 				MainActivity.smooth, callBackSearch).execute(url);
 	}
