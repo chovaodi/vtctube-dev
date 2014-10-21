@@ -122,7 +122,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private Random random = new Random();
 	private int positionActive = 1;
 	private int positionPreview = 0;
-	private String tagActivie;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +188,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		lblError = (TextView) findViewById(R.id.lblError);
 		imgAvata = (ImageView) header.findViewById(R.id.imgAvata);
 
-		
 		header.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -312,7 +310,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			break;
 		case R.id.menu_nhataitro:
-
+			addFragmentAbout();
 			break;
 		}
 	}
@@ -512,7 +510,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void addFragmentSearch(String json, String tag, int keyOption) {
-		
+
 		Utils.hideSoftKeyboard(MainActivity.this);
 
 		MainActivity.callBackCLick.onClick(false, "Tìm kiếm");
@@ -575,6 +573,25 @@ public class MainActivity extends SherlockFragmentActivity implements
 		} else {
 			FragmentCategory fragmentTmp = new FragmentCategory();
 			fragmentTmp.setCate(cate);
+			ft.show(fragment);
+		}
+
+		ft.commit();
+
+	}
+
+	public void addFragmentAbout() {
+		MainActivity.callBackCLick.onClick(true, "Giới thiệu");
+		FragmentTransaction ft = fragmentManager.beginTransaction();
+		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+		FragmentAbout fragment = null;
+		fragment = (FragmentAbout) fragmentManager
+				.findFragmentByTag(Utils.TAG_ABOUT);
+		if (fragment == null) {
+			fragment = FragmentAbout.newInstance();
+			ft.addToBackStack(null);
+			ft.replace(R.id.container, fragment, Utils.TAG_ABOUT);
+		} else {
 			ft.show(fragment);
 		}
 
@@ -735,7 +752,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 			leftMenu.closeMenu();
 			return;
 		}
-
+		Fragment myAbout = getSupportFragmentManager().findFragmentByTag(
+				Utils.TAG_ABOUT);
+		if (myAbout != null && myAbout.isVisible()) {
+			onBackView();
+			return;
+		}
+		
 		Fragment myFragment = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_CATE);
 		if (myFragment != null && myFragment.isVisible()) {
