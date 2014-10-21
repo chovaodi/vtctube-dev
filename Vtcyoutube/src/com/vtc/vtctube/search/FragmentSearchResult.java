@@ -31,7 +31,6 @@ public class FragmentSearchResult extends SherlockFragment implements
 	private static PinnedAdapter adapter;
 	private ListView listvideo;
 	private View fotter;
-	private ViewPager pager;
 
 	private int page = 1;
 	private int pageSize = 5;
@@ -124,7 +123,6 @@ public class FragmentSearchResult extends SherlockFragment implements
 		fotter = getActivity().getLayoutInflater().inflate(
 				R.layout.fotter_loadmore, null);
 
-
 		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,
 				getActivity(), callBack);
 
@@ -173,8 +171,6 @@ public class FragmentSearchResult extends SherlockFragment implements
 					if (type == Utils.LOAD_FIRST_DATA) {
 						addViewPost();
 					} else {
-						if (listvideo.getFooterViewsCount() > 0)
-							listvideo.removeFooterView(fotter);
 						listVideoLike = Utils.getVideoLike(queryLikeVideo, 0);
 						listTmp = Utils.checkLikeVideo(listTmp, listVideoLike);
 						for (int i = 0; i < listTmp.size(); i++) {

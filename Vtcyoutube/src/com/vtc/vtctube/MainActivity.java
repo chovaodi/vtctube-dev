@@ -188,17 +188,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		lblError = (TextView) findViewById(R.id.lblError);
 		imgAvata = (ImageView) header.findViewById(R.id.imgAvata);
 
-		leftMenu.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
-
-			@Override
-			public void onDrawerStateChange(int oldState, int newState) {
-				if (mSimpleFacebook.isLogin()) {
-					getProfile();
-				}
-				Utils.hideSoftKeyboard(MainActivity.this);
-			}
-		});
-
+		
 		header.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -239,6 +229,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 					clickMenu(positionActive);
 				}
+				if (mSimpleFacebook.isLogin()) {
+					getProfile();
+				}
+				Utils.hideSoftKeyboard(MainActivity.this);
+
 			}
 		});
 
@@ -315,7 +310,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 
 			break;
+		case R.id.menu_nhataitro:
 
+			break;
 		}
 	}
 
@@ -548,7 +545,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentResent fragment = (FragmentResent) fragmentManager
 				.findFragmentByTag(Utils.TAG_RESENT);
 		if (fragment == null) {
-			Log.d("Video yeuthich","111111111");
 			fragment = FragmentResent.newInstance(id);
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_RESENT);

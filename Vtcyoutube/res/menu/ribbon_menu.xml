@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menu_trangchu"
-        android:icon="@drawable/video_moinhat"
+        android:icon="@drawable/ic_home_normal"
         android:title="Trang chủ">
     </item>
     <item
@@ -54,7 +54,7 @@
     <item
         android:id="@+id/menu_nhataitro"
         android:icon="@drawable/video_caidat"
-        android:title="Nhà tài trợ">
+        android:title="Giới thiệu">
     </item>
 
 </menu>
