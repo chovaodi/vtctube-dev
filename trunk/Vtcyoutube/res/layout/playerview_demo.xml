@@ -175,7 +175,7 @@
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/video_share"
                     android:gravity="center_vertical|left"
-                    android:text="Chia sẽ"
+                    android:text="Chia sẻ"
                     android:textColor="#9197a3"
                     android:textSize="14dp" />
             </LinearLayout>

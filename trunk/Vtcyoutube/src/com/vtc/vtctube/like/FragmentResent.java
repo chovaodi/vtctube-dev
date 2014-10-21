@@ -96,7 +96,6 @@ public class FragmentResent extends Fragment {
 		smooth.setVisibility(View.GONE);
 
 		listvideo = (ListView) v.findViewById(R.id.listvideo);
-		Log.d("chvoaoid", "sssssssss");
 		addViewPost();
 		return v;
 

@@ -19,8 +19,11 @@ package com.vtc.vtctube;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.JsResult;
@@ -38,9 +41,13 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.vtc.vtctube.category.PinnedAdapter;
+import com.vtc.vtctube.category.RightLikeAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.menu.MenuDrawer;
+import com.vtc.vtctube.menu.Position;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.utils.IResult;
+import com.vtc.vtctube.utils.IResultOnclick;
 import com.vtc.vtctube.utils.Utils;
 
 /**
@@ -79,17 +86,36 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	private YouTubePlayerView youTubeView;
 	private YouTubePlayer player;
 	private List<ItemPost> listData;
+	private MenuDrawer rightMenu;
+	private RightLikeAdapter adapter = null;
+	private ListView listYeuthich;
+	private ResultItemClick callBackOnlick = new ResultItemClick();
+	private ItemPost itemActive=null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		adapter = new RightLikeAdapter(PinnedAdapter.TYPE_VIEW_CATE,
+				PlayerViewActivity.this, callBackOnlick);
+
 		overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);
 
 		getActionBar().hide();
+		rightMenu = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW,
+				Position.RIGHT);
+		rightMenu.setDropShadowColor(Color.parseColor("#503f3f3f"));
+		rightMenu.setDropShadowSize(8);
+		rightMenu.setAnimationCacheEnabled(true);
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		int width = displaymetrics.widthPixels;
+		rightMenu.setMenuSize(5 * width / 6);
+		rightMenu.setMenuView(R.layout.rightmenu);
 
 		setContentView(R.layout.playerview_demo);
-
+		listYeuthich = (ListView) findViewById(R.id.listView1);
+		addViewPost();
 		getActionBar().setTitle(title);
 
 		btnLienquan = (Button) findViewById(R.id.btnLienquan);
@@ -122,7 +148,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 			@Override
 			public void onClick(View v) {
-				actionLike();
+				rightMenu.toggleMenu();
 
 			}
 		});
@@ -165,7 +191,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 				btnLienquan.setSelected(false);
 				btnChitiet.setSelected(true);
 				if (btnChitiet.isSelected()) {
-					loadComment("http://www.haivl.com/photo/4528925");
+					loadComment("http://vtctube.vn/"+itemActive.getSlug());
 				}
 
 				listvideo.setVisibility(View.GONE);
@@ -199,6 +225,50 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 	}
 
+	public class ResultItemClick implements IResult {
+
+		@Override
+		public void getResult(int type, String result) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCLickView(ItemPost item) {
+			rightMenu.toggleMenu();
+			try {
+				if (!item.getVideoId().equals(title)) {
+					player.cueVideo(item.getVideoId());
+					setDataview(item);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	public void addViewPost() {
+		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
+		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
+				PinnedAdapter.YEUTHICH);
+
+		for (int i = 0; i < listData.size(); i++) {
+			if (listData.get(i).getStatus().equals("publish")) {
+				listData.get(i).setType(PinnedAdapter.ITEM);
+				adapter.add(listData.get(i));
+			}
+		}
+
+		listYeuthich.setAdapter(adapter);
+	}
+
 	public void actionLike() {
 		String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 				+ " WHERE id='" + id + "'";
@@ -213,6 +283,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	}
 
 	public void setDataview(ItemPost item) {
+		itemActive=item;
 		cate = item.getCateId();
 		slug = item.getSlug();
 		url = item.getUrl();
@@ -271,6 +342,13 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 	@Override
 	public void onBackPressed() {
+		final int left = rightMenu.getDrawerState();
+		if (left == MenuDrawer.STATE_OPEN || left == MenuDrawer.STATE_OPENING) {
+			rightMenu.closeMenu();
+			return;
+		}
+
+		
 		finish();
 		overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);
