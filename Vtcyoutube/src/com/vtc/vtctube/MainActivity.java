@@ -120,7 +120,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private FragmentTransaction ft;
 	public static ViewGroup mainView;
 	private Random random = new Random();
-	private int positionActive = 1;
+	private int positionActive = Integer.MAX_VALUE;
 	private int positionPreview = 0;
 
 	@Override
@@ -210,8 +210,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
+
+				positionActive = position - 1;
 				Log.d("positionActive", positionActive + "");
-				positionActive = position-1;
 				leftMenu.toggleMenu();
 
 				// /clickMenu(position);
@@ -223,8 +224,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerStateChange(int oldState, int newState) {
-				if (newState == MenuDrawer.STATE_CLOSED
-						&& positionActive != positionPreview) {
+				if (newState == MenuDrawer.STATE_CLOSED) {
 
 					clickMenu(positionActive);
 				}
@@ -263,13 +263,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu(int position) {
+		Log.d("trangchu", positionActive + "");
 		if (positionActive == Integer.MAX_VALUE) {
 			return;
 		}
-		positionPreview = position;
+
 		int id = listItemMenu.get(position).getRegId();
+		if (id == positionPreview) {
+			return;
+		}
+		positionPreview = id;
 		switch (id) {
 		case R.id.menu_trangchu:
+
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.popBackStack();
 			FragmentCategory.frament = null;
@@ -277,7 +283,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 
 		case R.id.menu_video_moinhat:
-			Log.d("Chovaodi","Mới nhất");
+			Log.d("Chovaodi", "Mới nhất");
 			actionNewvideo();
 			break;
 		case R.id.menu_video_xemnhieu:
@@ -747,7 +753,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		
+
 		final int left = leftMenu.getDrawerState();
 		if (left == MenuDrawer.STATE_OPEN || left == MenuDrawer.STATE_OPENING) {
 			leftMenu.closeMenu();
@@ -755,14 +761,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 		positionPreview = 0;
 		positionActive = Integer.MAX_VALUE;
-		
+
 		Fragment myAbout = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_ABOUT);
 		if (myAbout != null && myAbout.isVisible()) {
 			onBackView();
 			return;
 		}
-		
+
 		Fragment myFragment = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_CATE);
 		if (myFragment != null && myFragment.isVisible()) {
@@ -842,7 +848,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		Date dateobj = new Date();
 		String currentDateandTime = df.format(dateobj).toString();
 		String url = Utils.host + "get_date_posts?date=" + currentDateandTime;
-		Log.d("actionNewvideo",url);
+		Log.d("actionNewvideo", url);
 		new AysnRequestHttp(mainView, Utils.LOAD_NEWVIDEO, smooth,
 				callBackSearch).execute(url);
 	}
