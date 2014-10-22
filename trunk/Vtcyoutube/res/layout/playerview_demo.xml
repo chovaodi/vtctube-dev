@@ -59,7 +59,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="0"
             android:background="@android:color/transparent"
-            android:src="@drawable/like_top" />
+            android:src="@drawable/video_like" />
     </LinearLayout>
 
     <com.google.android.youtube.player.YouTubePlayerView
@@ -161,7 +161,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@drawable/like_top"
+                    android:drawableLeft="@drawable/video_like"
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical|left"
                     android:text="Yêu thích"
