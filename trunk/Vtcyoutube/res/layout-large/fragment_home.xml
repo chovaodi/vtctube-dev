@@ -35,7 +35,7 @@
         android:id="@+id/list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="80dp"
         android:background="@android:color/transparent"
         android:horizontalSpacing="30dp"
         android:listSelector="@android:color/transparent"
