@@ -111,15 +111,15 @@ public class FragmentResent extends Fragment {
 
 		@Override
 		public void pushResutClickItem(int type, int position, boolean isLike) {
-			switch (type) {
-			case PinnedAdapter.YEUTHICH:
+			switch (key) {
+			case R.id.menu_video_yeuthich:
 				if (!isLike) {
 					adapter.remove(listData.get(position));
 				} else {
 					adapter.getItem(position).setLike(isLike);
 				}
 				break;
-			case PinnedAdapter.MOINHAT:
+			default:
 				adapter.getItem(position).setLike(isLike);
 				break;
 			}
