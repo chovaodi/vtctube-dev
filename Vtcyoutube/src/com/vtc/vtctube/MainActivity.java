@@ -135,8 +135,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		callClickShare = new ResultClickShare();
 
 		fragmentManager = getSupportFragmentManager();
-
 		ft = fragmentManager.beginTransaction();
+
 		try {
 			myDbHelper.createDataBase();
 			myDbHelper.openDataBase();
@@ -258,16 +258,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 		getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 		Fragment newFragment = FragmentHome.newInstance(1);
-		ft.add(R.id.container, newFragment).commit();
+		ft.add(R.id.container, newFragment, Utils.TAG_HOME).commit();
 
 	}
 
 	public void clickMenu(int position) {
-		Log.d("trangchu", positionActive + "");
+		fragmentManager = getSupportFragmentManager();
+		ft = fragmentManager.beginTransaction();
+
 		if (positionActive == Integer.MAX_VALUE) {
 			return;
 		}
-
 		int id = listItemMenu.get(position).getRegId();
 		if (id == positionPreview) {
 			return;
@@ -276,8 +277,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 		switch (id) {
 		case R.id.menu_trangchu:
 
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.popBackStack();
+			FragmentHome fragment = (FragmentHome) fragmentManager
+					.findFragmentByTag(Utils.TAG_HOME);
+			if (fragment == null) {
+				ft.addToBackStack(null);
+				ft.replace(R.id.container, FragmentHome.newInstance(1),
+						Utils.TAG_HOME);
+			} else {
+				ft.replace(R.id.container, fragment, Utils.TAG_HOME);
+			}
+			ft.commit();
 			FragmentCategory.frament = null;
 			MainActivity.callBackCLick.onClick(false, "");
 			break;
@@ -574,13 +583,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 		fragment = (FragmentCategory) fragmentManager
 				.findFragmentByTag(Utils.TAG_CATE);
 		if (fragment == null) {
+			Log.d("111111111", "11111111111");
 			fragment = FragmentCategory.newInstance(cate, title);
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
 		} else {
+			Log.d("111111111", "22222222222");
 			FragmentCategory fragmentTmp = new FragmentCategory();
 			fragmentTmp.setCate(cate);
-			ft.show(fragment);
+			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
 		}
 
 		ft.commit();
