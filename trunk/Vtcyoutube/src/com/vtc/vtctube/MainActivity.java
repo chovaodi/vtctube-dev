@@ -8,9 +8,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.SearchManager;
+import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -58,7 +60,10 @@ import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
 import com.sromku.simple.fb.listeners.OnPublishListener;
+import com.vtc.vtctube.PlayerViewActivity.ResultItemClick;
 import com.vtc.vtctube.category.FragmentCategory;
+import com.vtc.vtctube.category.PinnedAdapter;
+import com.vtc.vtctube.category.RightLikeAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.like.FragmentResent;
 import com.vtc.vtctube.menu.MenuDrawer;
@@ -87,6 +92,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			SearchManager.SUGGEST_COLUMN_TEXT_1, };
 
 	private ListView listview;
+	private ListView listYeuthich;
 	private View header;
 	private SimpleFacebook mSimpleFacebook = null;
 	private TextView lblUserName;
@@ -110,24 +116,33 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public static ResultClickShare callClickShare;
 
 	private List<ItemMeu> listItemMenu;
+	private List<ItemPost> listVideoRanDom = new ArrayList<ItemPost>();
+
 	private List<String> listQuerySearch;
 	private String queryCurent = "";
+	private ItemPost itemActive = null;
 
 	private GlobalApplication globalApp;
-
+	private boolean isLoadding = false;
 	private boolean isMenuCate = false;
 	private FragmentManager fragmentManager;
 	private FragmentTransaction ft;
+	private RightLikeAdapter adapter = null;
+
 	public static ViewGroup mainView;
 	private Random random = new Random();
 	private int positionActive = Integer.MAX_VALUE;
 	private int positionPreview = 0;
+	private MenuDrawer rightMenu;
+	private ResultItemClick callBackOnlick = new ResultItemClick();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mainView = (ViewGroup) getWindow().getDecorView().findViewById(
 				android.R.id.content);
+		adapter = new RightLikeAdapter(PinnedAdapter.TYPE_VIEW_CATE,
+				MainActivity.this, callBackOnlick);
 
 		myDbHelper = new DatabaseHelper(MainActivity.this);
 		callBackCLick = new ResultCallBackCLick();
@@ -168,6 +183,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 		int width = displaymetrics.widthPixels;
 		leftMenu.setMenuSize(5 * width / 6);
 		leftMenu.setMenuView(R.layout.leftmenu);
+
+		rightMenu = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW,
+				Position.RIGHT);
+		rightMenu.setDropShadowColor(Color.parseColor("#503f3f3f"));
+		rightMenu.setDropShadowSize(8);
+		rightMenu.setAnimationCacheEnabled(true);
+
+		rightMenu.setMenuSize(5 * width / 6);
+
+		rightMenu.setMenuView(R.layout.rightmenu);
+
+		listYeuthich = (ListView) findViewById(R.id.listViewYeuthich);
+		listYeuthich.setAdapter(adapter);
 
 		setContentView(R.layout.fragment_content);
 		lineAdmob = (LinearLayout) findViewById(R.id.adview);
@@ -215,7 +243,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 				Log.d("positionActive", positionActive + "");
 				leftMenu.toggleMenu();
 
-				// /clickMenu(position);
 
 			}
 
@@ -235,6 +262,23 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			}
 		});
+
+		rightMenu
+				.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
+
+					@Override
+					public void onDrawerStateChange(int oldState, int newState) {
+						if (newState == MenuDrawer.STATE_OPEN) {
+							addViewPost();
+						}
+						if (itemActive != null
+								& newState == MenuDrawer.STATE_CLOSED) {
+							Utils.getVideoView(itemActive, MainActivity.this);
+							itemActive = null;
+						}
+
+					}
+				});
 
 		smooth = (SmoothProgressBar) findViewById(R.id.google_now);
 		smooth.setVisibility(View.GONE);
@@ -260,6 +304,110 @@ public class MainActivity extends SherlockFragmentActivity implements
 		Fragment newFragment = FragmentHome.newInstance(1);
 		ft.add(R.id.container, newFragment, Utils.TAG_HOME).commit();
 
+	}
+
+	public class ResultItemClick implements IResult {
+
+		@Override
+		public void getResult(int type, String result) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCLickView(ItemPost item) {
+			itemActive = item;
+			rightMenu.toggleMenu();
+		}
+	}
+
+	public void addViewPost() {
+
+		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
+		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
+				PinnedAdapter.YEUTHICH);
+
+		if (listData.size() == 0 && listVideoRanDom.size() == 0) {
+			String url = Utils.host + "get_posts?count=8";
+			ResultCallBack callBack = new ResultCallBack();
+			new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
+					MainActivity.smooth, callBack).execute(url);
+		} else if (listData.size() != adapter.getCount()) {
+			if (listData.size() > 0 && listVideoRanDom.size() > 0&&listData.size()!=adapter.getCount()) {
+				addViewData(listData);
+			}
+			if (listData.size() > 0&&listData.size()!=adapter.getCount()) {
+				addViewData(listData);
+			}
+			if (listVideoRanDom.size() > 0&&listVideoRanDom.size()!=adapter.getCount()) {
+				addViewData(listVideoRanDom);
+			}
+
+		}
+
+	}
+
+	public class ResultCallBack implements IResult {
+
+		@Override
+		public void getResult(int type, String result) {
+			Log.d("result", result);
+			isLoadding = false;
+			Utils.disableEnableControls(true, (ViewGroup) mainView);
+
+			try {
+				if (listVideoRanDom == null) {
+					listVideoRanDom = new ArrayList<ItemPost>();
+				}
+				JSONObject jsonObj = new JSONObject(result);
+				int count_total = jsonObj.getInt("count_total");
+				if (count_total > 0) {
+					JSONArray jsonArray = jsonObj.getJSONArray("posts");
+					for (int i = 0; i < jsonArray.length(); i++) {
+						ItemPost item = new ItemPost();
+						JSONObject json = (JSONObject) jsonArray.get(i);
+						item = Utils.getItemPost(json, 0, 0);
+
+						listVideoRanDom.add(item);
+
+					}
+
+					addViewData(listVideoRanDom);
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCLickView(ItemPost item) {
+			// TODO Auto-generated method stub
+
+		}
+	}
+
+	public void addViewData(List<ItemPost> list) {
+		adapter.clear();
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getStatus().equals("publish")) {
+				list.get(i).setType(PinnedAdapter.ITEM);
+				adapter.add(list.get(i));
+			}
+		}
+		adapter.notifyDataSetChanged();
 	}
 
 	public void clickMenu(int position) {
@@ -865,14 +1013,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void actionXemnhieu() {
-		currentCate = FragmentHome.listData.get(
-				random.nextInt(FragmentHome.listData.size() - 1))
-				.getIdCategory();
-		if (currentCate.equals(1)) {
-			FragmentHome.listData.get(0).getIdCategory();
-		}
-		String url = Utils.host + "get_posts?page=1&cat=" + currentCate;
-		Log.d("urlXemnhieu", url);
+		String url = Utils.host + "get_posts?count=10&page=4";
 		new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
 				MainActivity.smooth, callBackSearch).execute(url);
 	}
