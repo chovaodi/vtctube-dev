@@ -111,19 +111,7 @@ public class FragmentResent extends Fragment {
 
 		@Override
 		public void pushResutClickItem(int type, int position, boolean isLike) {
-			switch (key) {
-			case R.id.menu_video_yeuthich:
-				if (!isLike) {
-					adapter.remove(listData.get(position));
-				} else {
-					adapter.getItem(position).setLike(isLike);
-				}
-				break;
-			default:
-				adapter.getItem(position).setLike(isLike);
-				break;
-			}
-
+			adapter.getItem(position).setLike(isLike);
 			adapter.notifyDataSetChanged();
 		}
 
