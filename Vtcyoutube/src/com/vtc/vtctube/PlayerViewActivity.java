@@ -113,7 +113,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		rightMenu.setMenuView(R.layout.rightmenu);
 
 		setContentView(R.layout.playerview_demo);
-		listYeuthich = (ListView) findViewById(R.id.listView1);
+		listYeuthich = (ListView) findViewById(R.id.listViewYeuthich);
 		listYeuthich.setAdapter(adapter);
 		addViewPost();
 		getActionBar().setTitle(title);
@@ -231,6 +231,13 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 						if (newState == MenuDrawer.STATE_OPEN) {
 							addViewPost();
 						}
+						if (newState == MenuDrawer.STATE_CLOSED) {
+							if (itemActive != null
+									&& !itemActive.getVideoId().equals(title)) {
+								player.cueVideo(itemActive.getVideoId());
+								setDataview(itemActive);
+							}
+						}
 					}
 				});
 
@@ -253,24 +260,20 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		@Override
 		public void onCLickView(ItemPost item) {
 			rightMenu.toggleMenu();
-			try {
-				if (!item.getVideoId().equals(title)) {
-					player.cueVideo(item.getVideoId());
-					setDataview(item);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			itemActive = item;
+
 		}
 
 	}
 
 	public void addViewPost() {
-		adapter.clear();
+
 		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
 				PinnedAdapter.YEUTHICH);
-
+		if (listData.size() == adapter.getCount())
+			return;
+		adapter.clear();
 		for (int i = 0; i < listData.size(); i++) {
 			if (listData.get(i).getStatus().equals("publish")) {
 				listData.get(i).setType(PinnedAdapter.ITEM);
