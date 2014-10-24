@@ -243,7 +243,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 				Log.d("positionActive", positionActive + "");
 				leftMenu.toggleMenu();
 
-
 			}
 
 		});
@@ -334,18 +333,23 @@ public class MainActivity extends SherlockFragmentActivity implements
 				PinnedAdapter.YEUTHICH);
 
 		if (listData.size() == 0 && listVideoRanDom.size() == 0) {
-			String url = Utils.host + "get_posts?count=8";
+			String url = Utils.host + "get_posts?count=10&page=2";
 			ResultCallBack callBack = new ResultCallBack();
-			new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
-					MainActivity.smooth, callBack).execute(url);
+			if (!isLoadding) {
+				isLoadding = true;
+				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
+						MainActivity.smooth, callBack).execute(url);
+			}
 		} else if (listData.size() != adapter.getCount()) {
-			if (listData.size() > 0 && listVideoRanDom.size() > 0&&listData.size()!=adapter.getCount()) {
+			if (listData.size() > 0 && listVideoRanDom.size() > 0
+					&& listData.size() != adapter.getCount()) {
 				addViewData(listData);
 			}
-			if (listData.size() > 0&&listData.size()!=adapter.getCount()) {
+			if (listData.size() > 0 && listData.size() != adapter.getCount()) {
 				addViewData(listData);
 			}
-			if (listVideoRanDom.size() > 0&&listVideoRanDom.size()!=adapter.getCount()) {
+			if (listVideoRanDom.size() > 0
+					&& listVideoRanDom.size() != adapter.getCount()) {
 				addViewData(listVideoRanDom);
 			}
 
@@ -731,12 +735,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 		fragment = (FragmentCategory) fragmentManager
 				.findFragmentByTag(Utils.TAG_CATE);
 		if (fragment == null) {
-			Log.d("111111111", "11111111111");
+			
 			fragment = FragmentCategory.newInstance(cate, title);
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
 		} else {
-			Log.d("111111111", "22222222222");
+			
 			FragmentCategory fragmentTmp = new FragmentCategory();
 			fragmentTmp.setCate(cate);
 			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
@@ -1003,10 +1007,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void actionNewvideo() {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Date dateobj = new Date();
-		String currentDateandTime = df.format(dateobj).toString();
-		String url = Utils.host + "get_date_posts?date=" + currentDateandTime;
+//		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//		Date dateobj = new Date();
+//		String currentDateandTime = df.format(dateobj).toString();
+		String url = Utils.host + "get_posts?count=10&page=1";
 		Log.d("actionNewvideo", url);
 		new AysnRequestHttp(mainView, Utils.LOAD_NEWVIDEO, smooth,
 				callBackSearch).execute(url);

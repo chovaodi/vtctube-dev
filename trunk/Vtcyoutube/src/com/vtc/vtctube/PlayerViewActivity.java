@@ -16,15 +16,21 @@
 
 package com.vtc.vtctube;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -46,6 +52,7 @@ import com.vtc.vtctube.menu.MenuDrawer;
 import com.vtc.vtctube.menu.MenuDrawer.OnDrawerStateChangeListener;
 import com.vtc.vtctube.menu.Position;
 import com.vtc.vtctube.model.ItemPost;
+import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
@@ -79,6 +86,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	private TextView lblCountView;
 	private TextView lblShare;
 
+	public static ViewGroup mainView;
 	private ListView listvideo;
 	private WebView webview_fbview;
 	private ProgressBar loaddingcmt;
@@ -90,10 +98,17 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	private ListView listYeuthich;
 	private ResultItemClick callBackOnlick = new ResultItemClick();
 	private ItemPost itemActive = null;
+	private boolean isLoadding = false;
+	private int inPostActive;
+
+	private List<ItemPost> listVideoRanDom = new ArrayList<ItemPost>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mainView = (ViewGroup) getWindow().getDecorView().findViewById(
+				android.R.id.content);
+
 		adapter = new RightLikeAdapter(PinnedAdapter.TYPE_VIEW_CATE,
 				PlayerViewActivity.this, callBackOnlick);
 
@@ -125,7 +140,6 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		lblTaskTitle = (TextView) findViewById(R.id.lblTaskTitle);
 		lblCountView = (TextView) findViewById(R.id.lblLuotxem);
 		lblShare = (TextView) findViewById(R.id.btnShareDetailt);
-		lblYeuthich = (TextView) findViewById(R.id.btnShareDetailt);
 		lblShare.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -135,15 +149,25 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		});
 
 		lblYeuthich = (TextView) findViewById(R.id.lblYeuthich);
+		lblYeuthich.setSelected(Utils.itemCurrent.isLike());
 		lblYeuthich.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				actionLike();
+				if (!itemActive.isLike()) {
+					actionLike();
+					lblYeuthich.setSelected(true);
+				} else {
+					MainActivity.myDbHelper.deleteLikeVideo(
+							DatabaseHelper.TB_LIKE, itemActive.getIdPost());
+					lblYeuthich.setSelected(false);
+				}
+
 			}
 		});
 
 		ImageButton imgLike = (ImageButton) findViewById(R.id.btnLike);
+		imgLike.setSelected(true);
 		imgLike.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -232,15 +256,105 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 							addViewPost();
 						}
 						if (newState == MenuDrawer.STATE_CLOSED) {
-							if (itemActive != null
+							if (inPostActive != itemActive.getIdPost()
+									&& itemActive != null
 									&& !itemActive.getVideoId().equals(title)) {
 								player.cueVideo(itemActive.getVideoId());
 								setDataview(itemActive);
+								itemActive = null;
 							}
 						}
 					}
 				});
 
+	}
+
+	public void addViewPost() {
+
+		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
+		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
+				PinnedAdapter.YEUTHICH);
+
+		if (listData.size() == 0 && listVideoRanDom.size() == 0) {
+			String url = Utils.host + "get_posts?count=8";
+			ResultCallBack callBack = new ResultCallBack();
+			if (!isLoadding) {
+				isLoadding = true;
+				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
+						MainActivity.smooth, callBack).execute(url);
+			}
+		} else if (listData.size() != adapter.getCount()) {
+			if (listData.size() > 0 && listVideoRanDom.size() > 0
+					&& listData.size() != adapter.getCount()) {
+				addViewData(listData);
+			}
+			if (listData.size() > 0 && listData.size() != adapter.getCount()) {
+				addViewData(listData);
+			}
+			if (listVideoRanDom.size() > 0
+					&& listVideoRanDom.size() != adapter.getCount()) {
+				addViewData(listVideoRanDom);
+			}
+
+		}
+
+	}
+
+	public void addViewData(List<ItemPost> list) {
+		adapter.clear();
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getStatus().equals("publish")) {
+				list.get(i).setType(PinnedAdapter.ITEM);
+				adapter.add(list.get(i));
+			}
+		}
+		adapter.notifyDataSetChanged();
+	}
+
+	public class ResultCallBack implements IResult {
+
+		@Override
+		public void getResult(int type, String result) {
+			Log.d("result", result);
+			isLoadding = false;
+			Utils.disableEnableControls(true, (ViewGroup) mainView);
+
+			try {
+				if (listVideoRanDom == null) {
+					listVideoRanDom = new ArrayList<ItemPost>();
+				}
+				JSONObject jsonObj = new JSONObject(result);
+				int count_total = jsonObj.getInt("count_total");
+				if (count_total > 0) {
+					JSONArray jsonArray = jsonObj.getJSONArray("posts");
+					for (int i = 0; i < jsonArray.length(); i++) {
+						ItemPost item = new ItemPost();
+						JSONObject json = (JSONObject) jsonArray.get(i);
+						item = Utils.getItemPost(json, 0, 0);
+
+						listVideoRanDom.add(item);
+
+					}
+
+					addViewData(listVideoRanDom);
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCLickView(ItemPost item) {
+			// TODO Auto-generated method stub
+
+		}
 	}
 
 	public class ResultItemClick implements IResult {
@@ -266,23 +380,23 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 	}
 
-	public void addViewPost() {
-
-		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
-		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
-				PinnedAdapter.YEUTHICH);
-		if (listData.size() == adapter.getCount())
-			return;
-		adapter.clear();
-		for (int i = 0; i < listData.size(); i++) {
-			if (listData.get(i).getStatus().equals("publish")) {
-				listData.get(i).setType(PinnedAdapter.ITEM);
-				adapter.add(listData.get(i));
-			}
-		}
-		adapter.notifyDataSetChanged();
-
-	}
+	// public void addViewPost() {
+	//
+	// String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
+	// List<ItemPost> listData = Utils.getVideoLike(sqlLike,
+	// PinnedAdapter.YEUTHICH);
+	// if (listData.size() == adapter.getCount())
+	// return;
+	// adapter.clear();
+	// for (int i = 0; i < listData.size(); i++) {
+	// if (listData.get(i).getStatus().equals("publish")) {
+	// listData.get(i).setType(PinnedAdapter.ITEM);
+	// adapter.add(listData.get(i));
+	// }
+	// }
+	// adapter.notifyDataSetChanged();
+	//
+	// }
 
 	public void actionLike() {
 		String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
@@ -307,10 +421,12 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		countview = item.getCountview();
 		status = item.getStatus();
 		videoId = item.getVideoId();
+		inPostActive = id;
 
 		lblTaskTitle.setText(Html.fromHtml(item.getTitle()));
 		lblTitle.setText(Html.fromHtml(item.getTitle()));
 		lblCountView.setText("Lượt xem: " + item.getCountview());
+
 	}
 
 	public class ResultOnclikTab implements IResult {
@@ -345,7 +461,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	public void onInitializationSuccess(YouTubePlayer.Provider provider,
 			YouTubePlayer player, boolean wasRestored) {
 		this.player = player;
-		if (!wasRestored) {
+		if (!wasRestored && videoId.length() > 0) {
 			player.cueVideo(videoId);
 		}
 	}

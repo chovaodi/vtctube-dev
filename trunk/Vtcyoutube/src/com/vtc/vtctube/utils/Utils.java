@@ -27,8 +27,8 @@ import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -60,7 +60,7 @@ public class Utils {
 
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyBOIqSHxSY2pRqPdJaCwjDQ9FBzkNQmXhE";
 	public static String ADMOB_ID = "ca-app-pub-8362644350234649/3664611615";
-	
+
 	public static String TAG_ABOUT = "TAG_ABOUT";
 	public static String TAG_HOME = "TAG_HOME";
 	public static String TAG_CATE = "TAG_CATE";
@@ -101,7 +101,11 @@ public class Utils {
 	}
 
 	public static void getVideoView(ItemPost item, Activity activity) {
-		itemCurrent=item;
+		itemCurrent = item;
+//		if (item.getVideoId().length() == 0) {
+//			Utils.getDialogMessges(activity, "Nội dung không khả dụng");
+//			return;
+//		}
 		Intent intent = new Intent(activity, PlayerViewActivity.class);
 		activity.startActivity(intent);
 
@@ -288,14 +292,19 @@ public class Utils {
 			item.setPageCount(pageCount);
 			item.setTitle(json.getString("title"));
 			item.setStatus(json.getString("status"));
-			item.setVideoId(getIdVideo(json.getString("content")));
+
+			if (!json.isNull("content")) {
+				item.setVideoId("");
+			} else {
+				item.setVideoId(getIdVideo(json.getString("content")));
+			}
 			item.setUrl(json.getString("thumbnail"));
 			item.setOption(tabIndex);
 			item.setCountview(json.getJSONObject("custom_fields")
 					.getJSONArray("post_views_count").get(0).toString());
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 		return item;
 	}
@@ -307,7 +316,7 @@ public class Utils {
 			String[] data1 = value[1].split(" ");
 			return data1[0].replace("\"", "");
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 		return "";
 	}

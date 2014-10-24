@@ -8,7 +8,7 @@ public class ItemPost {
 	private String url;
 	private String content;
 	private String cateId;
-	private String videoId;
+	private String videoId="";
 	private String status;
 	private int pageCount;
 	private String countview;
