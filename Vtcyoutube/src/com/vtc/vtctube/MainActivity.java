@@ -1,10 +1,7 @@
 package com.vtc.vtctube;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -12,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.SearchManager;
-import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -60,7 +56,6 @@ import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
 import com.sromku.simple.fb.listeners.OnPublishListener;
-import com.vtc.vtctube.PlayerViewActivity.ResultItemClick;
 import com.vtc.vtctube.category.FragmentCategory;
 import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.category.RightLikeAdapter;
@@ -735,12 +730,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 		fragment = (FragmentCategory) fragmentManager
 				.findFragmentByTag(Utils.TAG_CATE);
 		if (fragment == null) {
-			
+
 			fragment = FragmentCategory.newInstance(cate, title);
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
 		} else {
-			
+
 			FragmentCategory fragmentTmp = new FragmentCategory();
 			fragmentTmp.setCate(cate);
 			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
@@ -1007,9 +1002,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void actionNewvideo() {
-//		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//		Date dateobj = new Date();
-//		String currentDateandTime = df.format(dateobj).toString();
+		// DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		// Date dateobj = new Date();
+		// String currentDateandTime = df.format(dateobj).toString();
 		String url = Utils.host + "get_posts?count=10&page=1";
 		Log.d("actionNewvideo", url);
 		new AysnRequestHttp(mainView, Utils.LOAD_NEWVIDEO, smooth,
