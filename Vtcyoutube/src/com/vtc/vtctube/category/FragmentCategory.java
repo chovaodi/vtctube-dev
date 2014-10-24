@@ -191,12 +191,10 @@ public class FragmentCategory extends SherlockFragment implements
 
 			@Override
 			public void onClick(View arg0) {
-				tabIndex = PinnedAdapter.YEUTHICH;
-				btnMoinhat.setSelected(false);
-				btnXemnhieu.setSelected(false);
+			
 				if (!btnYeuthich.isSelected())
 					callBackOnlick.getResult(PinnedAdapter.YEUTHICH, "");
-				btnYeuthich.setSelected(true);
+			
 			}
 		});
 
@@ -297,6 +295,15 @@ public class FragmentCategory extends SherlockFragment implements
 				break;
 			case PinnedAdapter.YEUTHICH:
 				mPullToRefreshLayout.setRefreshComplete();
+				if (listVideoLike.size() == 0) {
+					Utils.getDialogMessges(getActivity(),
+							"Danh sách yêu thích rỗng");
+					return;
+				}
+				tabIndex = PinnedAdapter.YEUTHICH;
+				btnMoinhat.setSelected(false);
+				btnXemnhieu.setSelected(false);
+				btnYeuthich.setSelected(true);
 				setViewTab(listVideoLike);
 				break;
 			}
@@ -381,7 +388,7 @@ public class FragmentCategory extends SherlockFragment implements
 
 		@Override
 		public void getResult(int type, String result) {
-			Log.d("result",result);
+			Log.d("result", result);
 			isLoadding = false;
 			Utils.disableEnableControls(true, (ViewGroup) v);
 
@@ -505,7 +512,7 @@ public class FragmentCategory extends SherlockFragment implements
 		if (isLoadLocal) {
 			String url = Utils.host + "get_posts?count=5&page=1&cat="
 					+ MainActivity.currentCate;
-
+			Log.d("url", url);
 			new AysnRequestHttp((ViewGroup) v, Utils.REFRESH, null, callBack)
 					.execute(url);
 
@@ -535,6 +542,7 @@ public class FragmentCategory extends SherlockFragment implements
 					listvideo.addFooterView(fotter);
 				String url = Utils.host + "get_posts?count=5&page=" + page
 						+ "&cat=" + MainActivity.currentCate;
+
 				int keyOption = Utils.LOAD_MORE;
 
 				new AysnRequestHttp((ViewGroup) v, keyOption,
