@@ -293,7 +293,7 @@ public class Utils {
 			item.setTitle(json.getString("title"));
 			item.setStatus(json.getString("status"));
 
-			if (!json.isNull("content")) {
+			if (json.isNull("content")) {
 				item.setVideoId("");
 			} else {
 				item.setVideoId(getIdVideo(json.getString("content")));

@@ -156,8 +156,10 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			public void onClick(View v) {
 				if (!itemActive.isLike()) {
 					actionLike();
+					itemActive.setLike(true);
 					lblYeuthich.setSelected(true);
 				} else {
+					itemActive.setLike(false);
 					MainActivity.myDbHelper.deleteLikeVideo(
 							DatabaseHelper.TB_LIKE, itemActive.getIdPost());
 					lblYeuthich.setSelected(false);
@@ -400,14 +402,14 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 	public void actionLike() {
 		String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
-				+ " WHERE id='" + id + "'";
+				+ " WHERE id='" + itemActive.getIdPost() + "'";
 		if (MainActivity.myDbHelper.getCountRow(DatabaseHelper.TB_LIKE,
 				sqlCheck) == 0) {
 			MainActivity.myDbHelper.insertVideoLike(id, cate, videoId, url,
 					status, title, slug, countview);
 		}
-		Utils.getDialogMessges(PlayerViewActivity.this,
-				"Video vừa được thêm vào danh sách yêu thích");
+		// Utils.getDialogMessges(PlayerViewActivity.this,
+		// "Video vừa được thêm vào danh sách yêu thích");
 
 	}
 
@@ -478,7 +480,6 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			rightMenu.closeMenu();
 			return;
 		}
-
 		finish();
 		overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);
