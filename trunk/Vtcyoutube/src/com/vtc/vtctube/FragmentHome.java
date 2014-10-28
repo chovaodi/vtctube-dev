@@ -24,16 +24,23 @@ import org.json.JSONObject;
 
 import uk.co.senab.actionbarpulltorefresh.library.HeaderTransformer;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.vtc.vtctube.adpter.MenuHomeAdapter;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.model.ItemPost;
@@ -50,6 +57,7 @@ public class FragmentHome extends SherlockFragment {
 	ResultCallBack callBack = null;
 	public static List<ItemCategory> listData = null;
 	public static String[] cateName;
+	private ImageLoader imageLoader;
 
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
@@ -82,9 +90,37 @@ public class FragmentHome extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		imageLoader = ImageLoader.getInstance();
+		imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()
+				.getApplicationContext()));
 		v = inflater.inflate(R.layout.fragment_home, container, false);
+		ImageView img = (ImageView) v.findViewById(R.id.imageView1);
+		img.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Utils.getVideoView(AcitivityLoadding.itemPost, getActivity());
+			}
+		});
+		imageLoader.displayImage("http://img.youtube.com/vi/"
+				+ AcitivityLoadding.itemPost.getVideoId() + "/3.jpg", img,
+				Utils.getOptions(getActivity(), R.drawable.bgr_home_video),
+				new SimpleImageLoadingListener() {
+					@Override
+					public void onLoadingStarted(String imageUri, View view) {
+					}
 
+					@Override
+					public void onLoadingFailed(String imageUri, View view,
+							FailReason failReason) {
+
+					}
+
+					@Override
+					public void onLoadingComplete(String imageUri, View view,
+							Bitmap loadedImage) {
+					}
+				});
 		String url = Utils.getUrlHttp(Utils.host, "get_category_index");
 		if (GlobalApplication.dataCate.length() > 0) {
 			showView(GlobalApplication.dataCate);
@@ -94,11 +130,12 @@ public class FragmentHome extends SherlockFragment {
 						.readJsonFile(Utils.GET_CATE_INDEX);
 				showView(GlobalApplication.dataCate);
 			} else {
-				new AysnRequestHttp((ViewGroup)v,Utils.LOAD_FIRST_DATA, MainActivity.smooth,
-						callBack).execute(url);
+				new AysnRequestHttp((ViewGroup) v, Utils.LOAD_FIRST_DATA,
+						MainActivity.smooth, callBack).execute(url);
 			}
 		}
-		new AysnRequestHttp((ViewGroup)v,Utils.REFRESH, null, callBack).execute(url);
+		new AysnRequestHttp((ViewGroup) v, Utils.REFRESH, null, callBack)
+				.execute(url);
 		return v;
 	}
 
@@ -189,10 +226,10 @@ public class FragmentHome extends SherlockFragment {
 			}
 
 			gridView = (GridView) v.findViewById(R.id.list);
-//			View header = getActivity().getLayoutInflater().inflate(
-//					R.layout.header, null);
+			// View header = getActivity().getLayoutInflater().inflate(
+			// R.layout.header, null);
 
-			//list.addHeaderView(header);
+			// list.addHeaderView(header);
 			gridView.setNumColumns(2);
 			gridView.setPadding(Utils.convertDpToPixel(20, getActivity()), 0,
 					Utils.convertDpToPixel(20, getActivity()), 0);
@@ -218,8 +255,6 @@ public class FragmentHome extends SherlockFragment {
 		}
 
 	}
-
-
 
 	public class ResultCallBack implements IResult {
 

@@ -20,7 +20,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="330dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/banner_home" />
+                android:background="@color/abs__background_holo_light"
+                 />
 
             <ImageView
                 android:id="@+id/imageView2"
