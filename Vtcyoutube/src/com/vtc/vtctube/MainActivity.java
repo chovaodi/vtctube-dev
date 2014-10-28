@@ -35,6 +35,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,6 +101,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private SearchView searchView;
 	private LinearLayout lineAdmob;
 	private AdView adView;
+	private ProgressBar prLoadLike;
 
 	public static ImageLoader imageLoader = null;
 	public static DatabaseHelper myDbHelper;
@@ -186,9 +188,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		rightMenu.setAnimationCacheEnabled(true);
 
 		rightMenu.setMenuSize(5 * width / 6);
-
 		rightMenu.setMenuView(R.layout.rightmenu);
-
+		prLoadLike=(ProgressBar)findViewById(R.id.prLoadLike);
+		
 		listYeuthich = (ListView) findViewById(R.id.listViewYeuthich);
 		listYeuthich.setAdapter(adapter);
 
@@ -331,6 +333,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			String url = Utils.host + "get_posts?count=10&page=2";
 			ResultCallBack callBack = new ResultCallBack();
 			if (!isLoadding) {
+				prLoadLike.setVisibility(View.VISIBLE);
 				isLoadding = true;
 				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
 						MainActivity.smooth, callBack).execute(url);
@@ -357,6 +360,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public void getResult(int type, String result) {
 			Log.d("result", result);
+			prLoadLike.setVisibility(View.INVISIBLE);
 			isLoadding = false;
 			Utils.disableEnableControls(true, (ViewGroup) mainView);
 

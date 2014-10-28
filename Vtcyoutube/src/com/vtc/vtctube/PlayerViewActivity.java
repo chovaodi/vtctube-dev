@@ -79,7 +79,8 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	private Button btnChitiet;
 	private LinearLayout lineChitiet;
 	private LinearLayout lineBack;
-
+	private ProgressBar prLoadLike;
+	
 	private TextView lblYeuthich;
 	private TextView lblTitle;
 	private TextView lblTaskTitle;
@@ -126,7 +127,8 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		int width = displaymetrics.widthPixels;
 		rightMenu.setMenuSize(5 * width / 6);
 		rightMenu.setMenuView(R.layout.rightmenu);
-
+		prLoadLike=(ProgressBar)findViewById(R.id.prLoadLike);
+		
 		setContentView(R.layout.playerview_demo);
 		listYeuthich = (ListView) findViewById(R.id.listViewYeuthich);
 		listYeuthich.setAdapter(adapter);
@@ -260,10 +262,10 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 						if (newState == MenuDrawer.STATE_CLOSED) {
 							if (inPostActive != itemActive.getIdPost()
 									&& itemActive != null
-									&& !itemActive.getVideoId().equals(title)) {
+									&& !itemActive.getVideoId().equals(id)) {
 								player.cueVideo(itemActive.getVideoId());
 								setDataview(itemActive);
-								itemActive = null;
+								//itemActive = null;
 							}
 						}
 					}
@@ -282,6 +284,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			ResultCallBack callBack = new ResultCallBack();
 			if (!isLoadding) {
 				isLoadding = true;
+				prLoadLike.setVisibility(View.VISIBLE);
 				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
 						MainActivity.smooth, callBack).execute(url);
 			}
@@ -317,7 +320,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 		@Override
 		public void getResult(int type, String result) {
-			Log.d("result", result);
+			prLoadLike.setVisibility(View.INVISIBLE);
 			isLoadding = false;
 			Utils.disableEnableControls(true, (ViewGroup) mainView);
 

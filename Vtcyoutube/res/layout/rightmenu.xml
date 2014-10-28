@@ -4,22 +4,22 @@
     android:layout_height="match_parent"
     android:background="@android:color/white" >
 
-    <ProgressBar
-        android:id="@+id/loadingBanner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="visible" />
-
     <ListView
         android:id="@+id/listViewYeuthich"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:divider="#50c4c4c4"
         android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"
         android:scrollbars="none"
         android:scrollingCache="false" >
     </ListView>
+
+    <ProgressBar
+        android:id="@+id/prLoadLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </FrameLayout>

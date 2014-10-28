@@ -8,22 +8,29 @@ public class ItemPost {
 	private String url;
 	private String content;
 	private String cateId;
-	private String videoId="";
+	private String videoId;
 	private String status;
 	private int pageCount;
 	private String countview;
-	private int option = PinnedAdapter.MOINHAT;
+	private int option;
 	private String slug;
-	private boolean isLike = false;
+	private boolean isLike;
+
+	public ItemPost() {
+		videoId = "";
+		isLike = false;
+		option = PinnedAdapter.MOINHAT;
+		countview="300";
+	}
 
 	public String getCountview() {
 		return countview;
 	}
-	
+
 	public void setCountview(String countview) {
 		this.countview = countview;
 	}
-	
+
 	public void setSlug(String slug) {
 		this.slug = slug;
 	}
