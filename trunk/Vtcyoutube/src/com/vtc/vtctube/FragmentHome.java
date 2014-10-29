@@ -103,7 +103,7 @@ public class FragmentHome extends SherlockFragment {
 			}
 		});
 		imageLoader.displayImage("http://img.youtube.com/vi/"
-				+ AcitivityLoadding.itemPost.getVideoId() + "/3.jpg", img,
+				+ AcitivityLoadding.itemPost.getVideoId() + "/maxresdefault.jpg", img,
 				Utils.getOptions(getActivity(), R.drawable.bgr_home_video),
 				new SimpleImageLoadingListener() {
 					@Override
