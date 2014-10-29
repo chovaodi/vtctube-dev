@@ -852,6 +852,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void getResult(int type, String result) {
+			Log.d("result",result);
 			try {
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");

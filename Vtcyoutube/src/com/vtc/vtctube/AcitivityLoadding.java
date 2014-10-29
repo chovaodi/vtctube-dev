@@ -33,17 +33,19 @@ public class AcitivityLoadding extends Activity {
 
 		@Override
 		public void getResult(int type, String result) {
-			Log.d("resultresult",result);
+			Log.d("resultresult", result);
 			itemPost = new ItemPost();
 			try {
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
 				JSONObject page = jsonObj.getJSONObject("page");
 				if (status.equals("ok")) {
-					
+
 					itemPost.setTitle(page.getString("title"));
-					itemPost.setContent(page.getString(""));
-					itemPost.setVideoId("1212");
+					String[] content = page.getString("content")
+							.split("embed/");
+					String[] id = content[1].split("\\?");
+					itemPost.setVideoId(id[0]);
 
 				}
 
