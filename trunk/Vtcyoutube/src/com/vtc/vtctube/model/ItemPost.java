@@ -20,7 +20,8 @@ public class ItemPost {
 		videoId = "";
 		isLike = false;
 		option = PinnedAdapter.MOINHAT;
-		countview="300";
+		countview = "300";
+		title = "Video chi tiết";
 	}
 
 	public String getCountview() {
