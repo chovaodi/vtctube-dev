@@ -52,13 +52,41 @@
                     android:textSize="14dp" />
             </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btn_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_setting" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/line_menu_left1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/line_menu_left" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <com.vtc.vtctube.font.CustomEditText
+            android:id="@+id/edSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:textColor="@color/text_color"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:background="@drawable/bgr_search"
+            android:ems="10" >
+
+            <requestFocus />
+        </com.vtc.vtctube.font.CustomEditText>
+
     </LinearLayout>
 
     <TextView

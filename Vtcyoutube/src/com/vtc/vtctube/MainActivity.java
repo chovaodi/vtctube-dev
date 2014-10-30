@@ -16,6 +16,7 @@ import android.database.MatrixCursor;
 import android.database.SQLException;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
@@ -25,18 +26,22 @@ import android.support.v4.widget.CursorAdapter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -132,6 +137,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private int positionPreview = 0;
 	private MenuDrawer rightMenu;
 	private ResultItemClick callBackOnlick = new ResultItemClick();
+	private EditText edSearch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -189,8 +195,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		rightMenu.setMenuSize(5 * width / 6);
 		rightMenu.setMenuView(R.layout.rightmenu);
-		prLoadLike=(ProgressBar)findViewById(R.id.prLoadLike);
-		
+		prLoadLike = (ProgressBar) findViewById(R.id.prLoadLike);
+
 		listYeuthich = (ListView) findViewById(R.id.listViewYeuthich);
 		listYeuthich.setAdapter(adapter);
 
@@ -300,6 +306,46 @@ public class MainActivity extends SherlockFragmentActivity implements
 		Fragment newFragment = FragmentHome.newInstance(1);
 		ft.add(R.id.container, newFragment, Utils.TAG_HOME).commit();
 
+		edSearch = (EditText) findViewById(R.id.edSearch);
+		edSearch.setOnEditorActionListener(new DoneOnEditorActionListener());
+	}
+
+	class DoneOnEditorActionListener implements OnEditorActionListener {
+		@Override
+		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+			if (actionId == EditorInfo.IME_ACTION_DONE) {
+				if (edSearch.getText().toString().length() == 0) {
+					Utils.getDialogMessges(MainActivity.this,
+							"Vui lòng nhập từ khóa tìm kiếm");
+
+				} else {
+					Utils.hideSoftKeyboard(MainActivity.this);
+					leftMenu.toggleMenu();
+					actionSearch(edSearch.getText().toString());
+				}
+				return true;
+			}
+			return false;
+		}
+	}
+
+	protected void sendEmail() {
+		Log.i("Send email", "");
+
+		String[] TO = { "vtctube.vn@gmail.com" };
+		Intent emailIntent = new Intent(Intent.ACTION_SEND);
+		emailIntent.setData(Uri.parse("mailto:"));
+		emailIntent.setType("text/plain");
+
+		emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Đánh giá VTCTube");
+		emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi All....");
+
+		try {
+			startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+			finish();
+		} catch (android.content.ActivityNotFoundException ex) {
+		}
 	}
 
 	public class ResultItemClick implements IResult {
@@ -475,6 +521,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 						.getString(R.string.lblMsgrong));
 			}
 
+			break;
+		case R.id.menu_danhgia:
+			sendEmail();
 			break;
 		case R.id.menu_nhataitro:
 			addFragmentAbout();
@@ -852,7 +901,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void getResult(int type, String result) {
-			Log.d("result",result);
+			Log.d("result", result);
 			try {
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
@@ -868,8 +917,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 								DatabaseHelper.TB_QUERY_SEARCH, sqlCheck) == 0) {
 							myDbHelper.insertQuerySearch(queryCurent);
 						}
-						addFragmentSearch(result, Utils.TAG_SEARCH,
-								Utils.LOAD_SEARCH);
+						try {
+							JSONObject json = new JSONObject(result);
+							if (json.getString("status").equals("ok")) {
+								addFragmentSearch(result, Utils.TAG_SEARCH,
+										Utils.LOAD_SEARCH);
+
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
 
 						break;
 					case Utils.LOAD_NEWVIDEO:
@@ -1002,6 +1059,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public void actionSearch(String query) {
 		String url = Utils.host + "get_search_results?search=" + query;
+		Log.d("url", url);
 		new AysnRequestHttp(mainView, Utils.LOAD_SEARCH, smooth, callBackSearch)
 				.execute(url);
 	}
