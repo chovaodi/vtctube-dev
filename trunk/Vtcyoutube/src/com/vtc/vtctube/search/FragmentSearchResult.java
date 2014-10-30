@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +57,8 @@ public class FragmentSearchResult extends SherlockFragment implements
 			if (adapter != null)
 				adapter.clear();
 			adapter.notifyDataSetChanged();
+			listData = new ArrayList<ItemPost>();
+			callBack.getResult(Utils.LOAD_FIRST_DATA, json);
 		}
 	}
 
@@ -73,6 +74,7 @@ public class FragmentSearchResult extends SherlockFragment implements
 		args.putInt("keyOtion", keyOtion);
 
 		frament.setArguments(args);
+		
 
 		return frament;
 	}
@@ -91,6 +93,7 @@ public class FragmentSearchResult extends SherlockFragment implements
 				"keyOtion") : 1);
 
 		callBack = new ResultCallBack();
+		
 	}
 
 	/**
@@ -154,9 +157,11 @@ public class FragmentSearchResult extends SherlockFragment implements
 			try {
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
-				pageCount = jsonObj.getInt("pages");
-				pageSize = jsonObj.getInt("count");
+			
 				if (status.equals("ok") && pageSize > 0) {
+					pageCount = jsonObj.getInt("pages");
+					pageSize = jsonObj.getInt("count");
+					
 					List<ItemPost> listTmp = new ArrayList<ItemPost>();
 					JSONArray jsonArray = jsonObj.getJSONArray("posts");
 					for (int i = 0; i < jsonArray.length(); i++) {

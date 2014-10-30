@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menu_trangchu"
-        android:icon="@drawable/ic_home_normal"
+        android:icon="@drawable/ic_home"
         android:title="Trang chủ">
     </item>
     <item
@@ -11,21 +11,7 @@
         android:icon="@drawable/video_moinhat"
         android:title="Video mới nhất">
     </item>
-   <!--  <item
-        android:id="@+id/menu_video_hotinday"
-        android:icon="@drawable/video_trongngay"
-        android:title="Hot trong ngày">
-    </item>
-    <item
-        android:id="@+id/menu_video_hotinwek"
-        android:icon="@drawable/video_trongtuan"
-        android:title="Hot trong tuần">
-    </item>
-    <item
-        android:id="@+id/menu_video_hotinmonth"
-        android:icon="@drawable/video_trongthang"
-        android:title="Hot trong tháng">
-    </item> -->
+
     <item
         android:id="@+id/menu_video_xemnhieu"
         android:icon="@drawable/video_xemnhieu"
@@ -47,13 +33,13 @@
         android:title="Xem tivi trực tuyến">
     </item>
     <item
-        android:id="@+id/menu_setting"
-        android:icon="@drawable/video_caidat"
-        android:title="Cài đặt">
+        android:id="@+id/menu_danhgia"
+        android:icon="@drawable/video_danhgia"
+        android:title="Đánh giá VTCTube">
     </item>
     <item
         android:id="@+id/menu_nhataitro"
-        android:icon="@drawable/ic_about"
+        android:icon="@drawable/ic_gioithieu"
         android:title="Giới thiệu">
     </item>
 
