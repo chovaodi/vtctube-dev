@@ -212,7 +212,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		listview = (ListView) findViewById(R.id.listView1);
 		header = getLayoutInflater().inflate(R.layout.account_layout, null);
+		View fotter = getLayoutInflater().inflate(R.layout.footer, null);
+
 		listview.addHeaderView(header);
+		listview.addFooterView(fotter);
 
 		lblUserName = (TextView) header.findViewById(R.id.lblName);
 		lblAccountId = (TextView) header.findViewById(R.id.lblEmail);
