@@ -9,9 +9,20 @@
         android:id="@+id/robotoLight1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
-        android:textColor="@android:color/white"
-        android:text="Bản quền thuộc về: VTCTube.vn. Liên hệ info@vtctube.vn" />
+        android:text="Bản quyền thuộc về: VTCTube.vn"
+        android:textColor="@android:color/white" />
+
+      <com.vtc.vtctube.font.RobotoLight
+          android:id="@+id/robotoLight1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="10dp"
+          android:gravity="center"
+          android:text="Liên hệ info@vtctube.vn"
+          android:textColor="@android:color/white" />
 
 </LinearLayout>
