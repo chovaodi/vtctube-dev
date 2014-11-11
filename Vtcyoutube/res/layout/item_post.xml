@@ -28,15 +28,21 @@
                     android:layout_gravity="center"
                     android:visibility="visible" />
 
-                <ImageView
+                <com.vtc.vtctube.roundimg.RoundedImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/imageView1"
-                    android:layout_width="130dp"
-                    android:layout_height="110dp"
-                    android:background="@drawable/img_erorrs"
+                    android:layout_width="120dp"
+                    android:layout_height="80dp"
                     android:clickable="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/avata_demo"
+                    app:border_color="#50cecece"
+                    app:border_width="1px"
+                    app:corner_radius="5dp" />
+
+              
             </FrameLayout>
 
             <LinearLayout
@@ -84,10 +90,10 @@
                             android:clickable="false"
                             android:drawablePadding="3dp"
                             android:focusable="false"
-                            android:textColor="#903f3f3f"
-                            android:text="12"
                             android:focusableInTouchMode="false"
-                            android:src="@drawable/video_comment" />
+                            android:src="@drawable/video_comment"
+                            android:text="12"
+                            android:textColor="#903f3f3f" />
                     </LinearLayout>
 
                     <LinearLayout

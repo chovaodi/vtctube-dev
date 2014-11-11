@@ -80,7 +80,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	private LinearLayout lineChitiet;
 	private LinearLayout lineBack;
 	private ProgressBar prLoadLike;
-	
+
 	private TextView lblYeuthich;
 	private TextView lblTitle;
 	private TextView lblTaskTitle;
@@ -127,8 +127,8 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		int width = displaymetrics.widthPixels;
 		rightMenu.setMenuSize(5 * width / 6);
 		rightMenu.setMenuView(R.layout.rightmenu);
-		prLoadLike=(ProgressBar)findViewById(R.id.prLoadLike);
-		
+		prLoadLike = (ProgressBar) findViewById(R.id.prLoadLike);
+
 		setContentView(R.layout.playerview_demo);
 		listYeuthich = (ListView) findViewById(R.id.listViewYeuthich);
 		listYeuthich.setAdapter(adapter);
@@ -265,7 +265,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 									&& !itemActive.getVideoId().equals(id)) {
 								player.cueVideo(itemActive.getVideoId());
 								setDataview(itemActive);
-								//itemActive = null;
+								// itemActive = null;
 							}
 						}
 					}
@@ -510,16 +510,11 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 				PlayerViewActivity.this), "Android");
 
 		webview_fbview.setVisibility(View.VISIBLE);
-		webview_fbview.setWebChromeClient(new WebChromeClient() {
-			public void onProgressChanged(WebView view, int progress) {
-				if (progress < 100
-						&& loaddingcmt.getVisibility() == ProgressBar.GONE) {
-					loaddingcmt.setVisibility(ProgressBar.VISIBLE);
-				}
-				// Pbar.setProgress(progress);
-				if (progress == 100) {
-					loaddingcmt.setVisibility(ProgressBar.GONE);
-				}
+		webview_fbview.setWebViewClient(new WebViewClient() {
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				Log.d("url", url);
+				return super.shouldOverrideUrlLoading(view, url);
 			}
 		});
 	}
