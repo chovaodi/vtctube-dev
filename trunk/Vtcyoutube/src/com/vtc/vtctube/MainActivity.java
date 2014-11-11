@@ -35,11 +35,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -53,6 +56,9 @@ import com.actionbarsherlock.widget.SearchView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sromku.simple.fb.Permission.Type;
@@ -80,11 +86,15 @@ import com.vtc.vtctube.utils.IRShareFeed;
 import com.vtc.vtctube.utils.IRclickTocate;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class MainActivity extends SherlockFragmentActivity implements
-		SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
+		SearchView.OnQueryTextListener, SearchView.OnSuggestionListener,
+		ConnectionCallbacks, OnConnectionFailedListener {
 	public static String currentCate;
 
 	private MenuDrawer leftMenu;
@@ -138,6 +148,20 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private MenuDrawer rightMenu;
 	private ResultItemClick callBackOnlick = new ResultItemClick();
 	private EditText edSearch;
+	private SlidingLayer mSlidingLayer;
+
+	private Button btnFaceBook;
+	private Button btnGoogle;
+
+	private static final int RC_SIGN_IN = 0;
+
+	/* Client used to interact with Google APIs. */
+	
+	/*
+	 * A flag indicating that a PendingIntent is in progress and prevents us
+	 * from starting further intents.
+	 */
+	private boolean mIntentInProgress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -226,10 +250,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onClick(View v) {
-				if (mSimpleFacebook.isLogin()) {
-					getProfile();
-				} else {
-					mSimpleFacebook.login(onLoginListener);
+				if (globalApp.getAccountModel() == null) {
+					mSlidingLayer.openLayer(true);
+					positionActive = Integer.MAX_VALUE;
+					leftMenu.toggleMenu();
 				}
 			}
 		});
@@ -311,6 +335,75 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		edSearch = (EditText) findViewById(R.id.edSearch);
 		edSearch.setOnEditorActionListener(new DoneOnEditorActionListener());
+
+		mSlidingLayer = (SlidingLayer) findViewById(R.id.slidingLayer);
+		LayoutParams rlp = (LayoutParams) mSlidingLayer.getLayoutParams();
+		mSlidingLayer.setStickTo(SlidingLayer.STICK_TO_BOTTOM);
+		rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		rlp.width = LayoutParams.MATCH_PARENT;
+		rlp.height = Utils.convertDpToPixel(140, MainActivity.this);
+
+		mSlidingLayer.setLayoutParams(rlp);
+		mSlidingLayer.setShadowWidthRes(R.dimen.shadow);
+		mSlidingLayer.setShadowDrawable(R.drawable.sidebar_shadow);
+
+		btnGoogle = (Button) findViewById(R.id.btnGoogle);
+		btnGoogle.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				mSlidingLayer.closeLayer(true);
+			}
+		});
+
+		btnFaceBook = (Button) findViewById(R.id.btnFacebook);
+		btnFaceBook.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				if (mSimpleFacebook.isLogin()) {
+					getProfile();
+				} else {
+					mSimpleFacebook.login(onLoginListener);
+				}
+				mSlidingLayer.closeLayer(true);
+
+			}
+		});
+
+		// PackageInfo packageInfo;
+		// String key = null;
+		// try {
+		//
+		// //getting application package name, as defined in manifest
+		// String packageName = this.getApplicationContext().getPackageName();
+		//
+		// //Retriving package info
+		// packageInfo = this.getPackageManager().getPackageInfo(packageName,
+		// PackageManager.GET_SIGNATURES);
+		//
+		// Log.e("Package Name=",
+		// this.getApplicationContext().getPackageName());
+		//
+		// for (Signature signature : packageInfo.signatures) {
+		// MessageDigest md = MessageDigest.getInstance("SHA");
+		// md.update(signature.toByteArray());
+		// key = new String(Base64.encode(md.digest(), 0));
+		//
+		// // String key = new String(Base64.encodeBytes(md.digest()));
+		// Log.e("Key Hash=", key);
+		//
+		// }
+		// } catch (NameNotFoundException e1) {
+		// Log.e("Name not found", e1.toString());
+		// }
+		//
+		// catch (NoSuchAlgorithmException e) {
+		// Log.e("No such an algorithm", e.toString());
+		// } catch (Exception e) {
+		// Log.e("Exception", e.toString());
+		// }
+
 	}
 
 	class DoneOnEditorActionListener implements OnEditorActionListener {
@@ -1137,5 +1230,23 @@ public class MainActivity extends SherlockFragmentActivity implements
 					.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1);
 			tv.setText(cursor.getString(textIndex));
 		}
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onConnected(Bundle arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onDisconnected() {
+		// TODO Auto-generated method stub
+
 	}
 }
