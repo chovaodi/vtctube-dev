@@ -8,33 +8,33 @@
     </item>
     <item
         android:id="@+id/menu_video_moinhat"
-        android:icon="@drawable/video_moinhat"
+        android:icon="@drawable/ic_moinhat"
         android:title="Video mới nhất">
     </item>
 
     <item
         android:id="@+id/menu_video_xemnhieu"
-        android:icon="@drawable/video_xemnhieu"
+        android:icon="@drawable/ic_xemnhieu"
         android:title="Video xem nhiều">
     </item>
     <item
         android:id="@+id/menu_video_yeuthich"
-        android:icon="@drawable/video_yeuthich"
+        android:icon="@drawable/ic_yeuthich"
         android:title="Video yêu thích">
     </item>
     <item
         android:id="@+id/menu_video_daxem"
-        android:icon="@drawable/video_daxem"
+        android:icon="@drawable/ic_daxem"
         android:title="Video đã xem">
     </item>
     <item
         android:id="@+id/menu_tivi_tructuyen"
-        android:icon="@drawable/video_xemtivi"
+        android:icon="@drawable/ic_xemtivionline"
         android:title="Xem tivi trực tuyến">
     </item>
     <item
         android:id="@+id/menu_danhgia"
-        android:icon="@drawable/video_danhgia"
+        android:icon="@drawable/ic_danhgia"
         android:title="Đánh giá VTCTube">
     </item>
     <item
