@@ -17,8 +17,8 @@
             android:layout_margin="10dp" >
 
             <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="100dp"
+                android:layout_height="90dp"
                 android:layout_marginRight="10dp" >
 
                 <ProgressBar
@@ -28,15 +28,19 @@
                     android:layout_gravity="center"
                     android:visibility="visible" />
 
-                <ImageView
+                <com.vtc.vtctube.roundimg.RoundedImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/imageView1"
-                    android:layout_width="80dp"
-                    android:layout_height="70dp"
-                    android:background="@drawable/img_erorrs"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:clickable="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/avata_demo"
+                    app:border_color="#50cecece"
+                    app:border_width="1px"
+                    app:corner_radius="5dp" />
             </FrameLayout>
 
             <LinearLayout
@@ -47,8 +51,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.6"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:orientation="vertical" >
 
                     <com.vtc.vtctube.font.RobotoLightTextView
@@ -64,14 +68,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0"
                     android:gravity="center_vertical|left" >
 
                     <LinearLayout
                         android:id="@+id/btnComment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.6"
                         android:gravity="center_vertical|left"
                         android:orientation="vertical" >
 
@@ -83,19 +87,19 @@
                             android:clickable="false"
                             android:drawablePadding="3dp"
                             android:focusable="false"
-                            android:textColor="#903f3f3f"
-                            android:text="12"
                             android:focusableInTouchMode="false"
-                            android:src="@drawable/video_comment" />
+                            android:src="@drawable/video_comment"
+                            android:text="12"
+                            android:textColor="#903f3f3f" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/btnLike"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:gravity="center_vertical|right"
                         android:orientation="vertical" >
+
                         <ImageButton
                             android:id="@+id/ic_like"
                             android:layout_width="wrap_content"

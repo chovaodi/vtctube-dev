@@ -30,20 +30,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1" >
 
-            <ImageButton
-                android:id="@+id/button1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|left"
-                android:background="@android:color/transparent"
-                android:paddingLeft="5dp"
-                android:src="@drawable/ss_back_off" />
-
             <com.vtc.vtctube.font.RobotoTextviewBold
                 android:id="@+id/lblTaskTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
+                android:drawableLeft="@drawable/ss_back_off"
                 android:gravity="center_vertical|left"
                 android:paddingLeft="5dp"
                 android:singleLine="true"
@@ -73,7 +65,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider"
+            android:dividerPadding="10dp"
+            android:showDividers="middle" >
 
             <com.vtc.vtctube.font.RobotoBoldButton
                 android:id="@+id/btnLienquan"
@@ -95,23 +90,12 @@
                 android:textColor="@drawable/textcolor_button"
                 android:textSize="17dp" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/TextView01"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1"
-            android:background="#cecece" />
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:background="@android:color/white"
-        
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@android:color/white" >
 
         <ListView
             android:id="@+id/listvideo"
@@ -150,8 +134,9 @@
                 <com.vtc.vtctube.font.RobotoLightTextView
                     android:id="@+id/lblLuotxem"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:text="Lượt xem: "
                     android:textColor="#9197a3"
                     android:textSize="14dp" />
@@ -163,7 +148,7 @@
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/video_like"
                     android:drawablePadding="5dp"
-                    android:gravity="center_vertical|left"
+                    android:gravity="center"
                     android:text="Yêu thích"
                     android:textColor="#9197a3"
                     android:textSize="14dp" />
@@ -173,8 +158,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@drawable/video_share"
-                    android:gravity="center_vertical|left"
+                    android:drawableRight="@drawable/video_share"
+                    android:gravity="center"
                     android:text="Chia sẻ"
                     android:textColor="#9197a3"
                     android:textSize="14dp" />
