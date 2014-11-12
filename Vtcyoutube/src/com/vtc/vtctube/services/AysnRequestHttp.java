@@ -33,11 +33,7 @@ public class AysnRequestHttp extends AsyncTask<String, Integer, String> {
 	protected String doInBackground(String... params) {
 		String json = "";
 		JSONParser jsonParser = new JSONParser();
-		try {
-			json = jsonParser.makeHttpRequest(params[0]).toString();
-		} catch (NetworkErrorException e) {
-			e.printStackTrace();
-		}
+		json = jsonParser.makeHttpRequest(params[0]).toString();
 		return json;
 	}
 
@@ -45,12 +41,12 @@ public class AysnRequestHttp extends AsyncTask<String, Integer, String> {
 	protected void onPreExecute() {
 		if (keyOption != Utils.AYSN_LOAD && process != null)
 			process.setVisibility(View.VISIBLE);
-		//Utils.disableEnableControls(false, viewgruop);
+		// Utils.disableEnableControls(false, viewgruop);
 	}
 
 	@Override
 	protected void onPostExecute(String result) {
-		//Utils.disableEnableControls(true, viewgruop);
+		Log.d("result",result.length()+"222");
 		if (process != null)
 			process.setVisibility(View.GONE);
 		this.iResult.getResult(keyOption, result);

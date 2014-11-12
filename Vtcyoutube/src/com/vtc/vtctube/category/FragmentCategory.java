@@ -33,8 +33,8 @@ import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.IResultOnclick;
 import com.vtc.vtctube.utils.Utils;
 
-public class FragmentCategory extends Fragment implements
-		OnRefreshListener, OnScrollListener {
+public class FragmentCategory extends Fragment implements OnRefreshListener,
+		OnScrollListener {
 	private View v;
 	List<ItemCategory> listData = null;
 	// private View header;
@@ -219,27 +219,13 @@ public class FragmentCategory extends Fragment implements
 		countDataLocal = MainActivity.myDbHelper.getCountRow(
 				DatabaseHelper.TB_LISTVIDEO, queryVideoLocal);
 
-		// if (countDataLocal > 0) {
-		//
-		// isLoadLocal = true;
-		// listViewNew = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,
-		// queryVideoLocal, tabIndex);
-		// if (listViewNew != null && listViewNew.size() > 0) {
-		// pageCount = listViewNew.get(0).getPageCount();
-		// listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
-		// addViewPost(listViewNew, PinnedAdapter.MOINHAT);
-		// }
-		// } else {
-		// isLoadLocal = false;
 		String url = Utils.host + "get_posts?count=5&page=1&cat="
 				+ MainActivity.currentCate;
 
 		new AysnRequestHttp((ViewGroup) v, Utils.LOAD_FIRST_DATA,
 				MainActivity.smooth, callBack).execute(url);
-		// }
 	}
 
-	
 	public class ResultOnlickItem implements IResultOnclick {
 
 		@Override
@@ -257,29 +243,31 @@ public class FragmentCategory extends Fragment implements
 			queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 					+ " WHERE cateId='" + MainActivity.currentCate + "'";
 			listVideoLike = Utils.getVideoLike(queryLikeVideo, type);
-
+			MainActivity.lblError.setVisibility(View.GONE);
 			switch (type) {
 			case PinnedAdapter.MOINHAT:
+
 				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
-				setViewTab(listViewNew);
+				if (listViewNew.size() == 0) {
+					MainActivity.lblError.setVisibility(View.VISIBLE);
+				} else {
+					setViewTab(listViewNew);
+				}
 
 				break;
 			case PinnedAdapter.XEMNHIEU:
-				listVideoXemnhieu=new ArrayList<ItemPost>();
+				listVideoXemnhieu = new ArrayList<ItemPost>();
 				adapter.clear();
 				adapter.notifyDataSetChanged();
 				Utils.disableEnableControls(false, (ViewGroup) v);
 				int page = 1;
-				if (!isLoadding) {
-					isLoadding = true;
-					if (pageCount != 0)
-						page = random.nextInt(pageCount);
-					String url = Utils.host + "get_posts?count=5&page=" + page
-							+ "&cat=" + MainActivity.currentCate;
+				if (pageCount != 0)
+					page = random.nextInt(pageCount);
+				String url = Utils.host + "get_posts?count=5&page=" + page
+						+ "&cat=" + MainActivity.currentCate;
 
-					new AysnRequestHttp((ViewGroup) v, Utils.LOAD_XEMNHIEU,
-							MainActivity.smooth, callBack).execute(url);
-				}
+				new AysnRequestHttp((ViewGroup) v, Utils.LOAD_XEMNHIEU,
+						MainActivity.smooth, callBack).execute(url);
 				break;
 			case PinnedAdapter.YEUTHICH:
 				mPullToRefreshLayout.setRefreshComplete();
@@ -326,7 +314,7 @@ public class FragmentCategory extends Fragment implements
 
 		@Override
 		public void onCLickView(ItemPost item) {
-			Utils.getVideoView(item, getActivity(),listViewNew);
+			Utils.getVideoView(item, getActivity(), listViewNew);
 		}
 	}
 
@@ -346,13 +334,14 @@ public class FragmentCategory extends Fragment implements
 
 		@Override
 		public void getResult(int type, String result) {
-			Log.d("result", result);
+			if (result.length() == 0) {
+				MainActivity.lblError.setVisibility(View.VISIBLE);
+			} else {
+				MainActivity.lblError.setVisibility(View.GONE);
+			}
 			isLoadding = false;
 			Utils.disableEnableControls(true, (ViewGroup) v);
-
-			showMessage();
 			MainActivity.smooth.setVisibility(View.GONE);
-
 			if (type == Utils.REFRESH) {
 				if (result.length() > 0) {
 					for (int i = 0; i < listViewNew.size(); i++) {
@@ -365,7 +354,6 @@ public class FragmentCategory extends Fragment implements
 					adapter.notifyDataSetChanged();
 					listViewNew = new ArrayList<ItemPost>();
 				}
-
 				mPullToRefreshLayout.setRefreshComplete();
 			}
 
@@ -411,7 +399,7 @@ public class FragmentCategory extends Fragment implements
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			showMessage();
+
 		}
 
 		@Override

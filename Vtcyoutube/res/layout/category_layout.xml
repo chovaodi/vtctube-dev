@@ -71,6 +71,8 @@
         </ListView>
     </LinearLayout>
 
+   
+
     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
         android:id="@+id/google_now"
         style="@style/GNowProgressBar"
