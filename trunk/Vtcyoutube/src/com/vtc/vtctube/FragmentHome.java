@@ -99,11 +99,16 @@ public class FragmentHome extends SherlockFragment {
 			
 			@Override
 			public void onClick(View arg0) {
-				Utils.getVideoView(AcitivityLoadding.itemPost, getActivity());
+				MainActivity.smooth.setVisibility(View.GONE);
+				Utils.getVideoView(AcitivityLoadding.itemPost, getActivity(),null);
 			}
 		});
+		 String idPostHome="xxx";
+		if(AcitivityLoadding.itemPost!=null){
+			 idPostHome=AcitivityLoadding.itemPost.getVideoId();
+		}
 		imageLoader.displayImage("http://img.youtube.com/vi/"
-				+ AcitivityLoadding.itemPost.getVideoId() + "/maxresdefault.jpg", img,
+				+ idPostHome + "/maxresdefault.jpg", img,
 				Utils.getOptions(getActivity(), R.drawable.bgr_home_video),
 				new SimpleImageLoadingListener() {
 					@Override

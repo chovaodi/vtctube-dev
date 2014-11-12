@@ -97,15 +97,29 @@
         android:layout_height="match_parent"
         android:background="@android:color/white" >
 
-        <ListView
-            android:id="@+id/listvideo"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="#503f3f3f"
-            android:dividerHeight="0dp"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false" />
+            android:layout_height="match_parent" >
+
+            <ListView
+                android:id="@+id/listvideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="#503f3f3f"
+                android:dividerHeight="0dp"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false" >
+            </ListView>
+
+            <ProgressBar
+                android:id="@+id/loadingListview"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
+
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/lineChitiet"
@@ -174,14 +188,6 @@
                     android:id="@+id/contentView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-
-                <ProgressBar
-                    android:id="@+id/loading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center"
-                    android:visibility="visible" />
             </RelativeLayout>
         </LinearLayout>
     </FrameLayout>

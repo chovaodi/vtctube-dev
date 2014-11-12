@@ -311,7 +311,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						}
 						if (itemActive != null
 								& newState == MenuDrawer.STATE_CLOSED) {
-							Utils.getVideoView(itemActive, MainActivity.this);
+							Utils.getVideoView(itemActive, MainActivity.this, listVideoRanDom);
 							itemActive = null;
 						}
 
@@ -489,8 +489,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
-
+				
 		}
 
 		@Override

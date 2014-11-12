@@ -91,12 +91,12 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	public static ViewGroup mainView;
 	private ListView listvideo;
 	private WebView webview_fbview;
-	private ProgressBar loaddingcmt;
+	private ProgressBar loadingListview;
 	private YouTubePlayerView youTubeView;
 	private YouTubePlayer player;
-	private List<ItemPost> listData;
 	private MenuDrawer rightMenu;
 	private RightLikeAdapter adapter = null;
+	private PinnedAdapter adapterTab;
 	private ListView listYeuthich;
 	private ResultItemClick callBackOnlick = new ResultItemClick();
 	private ItemPost itemActive = null;
@@ -229,24 +229,24 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			}
 		});
 		ResultOnclikTab callBackOnlick = new ResultOnclikTab();
-		PinnedAdapter adapter = new PinnedAdapter(
-				PinnedAdapter.TYPE_VIEW_DETAIL, this, callBackOnlick);
+		adapterTab = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_DETAIL, this,
+				callBackOnlick);
+		listvideo.setAdapter(adapterTab);
 
-		String queryVideoLocal = "SELECT * FROM tblListVideo where cateId='"
-				+ MainActivity.currentCate + "' and videoId !='" + videoId
-				+ "'";
-		listData = Utils.getVideoLocal(DatabaseHelper.TB_LISTVIDEO,
-				queryVideoLocal, 0);
-
-		for (int i = 0; i < listData.size(); i++) {
-			if (listData.get(i).getStatus().equals("publish")) {
-				listData.get(i).setType(PinnedAdapter.ITEM);
-				adapter.add(listData.get(i));
-			}
+		loadingListview = (ProgressBar) findViewById(R.id.loadingListview);
+		loadingListview.setVisibility(View.GONE);
+		if (Utils.listLienquan != null && Utils.listLienquan.size() > 0) {
+			addViewItemLienquan(Utils.listLienquan);
+		} else {
+			ResultCallBackLoad callBackLoad = new ResultCallBackLoad();
+			loadingListview.setVisibility(View.VISIBLE);
+			String url = Utils.host + "get_posts?count=5&page=6";
+			new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
+					MainActivity.smooth, callBackLoad).execute(url);
 		}
-		listvideo.setAdapter(adapter);
+		
 
-		loaddingcmt = (ProgressBar) findViewById(R.id.loading);
+		
 		webview_fbview = (WebView) findViewById(R.id.contentView);
 		settingWebView();
 		setDataview(Utils.itemCurrent);
@@ -273,6 +273,57 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 					}
 				});
 
+	}
+
+	public class ResultCallBackLoad implements IResult {
+
+		@Override
+		public void getResult(int type, String result) {
+			Log.d("result",result);
+			loadingListview.setVisibility(View.GONE);
+			try {
+				List<ItemPost> listViewNew = new ArrayList<ItemPost>();
+				JSONObject jsonObj = new JSONObject(result);
+				String status = jsonObj.getString("status");
+				if (status.equals("ok")) {
+					JSONArray jsonArray = jsonObj.getJSONArray("posts");
+					for (int i = 0; i < jsonArray.length(); i++) {
+						ItemPost item = new ItemPost();
+						JSONObject json = (JSONObject) jsonArray.get(i);
+						item = Utils.getItemPostRandom(json);
+						listViewNew.add(item);
+					}
+					addViewItemLienquan(listViewNew);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		@Override
+		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCLickView(ItemPost item) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	public void addViewItemLienquan(List<ItemPost> list) {
+		for (int i = 0; i < list.size(); i++) {
+			Log.d("11111111111","11111111");
+			if (list.get(i).getStatus().equals("publish")) {
+				list.get(i).setType(PinnedAdapter.ITEM);
+				adapterTab.add(list.get(i));
+			}
+		}
+		adapterTab.notifyDataSetChanged();
 	}
 
 	public void addViewPost() {

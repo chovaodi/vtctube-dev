@@ -80,7 +80,7 @@ public class MenuHomeAdapter extends BaseAdapter {
 		} else {
 			imageLoader.displayImage("http://vtctube.vn/category-thumbs/"
 					+ arr.get(position).getSlug() + ".png", holder.icon,
-					Utils.getOptions(mContext, R.drawable.bgr_icon_category),
+					Utils.getOptions(mContext, R.drawable.error_home),
 					new SimpleImageLoadingListener() {
 						@Override
 						public void onLoadingStarted(String imageUri, View view) {
