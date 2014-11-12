@@ -1,5 +1,6 @@
 package com.vtc.vtctube.category;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -190,8 +191,11 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 
 			@Override
 			public void onClick(View arg0) {
-				MainActivity.callClickShare.onShare(item.getTitle(),
-						item.getUrl(), item.getSlug());
+				// MainActivity.callClickShare.onShare(item.getTitle(),
+				// item.getUrl(), item.getSlug());
+				//
+				Utils.shareButton(item, (Activity) context);
+
 			}
 		});
 

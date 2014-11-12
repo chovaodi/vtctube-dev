@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,8 +23,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.MenuItem;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
@@ -34,7 +33,7 @@ import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.IResultOnclick;
 import com.vtc.vtctube.utils.Utils;
 
-public class FragmentCategory extends SherlockFragment implements
+public class FragmentCategory extends Fragment implements
 		OnRefreshListener, OnScrollListener {
 	private View v;
 	List<ItemCategory> listData = null;
@@ -240,14 +239,7 @@ public class FragmentCategory extends SherlockFragment implements
 		// }
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-
-		}
-		return false;
-	}
-
+	
 	public class ResultOnlickItem implements IResultOnclick {
 
 		@Override

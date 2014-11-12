@@ -22,6 +22,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -146,7 +147,8 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				MainActivity.callClickShare.onShare(title, url, slug);
+				Utils.shareButton(itemActive,
+						(Activity) PlayerViewActivity.this);
 			}
 		});
 

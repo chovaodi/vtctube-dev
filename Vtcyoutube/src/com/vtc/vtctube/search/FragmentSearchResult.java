@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
-public class FragmentSearchResult extends SherlockFragment implements
+public class FragmentSearchResult extends Fragment implements
 		OnScrollListener {
 	private static PinnedAdapter adapter;
 	private ListView listvideo;

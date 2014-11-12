@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.SQLException;
@@ -57,8 +58,12 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sromku.simple.fb.Permission.Type;
@@ -86,9 +91,6 @@ import com.vtc.vtctube.utils.IRShareFeed;
 import com.vtc.vtctube.utils.IRclickTocate;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
@@ -154,14 +156,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private Button btnGoogle;
 
 	private static final int RC_SIGN_IN = 0;
-
+	private ConnectionResult mConnectionResult;
 	/* Client used to interact with Google APIs. */
-	
+
 	/*
 	 * A flag indicating that a PendingIntent is in progress and prevents us
 	 * from starting further intents.
 	 */
 	private boolean mIntentInProgress;
+	private boolean mSignInClicked;
+	private GoogleApiClient mGoogleApiClient = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -287,6 +291,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 				if (mSimpleFacebook.isLogin()) {
 					getProfile();
 				}
+
+				if (mGoogleApiClient.isConnected()) {
+					getProfileInformation();
+				}
+
 				Utils.hideSoftKeyboard(MainActivity.this);
 
 			}
@@ -348,11 +357,18 @@ public class MainActivity extends SherlockFragmentActivity implements
 		mSlidingLayer.setShadowDrawable(R.drawable.sidebar_shadow);
 
 		btnGoogle = (Button) findViewById(R.id.btnGoogle);
+		mGoogleApiClient = new GoogleApiClient.Builder(this)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this).addApi(Plus.API)
+				.addScope(Plus.SCOPE_PLUS_LOGIN).build();
+
 		btnGoogle.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				mSlidingLayer.closeLayer(true);
+
+				signInWithGplus();
 			}
 		});
 
@@ -404,6 +420,25 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// Log.e("Exception", e.toString());
 		// }
 
+	}
+
+	private void signInWithGplus() {
+		if (!mGoogleApiClient.isConnecting()) {
+			mSignInClicked = true;
+			resolveSignInError();
+		}
+	}
+
+	private void resolveSignInError() {
+		if (mConnectionResult.hasResolution()) {
+			try {
+				mIntentInProgress = true;
+				mConnectionResult.startResolutionForResult(this, RC_SIGN_IN);
+			} catch (SendIntentException e) {
+				mIntentInProgress = false;
+				mGoogleApiClient.connect();
+			}
+		}
 	}
 
 	class DoneOnEditorActionListener implements OnEditorActionListener {
@@ -647,12 +682,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public void setAccInfo() {
 		if (globalApp.getAccountModel() != null) {
-			lblAccountId.setText(globalApp.getAccountModel().getUserID());
 
 			if (lblUserName.getText().equals("Đăng nhập")) {
-				imageLoader.displayImage(getLinkAvataFace(globalApp
-						.getAccountModel().getUserID()), imgAvata, Utils
-						.getOptions(MainActivity.this, R.drawable.img_erorrs));
+				if (globalApp.getAccountModel().getType() == AccountModel.LOGIN_FACE) {
+					imageLoader.displayImage(getLinkAvataFace(globalApp
+							.getAccountModel().getUserID()), imgAvata, Utils
+							.getOptions(MainActivity.this,
+									R.drawable.img_erorrs));
+					lblAccountId.setText(globalApp.getAccountModel()
+							.getUserID());
+
+				} else {
+					lblAccountId
+							.setText(globalApp.getAccountModel().getEmail());
+
+					imageLoader.displayImage(globalApp.getAccountModel()
+							.getUrlPhoto(), imgAvata, Utils.getOptions(
+							MainActivity.this, R.drawable.img_erorrs));
+				}
 			}
 			lblUserName.setText(globalApp.getAccountModel().getUserName());
 
@@ -678,6 +725,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (requestCode != 102)
 			mSimpleFacebook.onActivityResult(this, requestCode, resultCode,
 					data);
+		if (requestCode == RC_SIGN_IN) {
+			if (!mGoogleApiClient.isConnecting()) {
+				mGoogleApiClient.connect();
+			}
+
+			mIntentInProgress = false;
+
+			if (!mGoogleApiClient.isConnecting()) {
+				mGoogleApiClient.connect();
+			}
+		}
 
 	}
 
@@ -794,6 +852,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				AccountModel account = new AccountModel();
 				account.setUserID(user_ID);
 				account.setUserName(profileName);
+				account.setType(AccountModel.LOGIN_FACE);
 				globalApp.setAccountModel(account);
 				setAccInfo();
 			}
@@ -1068,6 +1127,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		if (mGoogleApiClient != null)
+			mGoogleApiClient.connect();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (mGoogleApiClient.isConnected()) {
+			mGoogleApiClient.disconnect();
+		}
+	}
+
+	@Override
 	public void onBackPressed() {
 
 		final int left = leftMenu.getDrawerState();
@@ -1233,20 +1307,64 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void onConnectionFailed(ConnectionResult arg0) {
-		// TODO Auto-generated method stub
+	public void onConnectionFailed(ConnectionResult result) {
+		if (!result.hasResolution()) {
+			GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
+					0).show();
+			return;
+		}
 
+		if (!mIntentInProgress) {
+			// Store the ConnectionResult for later usage
+			mConnectionResult = result;
+
+			if (mSignInClicked) {
+				Log.d("mSignInClicked", "mSignInClicked");
+				// The user has already clicked 'sign-in' so we attempt to
+				// resolve all
+				// errors until the user is signed in, or they cancel.
+				// resolveSignInError();
+			}
+		}
 	}
 
 	@Override
 	public void onConnected(Bundle arg0) {
-		// TODO Auto-generated method stub
+		mSignInClicked = false;
+		btnGoogle.setEnabled(false);
 
 	}
 
-	@Override
-	public void onDisconnected() {
-		// TODO Auto-generated method stub
+	private void getProfileInformation() {
+		try {
+			if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+				Person currentPerson = Plus.PeopleApi
+						.getCurrentPerson(mGoogleApiClient);
+				String personName = currentPerson.getDisplayName();
+				String personPhotoUrl = currentPerson.getImage().getUrl();
+				String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
 
+				personPhotoUrl = personPhotoUrl.substring(0,
+						personPhotoUrl.length() - 2) + 400;
+				AccountModel accountModel = new AccountModel();
+				accountModel.setUserName(personName);
+				accountModel.setEmail(email);
+				accountModel.setUrlPhoto(personPhotoUrl);
+				accountModel.setType(AccountModel.LOGIN_GOOGLE);
+				globalApp.setAccountModel(accountModel);
+				setAccInfo();
+
+			} else {
+				Toast.makeText(getApplicationContext(),
+						"Person information is null", Toast.LENGTH_LONG).show();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onConnectionSuspended(int arg0) {
+		mGoogleApiClient.connect();
 	}
 }

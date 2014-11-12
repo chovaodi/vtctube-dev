@@ -13,6 +13,7 @@ import org.xmlpull.v1.XmlPullParser;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -58,7 +59,7 @@ public class Utils {
 	public final static int LOAD_XEMNHIEU = 7;
 	public static ItemPost itemCurrent = null;
 
-	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyBOIqSHxSY2pRqPdJaCwjDQ9FBzkNQmXhE";
+	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyCGlpgcQnFX6At3jUT0j79ryrd0K0fmjls";
 	public static String ADMOB_ID = "ca-app-pub-8362644350234649/3664611615";
 
 	public static String TAG_ABOUT = "TAG_ABOUT";
@@ -102,10 +103,10 @@ public class Utils {
 
 	public static void getVideoView(ItemPost item, Activity activity) {
 		itemCurrent = item;
-//		if (item.getVideoId().length() == 0) {
-//			Utils.getDialogMessges(activity, "Nội dung không khả dụng");
-//			return;
-//		}
+		// if (item.getVideoId().length() == 0) {
+		// Utils.getDialogMessges(activity, "Nội dung không khả dụng");
+		// return;
+		// }
 		Intent intent = new Intent(activity, PlayerViewActivity.class);
 		activity.startActivity(intent);
 
@@ -121,6 +122,20 @@ public class Utils {
 		// }
 		// }
 
+	}
+
+	public static void shareButton(ItemPost item, Activity activity) {
+		String shareLink = "http://vtctube.vn/";
+		if (item.getSlug() != null && item.getSlug().length() > 0) {
+			shareLink = "http://vtctube.vn/" + item.getSlug() + "-" + ".html";
+		}
+		String userEntry = item.getTitle() + "\n"
+				+ "VTCTube-Xem thỏa thích. Chỉ cần Click\n" + shareLink;
+
+		Intent textShareIntent = new Intent(Intent.ACTION_SEND);
+		textShareIntent.putExtra(Intent.EXTRA_TEXT, userEntry);
+		textShareIntent.setType("text/plain");
+		activity.startActivity(textShareIntent);
 	}
 
 	public static void getDialogMessges(Activity activity, String mes) {
