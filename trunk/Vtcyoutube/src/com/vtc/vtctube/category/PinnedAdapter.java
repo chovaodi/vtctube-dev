@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +25,7 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
-import com.vtc.vtctube.like.CommentAcitivity;
+import com.vtc.vtctube.like.LichPhatsongAcitivity;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
@@ -116,18 +117,29 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 
 			@Override
 			public void onClick(View arg0) {
-				String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_RESENT
-						+ " WHERE id='" + item.getIdPost() + "'";
-				if (MainActivity.myDbHelper.getCountRow(
-						DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
-					MainActivity.myDbHelper.insertListVideo(
-							DatabaseHelper.TB_RESENT, item.getCateId(),
-							item.getTitle(), item.getVideoId(), item.getUrl(),
-							item.getStatus(), item.getPageCount(),
-							item.getIdPost(), item.getSlug(),
-							item.getCountview());
+				Log.d("item.getCateId()", item.getCateId());
+				if (item.getCateId().equals("1")) {
+					Intent intent = new Intent(context,
+							LichPhatsongAcitivity.class);
+					intent.putExtra("content", item.getContent());
+					context.startActivity(intent);
+
+				} else {
+
+					String sqlCheck = "SELECT * FROM "
+							+ DatabaseHelper.TB_RESENT + " WHERE id='"
+							+ item.getIdPost() + "'";
+					if (MainActivity.myDbHelper.getCountRow(
+							DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
+						MainActivity.myDbHelper.insertListVideo(
+								DatabaseHelper.TB_RESENT, item.getCateId(),
+								item.getTitle(), item.getVideoId(),
+								item.getUrl(), item.getStatus(),
+								item.getPageCount(), item.getIdPost(),
+								item.getSlug(), item.getCountview());
+					}
+					callBack.onCLickView(item);
 				}
-				callBack.onCLickView(item);
 			}
 		});
 
@@ -196,16 +208,6 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 				//
 				Utils.shareButton(item, (Activity) context);
 
-			}
-		});
-
-		holder.btnComment.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(context, CommentAcitivity.class);
-				intent.putExtra("link", "http://www.haivl.com/photo/4530297");
-				context.startActivity(intent);
 			}
 		});
 

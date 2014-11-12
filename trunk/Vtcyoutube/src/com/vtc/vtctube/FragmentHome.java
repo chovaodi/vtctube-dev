@@ -26,6 +26,7 @@ import uk.co.senab.actionbarpulltorefresh.library.HeaderTransformer;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -127,6 +128,7 @@ public class FragmentHome extends SherlockFragment {
 					}
 				});
 		String url = Utils.getUrlHttp(Utils.host, "get_category_index");
+		Log.d("url",url);
 		if (GlobalApplication.dataCate.length() > 0) {
 			showView(GlobalApplication.dataCate);
 		} else {

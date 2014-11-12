@@ -23,7 +23,7 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
-import com.vtc.vtctube.like.CommentAcitivity;
+import com.vtc.vtctube.like.LichPhatsongAcitivity;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
@@ -85,12 +85,21 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		final ItemPost item = getItem(position);
-		holder.lblCountview.setText("Lượt xem: "+item.getCountview());
+		holder.lblCountview.setText("Lượt xem: " + item.getCountview());
 
 		holder.lineClick.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
+				if (item.getCateId().length() > 0 && item.getCateId().equals(1)) {
+					Intent intent = new Intent(context,
+							LichPhatsongAcitivity.class);
+					intent.putExtra("content", item.getContent());
+					context.startActivity(intent);
+
+					return;
+				}
+
 				String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_RESENT
 						+ " WHERE id='" + item.getIdPost() + "'";
 				if (MainActivity.myDbHelper.getCountRow(
