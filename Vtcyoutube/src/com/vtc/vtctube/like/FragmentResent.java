@@ -117,7 +117,7 @@ public class FragmentResent extends Fragment {
 
 		@Override
 		public void onCLickView(ItemPost item) {
-			Utils.getVideoView(item, getActivity());
+			Utils.getVideoView(item, getActivity(),listData);
 
 		}
 	}

@@ -8,12 +8,19 @@
         android:gravity="center"
         android:orientation="vertical" >
 
-        <ImageView
+       <com.vtc.vtctube.roundimg.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/icon"
             android:layout_width="fill_parent"
             android:layout_height="150dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY" />
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:scaleType="fitXY"
+            android:src="@drawable/avata_demo"
+            app:border_color="#50c4c4c4"
+            app:border_width="1dp"
+            app:corner_radius="18dp" />
 
         <com.vtc.vtctube.font.RobotoLightTextView
             android:id="@+id/lblTitle"

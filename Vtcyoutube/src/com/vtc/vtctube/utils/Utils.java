@@ -69,6 +69,7 @@ public class Utils {
 	public static String TAG_SEARCH = "TAG_SEARCH";
 	public static String TAG_NEWVIDEO = "TAG_NEWVIDEO";
 	public static String TAG_XEMNHIEU = "TAG_XEMNHIEU";
+	public static List<ItemPost> listLienquan;
 
 	public static String getUrlHttp(String host, String funtionName) {
 		return host + funtionName;
@@ -101,27 +102,11 @@ public class Utils {
 
 	}
 
-	public static void getVideoView(ItemPost item, Activity activity) {
+	public static void getVideoView(ItemPost item, Activity activity, List<ItemPost> list) {
 		itemCurrent = item;
-		// if (item.getVideoId().length() == 0) {
-		// Utils.getDialogMessges(activity, "Nội dung không khả dụng");
-		// return;
-		// }
+		listLienquan=list;
 		Intent intent = new Intent(activity, PlayerViewActivity.class);
 		activity.startActivity(intent);
-
-		// Intent intent = null;
-		// intent = YouTubeStandalonePlayer.createVideoIntent(activity,
-		// Utils.DEVELOPER_KEY_YOUTUBE, videoId);
-		// if (intent != null) {
-		// if (canResolveIntent(intent, activity)) {
-		// activity.startActivityForResult(intent, 102);
-		// } else {
-		// YouTubeInitializationResult.SERVICE_MISSING.getErrorDialog(
-		// activity, 102).show();
-		// }
-		// }
-
 	}
 
 	public static void shareButton(ItemPost item, Activity activity) {
@@ -296,7 +281,25 @@ public class Utils {
 		}
 		return listAccount;
 	}
+	public static ItemPost getItemPostRandom(JSONObject json) {
+		ItemPost item = new ItemPost();
+		try {
+			item.setIdPost(json.getInt("id"));
+			item.setStatus(json.getString("slug"));
+			item.setTitle(json.getString("title"));
+			item.setStatus(json.getString("status"));
+			if (json.isNull("content")) {
+				item.setVideoId("");
+			} else {
+				item.setVideoId(getIdVideo(json.getString("content")));
+			}
+			item.setUrl(json.getString("thumbnail"));
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return item;
+	}
 	public static ItemPost getItemPost(JSONObject json, int pageCount,
 			int tabIndex) {
 		ItemPost item = new ItemPost();

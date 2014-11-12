@@ -203,7 +203,7 @@ public class FragmentSearchResult extends Fragment implements
 
 		@Override
 		public void onCLickView(ItemPost item) {
-			Utils.getVideoView(item, getActivity());
+			Utils.getVideoView(item, getActivity(),listData);
 
 		}
 	}
