@@ -19,7 +19,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Sherlock.Light" >
+        android:theme="@style/Theme.Styled" >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -33,21 +33,9 @@
             android:name="com.vtc.vtctube.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
+            
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name="com.vtc.vtctube.category.CategoryActivity"
-            android:configChanges="orientation"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.vtc.vtctube.like.FragmentResent"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.vtc.vtctube.search.FragmentSearchResult"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
         <activity
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name"
@@ -61,7 +49,7 @@
             android:value="@string/app_id" />
 
         <activity
-            android:name="com.vtc.vtctube.like.CommentAcitivity"
+            android:name="com.vtc.vtctube.like.LichPhatsongAcitivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity android:name="AcitivityLoadding" >

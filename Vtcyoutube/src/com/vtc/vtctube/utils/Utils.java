@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -102,9 +102,10 @@ public class Utils {
 
 	}
 
-	public static void getVideoView(ItemPost item, Activity activity, List<ItemPost> list) {
+	public static void getVideoView(ItemPost item, Activity activity,
+			List<ItemPost> list) {
 		itemCurrent = item;
-		listLienquan=list;
+		listLienquan = list;
 		Intent intent = new Intent(activity, PlayerViewActivity.class);
 		activity.startActivity(intent);
 	}
@@ -281,6 +282,7 @@ public class Utils {
 		}
 		return listAccount;
 	}
+
 	public static ItemPost getItemPostRandom(JSONObject json) {
 		ItemPost item = new ItemPost();
 		try {
@@ -288,9 +290,17 @@ public class Utils {
 			item.setStatus(json.getString("slug"));
 			item.setTitle(json.getString("title"));
 			item.setStatus(json.getString("status"));
+			JSONArray jsonArray = json.getJSONArray("categories");
+			if (jsonArray.length() > 0) {
+				JSONObject jsonObject = jsonArray.getJSONObject(0);
+				item.setCateId(jsonObject.getInt("id") + "");
+			} else {
+				item.setCateId("");
+			}
 			if (json.isNull("content")) {
 				item.setVideoId("");
 			} else {
+				item.setContent(json.getString("content"));
 				item.setVideoId(getIdVideo(json.getString("content")));
 			}
 			item.setUrl(json.getString("thumbnail"));
@@ -300,13 +310,21 @@ public class Utils {
 		}
 		return item;
 	}
+
 	public static ItemPost getItemPost(JSONObject json, int pageCount,
 			int tabIndex) {
 		ItemPost item = new ItemPost();
 		try {
 			item.setIdPost(json.getInt("id"));
 			item.setStatus(json.getString("slug"));
-			item.setCateId(MainActivity.currentCate);
+			JSONArray jsonArray = json.getJSONArray("categories");
+			if (jsonArray.length() > 0) {
+				JSONObject jsonObject = jsonArray.getJSONObject(0);
+				item.setCateId(jsonObject.getInt("id") + "");
+			} else {
+				item.setCateId("");
+			}
+			
 			item.setPageCount(pageCount);
 			item.setTitle(json.getString("title"));
 			item.setStatus(json.getString("status"));
@@ -314,6 +332,7 @@ public class Utils {
 			if (json.isNull("content")) {
 				item.setVideoId("");
 			} else {
+				item.setContent(json.getString("content"));
 				item.setVideoId(getIdVideo(json.getString("content")));
 			}
 			item.setUrl(json.getString("thumbnail"));

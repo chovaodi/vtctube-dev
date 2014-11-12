@@ -322,13 +322,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		smooth.setVisibility(View.GONE);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-		getSupportActionBar().setIcon(
-				getResources().getDrawable(R.drawable.icon_menuleft));
-		getSupportActionBar().setTitle("VTCTUBE");
-		getSupportActionBar().setBackgroundDrawable(
-				getResources().getDrawable(R.drawable.bgr_tasktop));
-
 		getSupportActionBar().setDisplayOptions(
 				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_CUSTOM
 						| ActionBar.DISPLAY_SHOW_TITLE);
