@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -33,7 +34,7 @@ public class JSONParser {
 	 * @return
 	 * @throws NetworkErrorException
 	 */
-	public String makeHttpRequest(String url) throws NetworkErrorException {
+	public String makeHttpRequest(String url) {
 		InputStream is = null;
 		String json = "";
 		try {
@@ -41,7 +42,7 @@ public class JSONParser {
 			int timeoutConnection = 10000;
 			HttpConnectionParams.setConnectionTimeout(httpParameters,
 					timeoutConnection);
-			int timeoutSocket = 10000;
+			int timeoutSocket = 10 * 000;
 			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
 			DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
@@ -50,6 +51,8 @@ public class JSONParser {
 			HttpResponse httpResponse = httpClient.execute(httpGet);
 			HttpEntity httpEntity = httpResponse.getEntity();
 			is = httpEntity.getContent();
+		} catch (UnknownHostException e) {
+			return "";
 		} catch (UnsupportedEncodingException e) {
 			return "";
 		} catch (ClientProtocolException e) {

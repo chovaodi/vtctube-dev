@@ -603,7 +603,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		positionPreview = id;
 		switch (id) {
 		case R.id.menu_trangchu:
-
+			MainActivity.lblError.setVisibility(View.GONE);
 			FragmentHome fragment = (FragmentHome) fragmentManager
 					.findFragmentByTag(Utils.TAG_HOME);
 			if (fragment == null) {
@@ -1142,7 +1142,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-
+		MainActivity.lblError.setVisibility(View.GONE);
 		final int left = leftMenu.getDrawerState();
 		if (left == MenuDrawer.STATE_OPEN || left == MenuDrawer.STATE_OPENING) {
 			leftMenu.closeMenu();

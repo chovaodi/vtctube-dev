@@ -11,20 +11,21 @@
         android:layout_height="match_parent"
         android:background="@android:color/white" >
 
-        <com.vtc.vtctube.font.RobotoLightTextView
-            android:id="@+id/lblError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/lblErorrs"
-            android:textSize="15dp"
-            android:visibility="gone" />
-
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </FrameLayout>
+
+        <com.vtc.vtctube.font.RobotoLightTextView
+            android:id="@+id/lblError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/lblErorrs"
+            android:textSize="15dp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/adview"
@@ -63,28 +64,25 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:orientation="vertical"
-                android:paddingTop="10dp" 
-                 android:paddingBottom="10dp"
-                >
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp" >
 
                 <Button
                     android:id="@+id/btnGoogle"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                     android:textColor="@android:color/white"
                     android:background="@drawable/googleplus_bgr"
                     android:text="Login with Google"
-                    />
+                    android:textColor="@android:color/white" />
 
                 <Button
-                    android:textColor="@android:color/white"
-                    android:background="@drawable/facebook_bgr"
                     android:id="@+id/btnFacebook"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
-                     android:text="Login with Facebook"
-                     />
+                    android:background="@drawable/facebook_bgr"
+                    android:text="Login with Facebook"
+                    android:textColor="@android:color/white" />
             </LinearLayout>
         </LinearLayout>
     </com.vtc.vtctube.SlidingLayer>
