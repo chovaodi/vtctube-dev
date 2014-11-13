@@ -53,6 +53,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.actionbarsherlock.widget.SearchView;
+import com.fortysevendeg.swipelistview.SwipeListView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -104,7 +105,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			SearchManager.SUGGEST_COLUMN_TEXT_1, };
 
 	private ListView listview;
-	private ListView listYeuthich;
+	private SwipeListView listYeuthich;
 	private View header;
 	private SimpleFacebook mSimpleFacebook = null;
 	private TextView lblUserName;
@@ -215,7 +216,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 		rightMenu.setMenuView(R.layout.rightmenu);
 		prLoadLike = (ProgressBar) findViewById(R.id.prLoadLike);
 
-		listYeuthich = (ListView) findViewById(R.id.listViewYeuthich);
+		listYeuthich = (SwipeListView) findViewById(R.id.listViewYeuthich);
+		// listYeuthich.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
+		// listYeuthich.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_NONE);
+		// listYeuthich.setSwipeActionRight(SwipeListView.SWIPE_ACTION_DISMISS);
+		listYeuthich.setOffsetLeft(width/2);
+		listYeuthich.setOffsetRight(width - 80);
+		listYeuthich.setAnimationTime(500);
+		listYeuthich.setSwipeOpenOnLongPress(true);
+		listYeuthich.setKeepScreenOn(true);
+
 		listYeuthich.setAdapter(adapter);
 
 		setContentView(R.layout.fragment_content);
@@ -452,8 +462,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			Log.d("111111111", "like-----");
-			setViewTab();
+			if (type == Utils.HOANTAC) {
+				listYeuthich.closeAnimate(postion);
+			} else {
+				setViewTab();
+			}
 		}
 
 		@Override

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -64,7 +65,7 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 		if (convertView == null) {
 			holder = new ViewHolder();
 
-			convertView = mInflater.inflate(R.layout.item_post_right, null);
+			convertView = mInflater.inflate(R.layout.item_infatuated, null);
 			holder.txtTitle = (TextView) convertView
 					.findViewById(R.id.lblTitlePost);
 			holder.lblCountview = (TextView) convertView
@@ -72,15 +73,14 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 			holder.imgIcon = (ImageView) convertView
 					.findViewById(R.id.imageView1);
-			holder.ic_like = (ImageView) convertView.findViewById(R.id.ic_like);
-
-			holder.lineClick = (LinearLayout) convertView
-					.findViewById(R.id.onClickItem);
-			holder.btnLike = (LinearLayout) convertView
-					.findViewById(R.id.btnLike);
 
 			holder.loadingBanner = (ProgressBar) convertView
 					.findViewById(R.id.loadingBanner);
+			holder.btnXoa = (Button) convertView.findViewById(R.id.btnXoa);
+			holder.btnHoantac = (Button) convertView
+					.findViewById(R.id.btnHoantac);
+			holder.lineFront = (LinearLayout) convertView
+					.findViewById(R.id.front);
 
 			convertView.setTag(holder);
 		} else {
@@ -89,7 +89,7 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 		final ItemPost item = getItem(position);
 		holder.lblCountview.setText("Lượt xem: " + item.getCountview());
 
-		holder.lineClick.setOnClickListener(new OnClickListener() {
+		holder.lineFront.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -117,34 +117,29 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 				}
 			}
 		});
-		if (item.getKeyRemove() == Utils.LOAD_LIKE) {
-			if (item.isLike()) {
-				holder.ic_like.setSelected(true);
-			} else {
-				holder.ic_like.setSelected(false);
-			}
-		} else {
-			holder.ic_like.setVisibility(View.GONE);
-		}
-		holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
 
-		// Bitmap bmp = imageLoader.loadImageSync(item.getUrl());
-		// if (bmp != null) {
-		// holder.imgIcon.setImageBitmap(bmp);
-		// } else {
-		holder.btnLike.setOnClickListener(new OnClickListener() {
+		holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
+		holder.btnHoantac.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				callBack.pushResutClickItem(Utils.HOANTAC,
+						getPosition(item), false);				
+			}
+		});
+		holder.btnXoa.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Log.d("like111","11111111111 đ"+item.getType());
+				Log.d("like111", "11111111111 đ" + item.getType());
 				if (item.getKeyRemove() == Utils.LOAD_LIKE) {
-					
+
 					if (item.isLike()) {
 						MainActivity.myDbHelper.deleteLikeVideo(
 								DatabaseHelper.TB_LIKE, item.getIdPost());
 						callBack.pushResutClickItem(item.getOption(),
 								getPosition(item), false);
-						
+
 					} else {
 						String sqlCheck = "SELECT * FROM "
 								+ DatabaseHelper.TB_LIKE + " WHERE id='"
@@ -210,9 +205,10 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 		public TextView lblCountview;
 		public ImageView imgIcon, ic_like;
 
-		public LinearLayout lineClick, btnLike;
+		public LinearLayout lineFront, btnLike;
 		public ProgressBar loadingBanner;
-
+		private Button btnXoa;
+		private Button btnHoantac;
 	}
 
 }
