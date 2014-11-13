@@ -1,6 +1,5 @@
 package com.vtc.vtctube.services;
 
-import android.accounts.NetworkErrorException;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -14,14 +13,12 @@ public class AysnRequestHttp extends AsyncTask<String, Integer, String> {
 	private int keyOption;
 	private View process;
 	private IResult iResult;
-	private ViewGroup viewgruop;
 
 	public AysnRequestHttp(ViewGroup viewgroup, int keyOption, View process,
 			IResult iResult) {
 		this.keyOption = keyOption;
 		this.process = process;
 		this.iResult = iResult;
-		this.viewgruop = viewgroup;
 
 	}
 

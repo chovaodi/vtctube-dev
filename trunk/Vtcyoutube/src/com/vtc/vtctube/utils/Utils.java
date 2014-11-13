@@ -16,7 +16,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
@@ -153,12 +152,6 @@ public class Utils {
 			}
 		});
 
-	}
-
-	private static boolean canResolveIntent(Intent intent, Activity activity) {
-		List<ResolveInfo> resolveInfo = activity.getPackageManager()
-				.queryIntentActivities(intent, 0);
-		return resolveInfo != null && !resolveInfo.isEmpty();
 	}
 
 	public static void hideSoftKeyboard(Activity activity) {

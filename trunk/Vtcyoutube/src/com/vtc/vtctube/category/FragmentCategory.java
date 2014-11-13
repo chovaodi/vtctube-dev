@@ -10,8 +10,8 @@ import org.json.JSONObject;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,11 +51,9 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 
 	private static int page = 1;
 	private static int pageCount = 0;
-	private int countDataLocal;
 	private static int tabIndex = PinnedAdapter.MOINHAT;
 	private int pageSize = 5;
 
-	private String queryVideoLocal;
 	private String queryLikeVideo;
 
 	private static boolean isLoadding = false;
@@ -78,9 +76,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 	public void setCate(String cate) {
 		if (!cate.equals(MainActivity.currentCate)) {
 			MainActivity.currentCate = cate;
-
 			initData();
-
 			resetTab();
 			onLoadData(false);
 		}
@@ -210,18 +206,10 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 	public void onLoadData(boolean isLoad) {
 		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 				+ " WHERE cateId='" + MainActivity.currentCate + "'";
-
 		listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
-
-		queryVideoLocal = "SELECT * FROM tblListVideo where cateId='"
-				+ MainActivity.currentCate + "'";
-
-		countDataLocal = MainActivity.myDbHelper.getCountRow(
-				DatabaseHelper.TB_LISTVIDEO, queryVideoLocal);
 
 		String url = Utils.host + "get_posts?count=5&page=1&cat="
 				+ MainActivity.currentCate;
-
 		new AysnRequestHttp((ViewGroup) v, Utils.LOAD_FIRST_DATA,
 				MainActivity.smooth, callBack).execute(url);
 	}

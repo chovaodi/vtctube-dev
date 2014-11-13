@@ -3,7 +3,6 @@ package com.vtc.vtctube;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -123,49 +122,40 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public static ImageLoader imageLoader = null;
 	public static DatabaseHelper myDbHelper;
 	public static SmoothProgressBar smooth;
-
-	private ResultSearchCallBack callBackSearch;
 	public static ResultCallBackCLick callBackCLick;
 	public static ResultCallBackCate callBackCLickCate;
 	public static ResultClickShare callClickShare;
-
+	public static ViewGroup mainView;
+	
+	private ResultSearchCallBack callBackSearch;
 	private List<ItemMeu> listItemMenu;
 	private List<ItemPost> listVideoRanDom = new ArrayList<ItemPost>();
-
 	private List<String> listQuerySearch;
+	
 	private String queryCurent = "";
 	private ItemPost itemActive = null;
-
 	private GlobalApplication globalApp;
-	private boolean isLoadding = false;
-	private boolean isMenuCate = false;
 	private FragmentManager fragmentManager;
 	private FragmentTransaction ft;
 	private RightLikeAdapter adapter = null;
-
-	public static ViewGroup mainView;
-	private Random random = new Random();
-	private int positionActive = Integer.MAX_VALUE;
-	private int positionPreview = 0;
 	private MenuDrawer rightMenu;
 	private ResultItemClick callBackOnlick = new ResultItemClick();
 	private EditText edSearch;
 	private SlidingLayer mSlidingLayer;
-
 	private Button btnFaceBook;
 	private Button btnGoogle;
-
+	
+	private int positionActive = Integer.MAX_VALUE;
+	private int positionPreview = 0;
 	private static final int RC_SIGN_IN = 0;
+	
 	private ConnectionResult mConnectionResult;
-	/* Client used to interact with Google APIs. */
+	private GoogleApiClient mGoogleApiClient = null;
 
-	/*
-	 * A flag indicating that a PendingIntent is in progress and prevents us
-	 * from starting further intents.
-	 */
 	private boolean mIntentInProgress;
 	private boolean mSignInClicked;
-	private GoogleApiClient mGoogleApiClient = null;
+	private boolean isLoadding = false;
+	private boolean isMenuCate = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -325,6 +315,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		getSupportActionBar().setDisplayOptions(
 				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_CUSTOM
 						| ActionBar.DISPLAY_SHOW_TITLE);
+		getSupportActionBar().setIcon(
+				getResources().getDrawable(R.drawable.icon_menuleft));
 		getSupportActionBar().setCustomView(R.layout.header_task);
 		imgLogo = (ImageView) findViewById(R.id.iconHeader);
 		lblTitle = (TextView) findViewById(R.id.lblHeaderTile);
