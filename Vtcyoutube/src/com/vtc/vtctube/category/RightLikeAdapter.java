@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,8 +72,13 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 			holder.imgIcon = (ImageView) convertView
 					.findViewById(R.id.imageView1);
+			holder.ic_like = (ImageView) convertView.findViewById(R.id.ic_like);
+
 			holder.lineClick = (LinearLayout) convertView
 					.findViewById(R.id.onClickItem);
+			holder.btnLike = (LinearLayout) convertView
+					.findViewById(R.id.btnLike);
+
 			holder.loadingBanner = (ProgressBar) convertView
 					.findViewById(R.id.loadingBanner);
 
@@ -111,14 +117,54 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 				}
 			}
 		});
-
+		if (item.getKeyRemove() == Utils.LOAD_LIKE) {
+			if (item.isLike()) {
+				holder.ic_like.setSelected(true);
+			} else {
+				holder.ic_like.setSelected(false);
+			}
+		} else {
+			holder.ic_like.setVisibility(View.GONE);
+		}
 		holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
 
 		// Bitmap bmp = imageLoader.loadImageSync(item.getUrl());
 		// if (bmp != null) {
 		// holder.imgIcon.setImageBitmap(bmp);
 		// } else {
+		holder.btnLike.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				Log.d("like111","11111111111 đ"+item.getType());
+				if (item.getKeyRemove() == Utils.LOAD_LIKE) {
+					
+					if (item.isLike()) {
+						MainActivity.myDbHelper.deleteLikeVideo(
+								DatabaseHelper.TB_LIKE, item.getIdPost());
+						callBack.pushResutClickItem(item.getOption(),
+								getPosition(item), false);
+						
+					} else {
+						String sqlCheck = "SELECT * FROM "
+								+ DatabaseHelper.TB_LIKE + " WHERE id='"
+								+ item.getIdPost() + "'";
+						if (MainActivity.myDbHelper.getCountRow(
+								DatabaseHelper.TB_LIKE, sqlCheck) == 0) {
+							MainActivity.myDbHelper.insertVideoLike(
+									item.getIdPost(), item.getCateId(),
+									item.getVideoId(), item.getUrl(),
+									item.getStatus(), item.getTitle(),
+									item.getSlug(), item.getCountview());
+							callBack.pushResutClickItem(item.getOption(),
+									getPosition(item), true);
+						}
+
+					}
+				}
+
+			}
+		});
 		imageLoader.displayImage(item.getUrl(), holder.imgIcon,
 				Utils.getOptions(context, R.drawable.img_erorrs),
 				new SimpleImageLoadingListener() {
@@ -162,9 +208,9 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 	public class ViewHolder {
 		public TextView txtTitle;
 		public TextView lblCountview;
-		public ImageView imgIcon;
+		public ImageView imgIcon, ic_like;
 
-		public LinearLayout lineClick;
+		public LinearLayout lineClick, btnLike;
 		public ProgressBar loadingBanner;
 
 	}

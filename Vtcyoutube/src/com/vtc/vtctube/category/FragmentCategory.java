@@ -431,10 +431,9 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 		 * Simulate Refresh with 4 seconds sleep
 		 */
 
-		if (isLoadLocal) {
+		if (isLoadLocal&&tabIndex==PinnedAdapter.MOINHAT) {
 			String url = Utils.host + "get_posts?count=5&page=1&cat="
 					+ MainActivity.currentCate;
-			Log.d("url", url);
 			new AysnRequestHttp((ViewGroup) v, Utils.REFRESH, null, callBack)
 					.execute(url);
 
