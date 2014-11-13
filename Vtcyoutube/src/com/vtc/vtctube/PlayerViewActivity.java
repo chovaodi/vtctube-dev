@@ -244,9 +244,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
 					MainActivity.smooth, callBackLoad).execute(url);
 		}
-		
 
-		
 		webview_fbview = (WebView) findViewById(R.id.contentView);
 		settingWebView();
 		setDataview(Utils.itemCurrent);
@@ -279,7 +277,6 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 		@Override
 		public void getResult(int type, String result) {
-			Log.d("result",result);
 			loadingListview.setVisibility(View.GONE);
 			try {
 				List<ItemPost> listViewNew = new ArrayList<ItemPost>();
@@ -317,7 +314,6 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 	public void addViewItemLienquan(List<ItemPost> list) {
 		for (int i = 0; i < list.size(); i++) {
-			Log.d("11111111111","11111111");
 			if (list.get(i).getStatus().equals("publish")) {
 				list.get(i).setType(PinnedAdapter.ITEM);
 				adapterTab.add(list.get(i));
@@ -555,7 +551,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		webview_fbview.setPadding(0, 0, 0, 0);
 		webview_fbview.setWebViewClient(new webViewClient());
 		webview_fbview.setWebChromeClient(new webChromeClient());
-		webview_fbview.setInitialScale(100);
+		webview_fbview.setInitialScale(50);
 		webview_fbview.clearCache(true);
 		webview_fbview.clearHistory();
 		webview_fbview.getSettings().setDefaultFontSize(14);
@@ -566,7 +562,10 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		webview_fbview.setWebViewClient(new WebViewClient() {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				Log.d("url", url);
+				Log.d("url",url);
+				if(url.contains("https://m.facebook.com/plugins/login_success.php")){
+					//loadComment("http://vtctube.vn/" + itemActive.getSlug());
+				}
 				return super.shouldOverrideUrlLoading(view, url);
 			}
 		});

@@ -86,11 +86,6 @@ public class FragmentResent extends Fragment {
 		v = inflater.inflate(R.layout.category_layout, container, false);
 		adapter = new PinnedAdapter(PinnedAdapter.TYPE_VIEW_CATE,
 				getActivity(), callBackOnlick);
-		// if (key == R.id.menu_video_yeuthich) {
-		// getSupportActionBar().setTitle("Video yêu thích");
-		// } else {
-		// getSupportActionBar().setTitle("Video đã xem");
-		// }
 
 		smooth = (SmoothProgressBar) v.findViewById(R.id.google_now);
 		smooth.setVisibility(View.GONE);
