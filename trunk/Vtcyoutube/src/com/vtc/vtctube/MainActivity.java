@@ -452,7 +452,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			Log.d("111111111","like-----");
+			Log.d("111111111", "like-----");
 			setViewTab();
 		}
 
@@ -479,16 +479,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 						MainActivity.smooth, callBack).execute(url);
 			}
 		} else if (listData.size() != adapter.getCount()) {
-			if (listData.size() > 0 && listVideoRanDom.size() > 0
-					&& listData.size() != adapter.getCount()) {
+			if (listData.size() != adapter.getCount()) {
 				addViewData(listData);
-			}
-			if (listData.size() > 0 && listData.size() != adapter.getCount()) {
-				addViewData(listData);
-			}
-			if (listVideoRanDom.size() > 0
-					&& listVideoRanDom.size() != adapter.getCount()) {
-				addViewData(listVideoRanDom);
+				return;
 			}
 
 		}
@@ -504,16 +497,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 			Utils.disableEnableControls(true, (ViewGroup) mainView);
 
 			try {
-				if (listVideoRanDom == null) {
-					listVideoRanDom = new ArrayList<ItemPost>();
-				}
+				List<ItemPost> listVideoRanDom = new ArrayList<ItemPost>();
 				JSONObject jsonObj = new JSONObject(result);
 				int count_total = jsonObj.getInt("count_total");
 				if (count_total > 0) {
 					JSONArray jsonArray = jsonObj.getJSONArray("posts");
 					for (int i = 0; i < jsonArray.length(); i++) {
 						ItemPost item = new ItemPost();
-						
+
 						JSONObject json = (JSONObject) jsonArray.get(i);
 						item = Utils.getItemPost(json, 0, 0);
 						item.setKeyRemove(Utils.LOAD_RADOM);
@@ -543,6 +534,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public void addViewData(List<ItemPost> list) {
 		adapter.clear();
+		adapter.notifyDataSetChanged();
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getStatus().equals("publish")) {
 				list.get(i).setType(PinnedAdapter.ITEM);
