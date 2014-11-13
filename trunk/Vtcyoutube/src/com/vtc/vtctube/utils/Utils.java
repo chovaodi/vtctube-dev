@@ -54,6 +54,7 @@ public class Utils {
 	public final static int REFRESH = 4;
 	public final static int LOAD_RADOM = 5;
 	public final static int LOAD_LIKE = 6;
+	public final static int HOANTAC = 7;
 
 	public final static int LOAD_SEARCH = 5;
 	public final static int LOAD_NEWVIDEO = 6;
