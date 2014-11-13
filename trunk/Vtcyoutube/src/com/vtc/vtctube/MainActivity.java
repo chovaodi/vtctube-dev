@@ -262,9 +262,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-
 				positionActive = position - 1;
-				Log.d("positionActive", positionActive + "");
 				leftMenu.toggleMenu();
 
 			}
@@ -372,39 +370,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 		});
 
-		// PackageInfo packageInfo;
-		// String key = null;
-		// try {
-		//
-		// //getting application package name, as defined in manifest
-		// String packageName = this.getApplicationContext().getPackageName();
-		//
-		// //Retriving package info
-		// packageInfo = this.getPackageManager().getPackageInfo(packageName,
-		// PackageManager.GET_SIGNATURES);
-		//
-		// Log.e("Package Name=",
-		// this.getApplicationContext().getPackageName());
-		//
-		// for (Signature signature : packageInfo.signatures) {
-		// MessageDigest md = MessageDigest.getInstance("SHA");
-		// md.update(signature.toByteArray());
-		// key = new String(Base64.encode(md.digest(), 0));
-		//
-		// // String key = new String(Base64.encodeBytes(md.digest()));
-		// Log.e("Key Hash=", key);
-		//
-		// }
-		// } catch (NameNotFoundException e1) {
-		// Log.e("Name not found", e1.toString());
-		// }
-		//
-		// catch (NoSuchAlgorithmException e) {
-		// Log.e("No such an algorithm", e.toString());
-		// } catch (Exception e) {
-		// Log.e("Exception", e.toString());
-		// }
-
 	}
 
 	private void signInWithGplus() {
@@ -446,8 +411,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	protected void sendEmail() {
-		Log.i("Send email", "");
-
 		String[] TO = { "vtctube.vn@gmail.com" };
 		Intent emailIntent = new Intent(Intent.ACTION_SEND);
 		emailIntent.setData(Uri.parse("mailto:"));
@@ -459,7 +422,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		try {
 			startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-			finish();
 		} catch (android.content.ActivityNotFoundException ex) {
 		}
 	}
@@ -520,7 +482,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void getResult(int type, String result) {
-			Log.d("result", result);
 			prLoadLike.setVisibility(View.INVISIBLE);
 			isLoadding = false;
 			Utils.disableEnableControls(true, (ViewGroup) mainView);
@@ -1311,6 +1272,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 		}
 	}
+	
 
 	@Override
 	public void onConnected(Bundle arg0) {
