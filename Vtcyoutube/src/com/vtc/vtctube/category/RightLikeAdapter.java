@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -44,14 +42,12 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 	public static ImageLoader imageLoader = null;
 	private IResult callBack;
-	private int typeView;
 
 	public RightLikeAdapter(int type, Context context, IResult callBack) {
 		super(context, 0);
 		mInflater = LayoutInflater.from(context);
 		this.context = context;
 		this.callBack = callBack;
-		this.typeView = type;
 
 		if (imageLoader == null) {
 			imageLoader = ImageLoader.getInstance();
@@ -91,27 +87,28 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 			@Override
 			public void onClick(View arg0) {
-				if (item.getCateId().length() > 0 && item.getCateId().equals(1)) {
+				if (item.getCateId().equals("1")) {
 					Intent intent = new Intent(context,
 							LichPhatsongAcitivity.class);
 					intent.putExtra("content", item.getContent());
 					context.startActivity(intent);
 
-					return;
-				}
+				} else {
 
-				String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_RESENT
-						+ " WHERE id='" + item.getIdPost() + "'";
-				if (MainActivity.myDbHelper.getCountRow(
-						DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
-					MainActivity.myDbHelper.insertListVideo(
-							DatabaseHelper.TB_RESENT, item.getCateId(),
-							item.getTitle(), item.getVideoId(), item.getUrl(),
-							item.getStatus(), item.getPageCount(),
-							item.getIdPost(), item.getSlug(),
-							item.getCountview());
+					String sqlCheck = "SELECT * FROM "
+							+ DatabaseHelper.TB_RESENT + " WHERE id='"
+							+ item.getIdPost() + "'";
+					if (MainActivity.myDbHelper.getCountRow(
+							DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
+						MainActivity.myDbHelper.insertListVideo(
+								DatabaseHelper.TB_RESENT, item.getCateId(),
+								item.getTitle(), item.getVideoId(),
+								item.getUrl(), item.getStatus(),
+								item.getPageCount(), item.getIdPost(),
+								item.getSlug(), item.getCountview());
+					}
+					callBack.onCLickView(item);
 				}
-				callBack.onCLickView(item);
 			}
 		});
 
