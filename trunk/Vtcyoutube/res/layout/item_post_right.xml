@@ -75,7 +75,7 @@
                         android:id="@+id/btnComment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.6"
+                        android:layout_weight="0.3"
                         android:gravity="center_vertical|left"
                         android:orientation="vertical" >
 
@@ -95,20 +95,24 @@
 
                     <LinearLayout
                         android:id="@+id/btnLike"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
                         android:gravity="center_vertical|right"
                         android:orientation="vertical" >
 
-                        <ImageButton
+                        <ImageView
                             android:id="@+id/ic_like"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginTop="5dp"
                             android:background="@android:color/transparent"
                             android:clickable="false"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:src="@drawable/ic_like_o" />
+
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

@@ -126,12 +126,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public static ResultCallBackCate callBackCLickCate;
 	public static ResultClickShare callClickShare;
 	public static ViewGroup mainView;
-	
+
 	private ResultSearchCallBack callBackSearch;
 	private List<ItemMeu> listItemMenu;
 	private List<ItemPost> listVideoRanDom = new ArrayList<ItemPost>();
 	private List<String> listQuerySearch;
-	
+
 	private String queryCurent = "";
 	private ItemPost itemActive = null;
 	private GlobalApplication globalApp;
@@ -144,11 +144,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private SlidingLayer mSlidingLayer;
 	private Button btnFaceBook;
 	private Button btnGoogle;
-	
+
 	private int positionActive = Integer.MAX_VALUE;
 	private int positionPreview = 0;
 	private static final int RC_SIGN_IN = 0;
-	
+
 	private ConnectionResult mConnectionResult;
 	private GoogleApiClient mGoogleApiClient = null;
 
@@ -299,7 +299,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 						}
 						if (itemActive != null
 								& newState == MenuDrawer.STATE_CLOSED) {
-							Utils.getVideoView(itemActive, MainActivity.this, listVideoRanDom);
+							Utils.getVideoView(itemActive, MainActivity.this,
+									listVideoRanDom);
 							itemActive = null;
 						}
 
@@ -372,6 +373,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
+	public void setViewTab() {
+		String queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
+		List<ItemPost> list = Utils.getVideoLike(queryLikeVideo, 1);
+
+		adapter.clear();
+		adapter.notifyDataSetChanged();
+
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setType(PinnedAdapter.ITEM);
+			adapter.add(list.get(i));
+		}
+		adapter.notifyDataSetChanged();
+
+	}
+
 	private void signInWithGplus() {
 		if (!mGoogleApiClient.isConnecting()) {
 			mSignInClicked = true;
@@ -436,7 +452,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void pushResutClickItem(int type, int postion, boolean isLike) {
-				
+			Log.d("111111111","like-----");
+			setViewTab();
 		}
 
 		@Override
@@ -452,7 +469,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
 				PinnedAdapter.YEUTHICH);
 
-		if (listData.size() == 0 && listVideoRanDom.size() == 0) {
+		if (listData.size() == 0) {
 			String url = Utils.host + "get_posts?count=10&page=2";
 			ResultCallBack callBack = new ResultCallBack();
 			if (!isLoadding) {
@@ -496,11 +513,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 					JSONArray jsonArray = jsonObj.getJSONArray("posts");
 					for (int i = 0; i < jsonArray.length(); i++) {
 						ItemPost item = new ItemPost();
+						
 						JSONObject json = (JSONObject) jsonArray.get(i);
 						item = Utils.getItemPost(json, 0, 0);
-
+						item.setKeyRemove(Utils.LOAD_RADOM);
 						listVideoRanDom.add(item);
-
 					}
 
 					addViewData(listVideoRanDom);
@@ -1272,7 +1289,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 		}
 	}
-	
 
 	@Override
 	public void onConnected(Bundle arg0) {

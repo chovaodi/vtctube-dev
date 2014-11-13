@@ -322,13 +322,29 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		adapterTab.notifyDataSetChanged();
 	}
 
+	public void setViewTab() {
+		String queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
+		List<ItemPost> list = Utils.getVideoLike(queryLikeVideo, 1);
+
+		adapter.clear();
+		adapter.notifyDataSetChanged();
+
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setType(PinnedAdapter.ITEM);
+			adapter.add(list.get(i));
+		}
+		adapter.notifyDataSetChanged();
+
+	}
+
 	public void addViewPost() {
 
 		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
 				PinnedAdapter.YEUTHICH);
 
-		if (listData.size() == 0 && listVideoRanDom.size() == 0) {
+		if (listData.size() == 0) {
+
 			String url = Utils.host + "get_posts?count=8";
 			ResultCallBack callBack = new ResultCallBack();
 			if (!isLoadding) {
@@ -337,21 +353,18 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
 						MainActivity.smooth, callBack).execute(url);
 			}
-		} else if (listData.size() != adapter.getCount()) {
-			if (listData.size() > 0 && listVideoRanDom.size() > 0
-					&& listData.size() != adapter.getCount()) {
+		} else  {
+			if (listData.size() > 0) {
+				Log.d("11111111","2222222222");
 				addViewData(listData);
+				return;
 			}
-			if (listData.size() > 0 && listData.size() != adapter.getCount()) {
-				addViewData(listData);
-			}
+
 			if (listVideoRanDom.size() > 0
 					&& listVideoRanDom.size() != adapter.getCount()) {
 				addViewData(listVideoRanDom);
 			}
-
 		}
-
 	}
 
 	public void addViewData(List<ItemPost> list) {
@@ -385,11 +398,13 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 						ItemPost item = new ItemPost();
 						JSONObject json = (JSONObject) jsonArray.get(i);
 						item = Utils.getItemPost(json, 0, 0);
+						item.setKeyRemove(Utils.LOAD_RADOM);
 
 						listVideoRanDom.add(item);
 
 					}
-
+					adapter.clear();
+					adapter.notifyDataSetChanged();
 					addViewData(listVideoRanDom);
 
 				}
@@ -421,8 +436,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 		@Override
 		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
-
+			setViewTab();
 		}
 
 		@Override
@@ -551,7 +565,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		webview_fbview.setPadding(0, 0, 0, 0);
 		webview_fbview.setWebViewClient(new webViewClient());
 		webview_fbview.setWebChromeClient(new webChromeClient());
-		webview_fbview.setInitialScale(50);
+		webview_fbview.setInitialScale(100);
 		webview_fbview.clearCache(true);
 		webview_fbview.clearHistory();
 		webview_fbview.getSettings().setDefaultFontSize(14);
@@ -562,9 +576,9 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		webview_fbview.setWebViewClient(new WebViewClient() {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				Log.d("url",url);
-				if(url.contains("https://m.facebook.com/plugins/login_success.php")){
-					//loadComment("http://vtctube.vn/" + itemActive.getSlug());
+				Log.d("url", url);
+				if (url.equalsIgnoreCase("https://m.facebook.com/plugins/login_success.php?refsrc=https%3A%2F%2Fm.facebook.com%2Fplugins%2Fcomments.php&refid=9&_rdr#_=_")) {
+					loadComment("http://vtctube.vn/" + itemActive.getSlug());
 				}
 				return super.shouldOverrideUrlLoading(view, url);
 			}

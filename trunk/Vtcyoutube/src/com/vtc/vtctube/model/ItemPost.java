@@ -1,6 +1,7 @@
 package com.vtc.vtctube.model;
 
 import com.vtc.vtctube.category.PinnedAdapter;
+import com.vtc.vtctube.utils.Utils;
 
 public class ItemPost {
 	private String title;
@@ -15,6 +16,9 @@ public class ItemPost {
 	private int option;
 	private String slug;
 	private boolean isLike;
+	public int type;
+	private int idPost;
+	private int keyRemove = Utils.LOAD_LIKE;
 
 	public ItemPost() {
 		videoId = "";
@@ -22,6 +26,14 @@ public class ItemPost {
 		option = PinnedAdapter.MOINHAT;
 		countview = "300";
 		title = "Video chi tiết";
+	}
+
+	public void setKeyRemove(int keyRemove) {
+		this.keyRemove = keyRemove;
+	}
+
+	public int getKeyRemove() {
+		return keyRemove;
 	}
 
 	public String getCountview() {
@@ -71,9 +83,6 @@ public class ItemPost {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	public int type;
-	private int idPost;
 
 	public String getVideoId() {
 		return videoId;

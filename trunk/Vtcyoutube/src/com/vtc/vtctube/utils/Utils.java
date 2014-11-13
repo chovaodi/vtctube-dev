@@ -52,6 +52,8 @@ public class Utils {
 	public final static int LOAD_MORE = 3;
 	public final static int AYSN_LOAD = 2;
 	public final static int REFRESH = 4;
+	public final static int LOAD_RADOM = 5;
+	public final static int LOAD_LIKE = 6;
 
 	public final static int LOAD_SEARCH = 5;
 	public final static int LOAD_NEWVIDEO = 6;
@@ -266,6 +268,7 @@ public class Utils {
 					item.setSlug(c.getString(6));
 					item.setCountview(c.getInt(7) + "");
 					item.setLike(true);
+					item.setKeyRemove(LOAD_LIKE);
 					item.setOption(tabIndex);
 					listAccount.add(item);
 				} while (c.moveToNext());
@@ -317,7 +320,7 @@ public class Utils {
 			} else {
 				item.setCateId("");
 			}
-			
+
 			item.setPageCount(pageCount);
 			item.setTitle(json.getString("title"));
 			item.setStatus(json.getString("status"));
