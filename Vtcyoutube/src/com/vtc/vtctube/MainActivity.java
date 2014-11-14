@@ -130,7 +130,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private ResultSearchCallBack callBackSearch;
 	private List<ItemMeu> listItemMenu;
-	private List<ItemPost> listVideoRanDom = new ArrayList<ItemPost>();
+	private List<ItemPost> listVideoRanDom=new ArrayList<ItemPost>();
 	private List<String> listQuerySearch;
 
 	private String queryCurent = "";
@@ -221,7 +221,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// listYeuthich.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_NONE);
 		// listYeuthich.setSwipeActionRight(SwipeListView.SWIPE_ACTION_DISMISS);
 		Utils.settingControlRemove(listYeuthich, MainActivity.this);
-
 
 		listYeuthich.setAdapter(adapter);
 		setContentView(R.layout.fragment_content);
@@ -482,7 +481,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (listData.size() == 0) {
 			String url = Utils.host + "get_posts?count=10&page=2";
 			ResultCallBack callBack = new ResultCallBack();
-			if (!isLoadding&& listVideoRanDom.size()!=adapter.getCount()) {
+			if (!isLoadding && listVideoRanDom.size() == 0) {
 				prLoadLike.setVisibility(View.VISIBLE);
 				isLoadding = true;
 				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
@@ -506,7 +505,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			Utils.disableEnableControls(true, (ViewGroup) mainView);
 
 			try {
-				List<ItemPost> listVideoRanDom = new ArrayList<ItemPost>();
+				listVideoRanDom = new ArrayList<ItemPost>();
 				JSONObject jsonObj = new JSONObject(result);
 				int count_total = jsonObj.getInt("count_total");
 				if (count_total > 0) {

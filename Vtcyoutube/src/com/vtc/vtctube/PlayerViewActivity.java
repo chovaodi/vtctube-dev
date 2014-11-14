@@ -342,7 +342,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		if (listData.size() == 0) {
 			String url = Utils.host + "get_posts?count=8";
 			ResultCallBack callBack = new ResultCallBack();
-			if (!isLoadding&&listVideoRanDom.size()!=adapter.getCount()) {
+			if (!isLoadding && listVideoRanDom.size() != 0) {
 				isLoadding = true;
 				prLoadLike.setVisibility(View.VISIBLE);
 				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
@@ -376,9 +376,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			Utils.disableEnableControls(true, (ViewGroup) mainView);
 
 			try {
-				if (listVideoRanDom == null) {
-					listVideoRanDom = new ArrayList<ItemPost>();
-				}
+				listVideoRanDom = new ArrayList<ItemPost>();
 				JSONObject jsonObj = new JSONObject(result);
 				int count_total = jsonObj.getInt("count_total");
 				if (count_total > 0) {
@@ -436,8 +434,6 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		}
 
 	}
-
-	
 
 	public void actionLike() {
 		String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
