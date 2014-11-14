@@ -34,6 +34,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.fortysevendeg.swipelistview.SwipeListView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -85,6 +86,15 @@ public class Utils {
 		final float scale = metrics.density;
 		int pixels = (int) (dps * scale + 0.5f);
 		return pixels;
+	}
+
+	public static void settingControlRemove(SwipeListView swipeListView,
+			Activity activity) {
+		swipeListView.setOffsetLeft(Utils.convertDpToPixel(155, activity));
+		swipeListView.setOffsetRight(Utils.convertDpToPixel(155, activity));
+		swipeListView.setAnimationTime(300);
+		swipeListView.setSwipeOpenOnLongPress(true);
+		swipeListView.setKeepScreenOn(true);
 	}
 
 	public static boolean isOnline(Activity activity) {
