@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.common.internal.i;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -76,9 +76,8 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 			holder.loadingBanner = (ProgressBar) convertView
 					.findViewById(R.id.loadingBanner);
-			holder.btnXoa = (Button) convertView.findViewById(R.id.btnXoa);
-			holder.btnHoantac = (Button) convertView
-					.findViewById(R.id.btnHoantac);
+			holder.btnXoa = (TextView) convertView.findViewById(R.id.btnXoa);
+		
 			holder.lineFront = (LinearLayout) convertView
 					.findViewById(R.id.front);
 
@@ -89,49 +88,29 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 		final ItemPost item = getItem(position);
 		holder.lblCountview.setText("Lượt xem: " + item.getCountview());
 
-		holder.lineFront.setOnClickListener(new OnClickListener() {
+		holder.imgIcon.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				if (item.getCateId().equals("1")) {
-					Intent intent = new Intent(context,
-							LichPhatsongAcitivity.class);
-					intent.putExtra("content", item.getContent());
-					context.startActivity(intent);
-
-				} else {
-
-					String sqlCheck = "SELECT * FROM "
-							+ DatabaseHelper.TB_RESENT + " WHERE id='"
-							+ item.getIdPost() + "'";
-					if (MainActivity.myDbHelper.getCountRow(
-							DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
-						MainActivity.myDbHelper.insertListVideo(
-								DatabaseHelper.TB_RESENT, item.getCateId(),
-								item.getTitle(), item.getVideoId(),
-								item.getUrl(), item.getStatus(),
-								item.getPageCount(), item.getIdPost(),
-								item.getSlug(), item.getCountview());
-					}
-					callBack.onCLickView(item);
-				}
+				getVideoView(item);
 			}
 		});
+		holder.txtTitle.setOnClickListener(new OnClickListener() {
 
-		holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
-		holder.btnHoantac.setOnClickListener(new OnClickListener() {
-			
 			@Override
-			public void onClick(View v) {
-				callBack.pushResutClickItem(Utils.HOANTAC,
-						getPosition(item), false);				
+			public void onClick(View arg0) {
+				getVideoView(item);
 			}
 		});
+
+		
+		holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
+		
 		holder.btnXoa.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Log.d("like111", "11111111111 đ" + item.getType());
+				
 				if (item.getKeyRemove() == Utils.LOAD_LIKE) {
 
 					if (item.isLike()) {
@@ -207,8 +186,32 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 		public LinearLayout lineFront, btnLike;
 		public ProgressBar loadingBanner;
-		private Button btnXoa;
-		private Button btnHoantac;
+		private TextView btnXoa;
+	}
+	
+	public void getVideoView(ItemPost item){
+		if (item.getCateId().equals("1")) {
+			Intent intent = new Intent(context,
+					LichPhatsongAcitivity.class);
+			intent.putExtra("content", item.getContent());
+			context.startActivity(intent);
+
+		} else {
+
+			String sqlCheck = "SELECT * FROM "
+					+ DatabaseHelper.TB_RESENT + " WHERE id='"
+					+ item.getIdPost() + "'";
+			if (MainActivity.myDbHelper.getCountRow(
+					DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
+				MainActivity.myDbHelper.insertListVideo(
+						DatabaseHelper.TB_RESENT, item.getCateId(),
+						item.getTitle(), item.getVideoId(),
+						item.getUrl(), item.getStatus(),
+						item.getPageCount(), item.getIdPost(),
+						item.getSlug(), item.getCountview());
+			}
+			callBack.onCLickView(item);
+		}
 	}
 
 }

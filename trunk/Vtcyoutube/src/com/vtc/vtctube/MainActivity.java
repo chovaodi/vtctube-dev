@@ -196,8 +196,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		leftMenu = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW,
 				Position.LEFT);
-		leftMenu.setDropShadowColor(Color.parseColor("#503f3f3f"));
-		leftMenu.setDropShadowSize(8);
+		leftMenu.setDropShadowColor(Color.parseColor("#993f3f3f"));
+		leftMenu.setDropShadowSize(11);
 		leftMenu.setAnimationCacheEnabled(true);
 
 		DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -220,14 +220,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// listYeuthich.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
 		// listYeuthich.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_NONE);
 		// listYeuthich.setSwipeActionRight(SwipeListView.SWIPE_ACTION_DISMISS);
-		listYeuthich.setOffsetLeft(width/2);
-		listYeuthich.setOffsetRight(width - 80);
-		listYeuthich.setAnimationTime(500);
-		listYeuthich.setSwipeOpenOnLongPress(true);
-		listYeuthich.setKeepScreenOn(true);
+		Utils.settingControlRemove(listYeuthich, MainActivity.this);
+
 
 		listYeuthich.setAdapter(adapter);
-
 		setContentView(R.layout.fragment_content);
 		lineAdmob = (LinearLayout) findViewById(R.id.adview);
 		adView = new AdView(this);
@@ -465,6 +461,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (type == Utils.HOANTAC) {
 				listYeuthich.closeAnimate(postion);
 			} else {
+				listYeuthich.closeOpenedItems();
 				setViewTab();
 			}
 		}
@@ -485,7 +482,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (listData.size() == 0) {
 			String url = Utils.host + "get_posts?count=10&page=2";
 			ResultCallBack callBack = new ResultCallBack();
-			if (!isLoadding) {
+			if (!isLoadding&& listVideoRanDom.size()!=adapter.getCount()) {
 				prLoadLike.setVisibility(View.VISIBLE);
 				isLoadding = true;
 				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
@@ -496,7 +493,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 				addViewData(listData);
 				return;
 			}
-
 		}
 
 	}

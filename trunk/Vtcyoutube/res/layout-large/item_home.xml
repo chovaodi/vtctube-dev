@@ -31,7 +31,7 @@
             android:text="TextView"
            android:textAllCaps="true"
             android:textColor="#505050"
-            android:textSize="15dp" />
+            android:textSize="20dp" />
     </LinearLayout>
 
 </FrameLayout>

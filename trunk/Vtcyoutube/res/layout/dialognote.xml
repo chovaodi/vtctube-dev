@@ -23,9 +23,9 @@
         <com.vtc.vtctube.font.RobotoLight
             android:id="@+id/otp_ed"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:layout_weight="0"
-            android:background="@drawable/gradiendline_gate" />
+            android:background="#cecece" />
 
         <com.vtc.vtctube.font.RobotoLight
             android:id="@+id/lblMessage"
@@ -42,9 +42,9 @@
         <com.vtc.vtctube.font.RobotoLight
             android:id="@+id/lblHisAmount"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:layout_weight="0"
-            android:background="@drawable/gradiendline_gate" />
+            android:background="#cecece" />
 
         <LinearLayout
             android:layout_width="match_parent"

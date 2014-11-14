@@ -12,7 +12,6 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -234,7 +233,8 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 			MainActivity.lblError.setVisibility(View.GONE);
 			switch (type) {
 			case PinnedAdapter.MOINHAT:
-
+				adapter.clear();
+				adapter.notifyDataSetChanged();
 				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
 				if (listViewNew.size() == 0) {
 					MainActivity.lblError.setVisibility(View.VISIBLE);

@@ -43,6 +43,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.fortysevendeg.swipelistview.SwipeListView;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
@@ -97,7 +98,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	private MenuDrawer rightMenu;
 	private RightLikeAdapter adapter = null;
 	private PinnedAdapter adapterTab;
-	private ListView listYeuthich;
+	private SwipeListView listYeuthich;
 	private ResultItemClick callBackOnlick = new ResultItemClick();
 	private ItemPost itemActive = null;
 	private boolean isLoadding = false;
@@ -131,7 +132,9 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		prLoadLike = (ProgressBar) findViewById(R.id.prLoadLike);
 
 		setContentView(R.layout.playerview_demo);
-		listYeuthich = (ListView) findViewById(R.id.listViewYeuthich);
+		listYeuthich = (SwipeListView) findViewById(R.id.listViewYeuthich);
+		Utils.settingControlRemove(listYeuthich, PlayerViewActivity.this);
+
 		listYeuthich.setAdapter(adapter);
 		addViewPost();
 		getActionBar().setTitle(title);
@@ -265,12 +268,10 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 									&& !itemActive.getVideoId().equals(id)) {
 								player.cueVideo(itemActive.getVideoId());
 								setDataview(itemActive);
-								// itemActive = null;
 							}
 						}
 					}
 				});
-
 	}
 
 	public class ResultCallBackLoad implements IResult {
@@ -295,7 +296,6 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 		}
 
 		@Override
@@ -307,9 +307,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		@Override
 		public void onCLickView(ItemPost item) {
 			// TODO Auto-generated method stub
-
 		}
-
 	}
 
 	public void addViewItemLienquan(List<ItemPost> list) {
@@ -334,35 +332,26 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			adapter.add(list.get(i));
 		}
 		adapter.notifyDataSetChanged();
-
 	}
 
 	public void addViewPost() {
-
 		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
 				PinnedAdapter.YEUTHICH);
 
 		if (listData.size() == 0) {
-
 			String url = Utils.host + "get_posts?count=8";
 			ResultCallBack callBack = new ResultCallBack();
-			if (!isLoadding) {
+			if (!isLoadding&&listVideoRanDom.size()!=adapter.getCount()) {
 				isLoadding = true;
 				prLoadLike.setVisibility(View.VISIBLE);
 				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
 						MainActivity.smooth, callBack).execute(url);
 			}
-		} else  {
-			if (listData.size() > 0) {
-				Log.d("11111111","2222222222");
+		} else {
+			if (listData.size() != adapter.getCount()) {
 				addViewData(listData);
 				return;
-			}
-
-			if (listVideoRanDom.size() > 0
-					&& listVideoRanDom.size() != adapter.getCount()) {
-				addViewData(listVideoRanDom);
 			}
 		}
 	}
@@ -448,23 +437,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 	}
 
-	// public void addViewPost() {
-	//
-	// String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
-	// List<ItemPost> listData = Utils.getVideoLike(sqlLike,
-	// PinnedAdapter.YEUTHICH);
-	// if (listData.size() == adapter.getCount())
-	// return;
-	// adapter.clear();
-	// for (int i = 0; i < listData.size(); i++) {
-	// if (listData.get(i).getStatus().equals("publish")) {
-	// listData.get(i).setType(PinnedAdapter.ITEM);
-	// adapter.add(listData.get(i));
-	// }
-	// }
-	// adapter.notifyDataSetChanged();
-	//
-	// }
+	
 
 	public void actionLike() {
 		String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE

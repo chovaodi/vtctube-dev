@@ -89,8 +89,6 @@
             android:imeOptions="actionDone"
             android:background="@drawable/bgr_search"
             android:ems="10" >
-
-            <requestFocus />
         </com.vtc.vtctube.font.CustomEditText>
 
     </LinearLayout>

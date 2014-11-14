@@ -12,7 +12,7 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/icon"
             android:layout_width="fill_parent"
-            android:layout_height="80dp"
+            android:layout_height="85dp"
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -20,7 +20,7 @@
             android:src="@drawable/avata_demo"
             app:border_color="#50c4c4c4"
             app:border_width="1dp"
-            app:corner_radius="10dp" />
+            app:corner_radius="15dp" />
 
         <com.vtc.vtctube.font.RobotoLightTextView
             android:id="@+id/lblTitle"
