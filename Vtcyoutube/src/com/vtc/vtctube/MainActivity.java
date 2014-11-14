@@ -485,7 +485,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				prLoadLike.setVisibility(View.VISIBLE);
 				isLoadding = true;
 				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
-						MainActivity.smooth, callBack).execute(url);
+						null, callBack).execute(url);
 			}
 		} else if (listData.size() != adapter.getCount()) {
 			if (listData.size() != adapter.getCount()) {
