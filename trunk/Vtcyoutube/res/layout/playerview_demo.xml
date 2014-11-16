@@ -115,10 +115,9 @@
             <ProgressBar
                 android:id="@+id/loadingListview"
                 android:layout_width="wrap_content"
-                android:layout_gravity="center"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:visibility="visible" />
-
         </FrameLayout>
 
         <LinearLayout
@@ -136,7 +135,7 @@
                 android:layout_marginTop="5dp"
                 android:text="TextView"
                 android:textColor="#565656"
-                android:textSize="18dp" />
+                android:textSize="15dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -145,38 +144,58 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp" >
 
-                <com.vtc.vtctube.font.RobotoLightTextView
-                    android:id="@+id/lblLuotxem"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Lượt xem: "
-                    android:textColor="#9197a3"
-                    android:textSize="14dp" />
+                    android:orientation="vertical" >
 
-                <com.vtc.vtctube.font.RobotoLightTextView
-                    android:id="@+id/lblYeuthich"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/video_like"
-                    android:drawablePadding="5dp"
-                    android:gravity="center"
-                    android:text="Yêu thích"
-                    android:textColor="#9197a3"
-                    android:textSize="14dp" />
+                    <com.vtc.vtctube.font.RobotoLightTextView
+                        android:id="@+id/lblLuotxem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Lượt xem: "
+                        android:textColor="#9197a3"
+                        android:textSize="14dp" />
+                </LinearLayout>
 
-                <com.vtc.vtctube.font.RobotoLightTextView
-                    android:id="@+id/btnShareDetailt"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableRight="@drawable/video_share"
                     android:gravity="center"
-                    android:text="Chia sẻ"
-                    android:textColor="#9197a3"
-                    android:textSize="14dp" />
+                    android:orientation="vertical" >
+
+                    <com.vtc.vtctube.font.RobotoLightTextView
+                        android:id="@+id/lblYeuthich"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/video_like"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:text="Yêu thích"
+                        android:textColor="#9197a3"
+                        android:textSize="14dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+
+                    <com.vtc.vtctube.font.RobotoLightTextView
+                        android:id="@+id/btnShareDetailt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/video_share"
+                        android:text="Chia sẻ"
+                        android:gravity="center_vertical"
+                        android:textColor="#9197a3"
+                        android:textSize="14dp" />
+                </LinearLayout>
             </LinearLayout>
 
             <RelativeLayout

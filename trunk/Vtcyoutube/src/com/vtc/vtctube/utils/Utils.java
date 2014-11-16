@@ -90,8 +90,8 @@ public class Utils {
 
 	public static void settingControlRemove(int widht,
 			SwipeListView swipeListView, Activity activity) {
-		swipeListView.setOffsetLeft(widht);
-		swipeListView.setOffsetRight(widht +convertDpToPixel(10, activity));
+		swipeListView.setOffsetLeft(widht+convertDpToPixel(55, activity));
+		swipeListView.setOffsetRight(widht+convertDpToPixel(55, activity));
 		swipeListView.setAnimationTime(300);
 		swipeListView.setSwipeOpenOnLongPress(true);
 		swipeListView.setKeepScreenOn(true);
