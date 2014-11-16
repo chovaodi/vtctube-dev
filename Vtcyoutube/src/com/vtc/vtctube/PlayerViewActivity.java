@@ -104,8 +104,6 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	private boolean isLoadding = false;
 	private int inPostActive;
 
-	private List<ItemPost> listVideoRanDom = new ArrayList<ItemPost>();
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -133,10 +131,10 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 		setContentView(R.layout.playerview_demo);
 		listYeuthich = (SwipeListView) findViewById(R.id.listViewYeuthich);
-		Utils.settingControlRemove(listYeuthich, PlayerViewActivity.this);
+		Utils.settingControlRemove(width, listYeuthich, PlayerViewActivity.this);
 
 		listYeuthich.setAdapter(adapter);
-		addViewPost();
+		setData();
 		getActionBar().setTitle(title);
 
 		btnLienquan = (Button) findViewById(R.id.btnLienquan);
@@ -260,7 +258,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 					@Override
 					public void onDrawerStateChange(int oldState, int newState) {
 						if (newState == MenuDrawer.STATE_OPEN) {
-							addViewPost();
+							setData();
 						}
 						if (newState == MenuDrawer.STATE_CLOSED) {
 							if (inPostActive != itemActive.getIdPost()
@@ -334,25 +332,25 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		adapter.notifyDataSetChanged();
 	}
 
-	public void addViewPost() {
+	public void setData() {
 		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
 				PinnedAdapter.YEUTHICH);
 
 		if (listData.size() == 0) {
-			String url = Utils.host + "get_posts?count=8";
+			String url = Utils.host + "get_posts?count=10&page=2";
 			ResultCallBack callBack = new ResultCallBack();
-			if (!isLoadding && listVideoRanDom.size() != 0) {
-				isLoadding = true;
+			if (!isLoadding && MainActivity.listVideoRanDom.size() == 0) {
 				prLoadLike.setVisibility(View.VISIBLE);
-				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
-						MainActivity.smooth, callBack).execute(url);
+				isLoadding = true;
+				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA, null,
+						callBack).execute(url);
+			} else if (MainActivity.listVideoRanDom.size() != adapter
+					.getCount()) {
+				addViewData(MainActivity.listVideoRanDom);
 			}
-		} else {
-			if (listData.size() != adapter.getCount()) {
-				addViewData(listData);
-				return;
-			}
+		} else if (listData.size() != adapter.getCount()) {
+			addViewData(listData);
 		}
 	}
 
@@ -376,7 +374,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			Utils.disableEnableControls(true, (ViewGroup) mainView);
 
 			try {
-				listVideoRanDom = new ArrayList<ItemPost>();
+				MainActivity.listVideoRanDom = new ArrayList<ItemPost>();
 				JSONObject jsonObj = new JSONObject(result);
 				int count_total = jsonObj.getInt("count_total");
 				if (count_total > 0) {
@@ -387,12 +385,12 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 						item = Utils.getItemPost(json, 0, 0);
 						item.setKeyRemove(Utils.LOAD_RADOM);
 
-						listVideoRanDom.add(item);
+						MainActivity.listVideoRanDom.add(item);
 
 					}
 					adapter.clear();
 					adapter.notifyDataSetChanged();
-					addViewData(listVideoRanDom);
+					addViewData(MainActivity.listVideoRanDom);
 
 				}
 			} catch (Exception e) {

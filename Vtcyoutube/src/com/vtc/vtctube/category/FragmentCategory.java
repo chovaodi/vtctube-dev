@@ -207,7 +207,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 				+ " WHERE cateId='" + MainActivity.currentCate + "'";
 		listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
 
-		String url = Utils.host + "get_posts?count=5&page=1&cat="
+		String url = Utils.host + "get_posts?count=10&page=1&cat="
 				+ MainActivity.currentCate;
 		new AysnRequestHttp((ViewGroup) v, Utils.LOAD_FIRST_DATA,
 				MainActivity.smooth, callBack).execute(url);
@@ -251,7 +251,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 				int page = 1;
 				if (pageCount != 0)
 					page = random.nextInt(pageCount);
-				String url = Utils.host + "get_posts?count=5&page=" + page
+				String url = Utils.host + "get_posts?count=10&page=" + page
 						+ "&cat=" + MainActivity.currentCate;
 
 				new AysnRequestHttp((ViewGroup) v, Utils.LOAD_XEMNHIEU,

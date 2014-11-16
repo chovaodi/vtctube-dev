@@ -130,7 +130,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private ResultSearchCallBack callBackSearch;
 	private List<ItemMeu> listItemMenu;
-	private List<ItemPost> listVideoRanDom=new ArrayList<ItemPost>();
+	public static List<ItemPost> listVideoRanDom = null;
 	private List<String> listQuerySearch;
 
 	private String queryCurent = "";
@@ -173,7 +173,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		fragmentManager = getSupportFragmentManager();
 		ft = fragmentManager.beginTransaction();
-
+		if (listVideoRanDom == null) {
+			listVideoRanDom = new ArrayList<ItemPost>();
+		}
 		try {
 			myDbHelper.createDataBase();
 			myDbHelper.openDataBase();
@@ -220,7 +222,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// listYeuthich.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
 		// listYeuthich.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_NONE);
 		// listYeuthich.setSwipeActionRight(SwipeListView.SWIPE_ACTION_DISMISS);
-		Utils.settingControlRemove(listYeuthich, MainActivity.this);
+		Utils.settingControlRemove(width, listYeuthich, MainActivity.this);
 
 		listYeuthich.setAdapter(adapter);
 		setContentView(R.layout.fragment_content);
@@ -484,14 +486,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (!isLoadding && listVideoRanDom.size() == 0) {
 				prLoadLike.setVisibility(View.VISIBLE);
 				isLoadding = true;
-				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA,
-						null, callBack).execute(url);
+				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA, null,
+						callBack).execute(url);
+			} else if (MainActivity.listVideoRanDom.size() != adapter
+					.getCount()) {
+				addViewData(listVideoRanDom);
 			}
 		} else if (listData.size() != adapter.getCount()) {
-			if (listData.size() != adapter.getCount()) {
-				addViewData(listData);
-				return;
-			}
+			addViewData(listData);
 		}
 
 	}
@@ -1109,6 +1111,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 		final int left = leftMenu.getDrawerState();
 		if (left == MenuDrawer.STATE_OPEN || left == MenuDrawer.STATE_OPENING) {
 			leftMenu.closeMenu();
+			return;
+		}
+		final int right = rightMenu.getDrawerState();
+		if (right == MenuDrawer.STATE_OPEN || right == MenuDrawer.STATE_OPENING) {
+			rightMenu.closeMenu();
 			return;
 		}
 		positionPreview = 0;
