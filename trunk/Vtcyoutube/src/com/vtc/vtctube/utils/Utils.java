@@ -88,10 +88,10 @@ public class Utils {
 		return pixels;
 	}
 
-	public static void settingControlRemove(SwipeListView swipeListView,
-			Activity activity) {
-		swipeListView.setOffsetLeft(Utils.convertDpToPixel(155, activity));
-		swipeListView.setOffsetRight(Utils.convertDpToPixel(155, activity));
+	public static void settingControlRemove(int widht,
+			SwipeListView swipeListView, Activity activity) {
+		swipeListView.setOffsetLeft(widht);
+		swipeListView.setOffsetRight(widht +convertDpToPixel(10, activity));
 		swipeListView.setAnimationTime(300);
 		swipeListView.setSwipeOpenOnLongPress(true);
 		swipeListView.setKeepScreenOn(true);
@@ -148,7 +148,7 @@ public class Utils {
 		activity.getWindowManager().getDefaultDisplay()
 				.getMetrics(displaymetrics);
 		int width = displaymetrics.widthPixels;
-		dialog.getWindow().setLayout(5 * width / 6, LayoutParams.WRAP_CONTENT);
+		dialog.getWindow().setLayout(2 * width / 3, LayoutParams.WRAP_CONTENT);
 
 		dialog.show();
 		TextView lblMess = (TextView) dialog.findViewById(R.id.lblMessage);
