@@ -530,7 +530,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		webview_fbview.getSettings().setUseWideViewPort(true);
 		webview_fbview.requestFocus(View.FOCUS_DOWN);
 		webview_fbview.setPadding(0, 0, 0, 0);
-		webview_fbview.setWebViewClient(new webViewClient());
+		// webview_fbview.setWebViewClient(new webViewClient());
 		webview_fbview.setWebChromeClient(new webChromeClient());
 		webview_fbview.setInitialScale(100);
 		webview_fbview.clearCache(true);
@@ -544,6 +544,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				Log.d("url", url);
+
 				if (url.equalsIgnoreCase("https://m.facebook.com/plugins/login_success.php?refsrc=https%3A%2F%2Fm.facebook.com%2Fplugins%2Fcomments.php&refid=9&_rdr#_=_")) {
 					loadComment("http://vtctube.vn/" + itemActive.getSlug());
 				}
