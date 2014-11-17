@@ -338,7 +338,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 				PinnedAdapter.YEUTHICH);
 
 		if (listData.size() == 0) {
-			String url = Utils.host + "get_posts?count=10&page=2";
+			String url = Utils.host + "get_posts?count=20&page=2";
 			ResultCallBack callBack = new ResultCallBack();
 			if (!isLoadding && MainActivity.listVideoRanDom.size() == 0) {
 				prLoadLike.setVisibility(View.VISIBLE);

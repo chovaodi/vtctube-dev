@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.common.internal.i;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -77,7 +75,7 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 			holder.loadingBanner = (ProgressBar) convertView
 					.findViewById(R.id.loadingBanner);
 			holder.btnXoa = (TextView) convertView.findViewById(R.id.btnXoa);
-		
+
 			holder.lineFront = (LinearLayout) convertView
 					.findViewById(R.id.front);
 
@@ -103,14 +101,13 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 			}
 		});
 
-		
 		holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
-		
+
 		holder.btnXoa.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				
+
 				if (item.getKeyRemove() == Utils.LOAD_LIKE) {
 
 					if (item.isLike()) {
@@ -139,27 +136,33 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 			}
 		});
-		imageLoader.displayImage(item.getUrl(), holder.imgIcon,
-				Utils.getOptions(context, R.drawable.img_erorrs),
-				new SimpleImageLoadingListener() {
-					@Override
-					public void onLoadingStarted(String imageUri, View view) {
-						// holder.loadingBanner.setVisibility(View.VISIBLE);
-					}
 
-					@Override
-					public void onLoadingFailed(String imageUri, View view,
-							FailReason failReason) {
-						// holder.spinner.setVisibility(View.GONE);
-					}
+//		Bitmap bmp = imageLoader.loadImageSync(item.getUrl(),
+//				Utils.getOptions(context, R.drawable.img_erorrs));
+//		if (bmp != null) {
+//			holder.imgIcon.setImageBitmap(bmp);
+//		} else {
+			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
+					Utils.getOptions(context, R.drawable.img_erorrs),
+					new SimpleImageLoadingListener() {
+						@Override
+						public void onLoadingStarted(String imageUri, View view) {
+							// holder.loadingBanner.setVisibility(View.VISIBLE);
+						}
 
-					@Override
-					public void onLoadingComplete(String imageUri, View view,
-							Bitmap loadedImage) {
-						// holder.loadingBanner.setVisibility(View.GONE);
-					}
-				});
-		// }
+						@Override
+						public void onLoadingFailed(String imageUri, View view,
+								FailReason failReason) {
+							// holder.spinner.setVisibility(View.GONE);
+						}
+
+						@Override
+						public void onLoadingComplete(String imageUri,
+								View view, Bitmap loadedImage) {
+							// holder.loadingBanner.setVisibility(View.GONE);
+						}
+					});
+	//	}
 
 		return convertView;
 	}
@@ -188,27 +191,24 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 		public ProgressBar loadingBanner;
 		private TextView btnXoa;
 	}
-	
-	public void getVideoView(ItemPost item){
+
+	public void getVideoView(ItemPost item) {
 		if (item.getCateId().equals("1")) {
-			Intent intent = new Intent(context,
-					LichPhatsongAcitivity.class);
+			Intent intent = new Intent(context, LichPhatsongAcitivity.class);
 			intent.putExtra("content", item.getContent());
 			context.startActivity(intent);
 
 		} else {
 
-			String sqlCheck = "SELECT * FROM "
-					+ DatabaseHelper.TB_RESENT + " WHERE id='"
-					+ item.getIdPost() + "'";
-			if (MainActivity.myDbHelper.getCountRow(
-					DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
+			String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_RESENT
+					+ " WHERE id='" + item.getIdPost() + "'";
+			if (MainActivity.myDbHelper.getCountRow(DatabaseHelper.TB_RESENT,
+					sqlCheck) == 0) {
 				MainActivity.myDbHelper.insertListVideo(
 						DatabaseHelper.TB_RESENT, item.getCateId(),
-						item.getTitle(), item.getVideoId(),
-						item.getUrl(), item.getStatus(),
-						item.getPageCount(), item.getIdPost(),
-						item.getSlug(), item.getCountview());
+						item.getTitle(), item.getVideoId(), item.getUrl(),
+						item.getStatus(), item.getPageCount(),
+						item.getIdPost(), item.getSlug(), item.getCountview());
 			}
 			callBack.onCLickView(item);
 		}

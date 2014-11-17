@@ -90,8 +90,8 @@ public class Utils {
 
 	public static void settingControlRemove(int widht,
 			SwipeListView swipeListView, Activity activity) {
-		swipeListView.setOffsetLeft(widht+convertDpToPixel(55, activity));
-		swipeListView.setOffsetRight(widht+convertDpToPixel(55, activity));
+		swipeListView.setOffsetLeft(widht + convertDpToPixel(55, activity));
+		swipeListView.setOffsetRight(widht + convertDpToPixel(55, activity));
 		swipeListView.setAnimationTime(300);
 		swipeListView.setSwipeOpenOnLongPress(true);
 		swipeListView.setKeepScreenOn(true);
@@ -250,7 +250,7 @@ public class Utils {
 	public static DisplayImageOptions getOptions(Context activity, int draw) {
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 				.showImageForEmptyUri(draw).showImageOnFail(draw)
-				.showImageOnLoading(draw).resetViewBeforeLoading(true)
+				.showImageOnLoading(draw).resetViewBeforeLoading(false)
 				.cacheOnDisc(true).imageScaleType(ImageScaleType.EXACTLY)
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.resetViewBeforeLoading(false)
@@ -310,7 +310,10 @@ public class Utils {
 				item.setContent(json.getString("content"));
 				item.setVideoId(getIdVideo(json.getString("content")));
 			}
-			item.setUrl(json.getString("thumbnail"));
+			String urlThumnail = json.getJSONObject("thumbnail_images")
+					.getJSONObject("full").getString("url");
+
+			item.setUrl(urlThumnail);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -342,7 +345,10 @@ public class Utils {
 				item.setContent(json.getString("content"));
 				item.setVideoId(getIdVideo(json.getString("content")));
 			}
-			item.setUrl(json.getString("thumbnail"));
+			String urlThumnail = json.getJSONObject("thumbnail_images")
+					.getJSONObject("full").getString("url");
+			item.setUrl(urlThumnail);
+
 			item.setOption(tabIndex);
 			item.setCountview(json.getJSONObject("custom_fields")
 					.getJSONArray("post_views_count").get(0).toString());

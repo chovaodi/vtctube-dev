@@ -238,7 +238,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 		listview = (ListView) findViewById(R.id.listView1);
 		header = getLayoutInflater().inflate(R.layout.account_layout, null);
 		View fotter = getLayoutInflater().inflate(R.layout.footer, null);
-
+		fotter.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 		listview.addHeaderView(header);
 		listview.addFooterView(fotter);
 
@@ -481,7 +489,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				PinnedAdapter.YEUTHICH);
 
 		if (listData.size() == 0) {
-			String url = Utils.host + "get_posts?count=10&page=2";
+			String url = Utils.host + "get_posts?count=20&page=2";
 			ResultCallBack callBack = new ResultCallBack();
 			if (!isLoadding && listVideoRanDom.size() == 0) {
 				prLoadLike.setVisibility(View.VISIBLE);
@@ -599,8 +607,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			} else {
 				positionPreview = 0;
 				positionActive = Integer.MAX_VALUE;
-				Utils.getDialogMessges(MainActivity.this, getResources()
-						.getString(R.string.lblMsgrong));
+				Utils.getDialogMessges(MainActivity.this,"Bạn chưa yêu thích video nào, chúng tôi có hàng ngàn video hay cho bạn thưởng thức");
 			}
 
 			break;
@@ -612,8 +619,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			} else {
 				positionPreview = 0;
 				positionActive = Integer.MAX_VALUE;
-				Utils.getDialogMessges(MainActivity.this, getResources()
-						.getString(R.string.lblMsgrong));
+				Utils.getDialogMessges(MainActivity.this,"Bạn chưa xem video nào, chúng tôi có hàng ngàn video hay cho bạn thưởng thức");
 			}
 
 			break;
@@ -622,6 +628,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 		case R.id.menu_nhataitro:
 			addFragmentAbout();
+			break;
+		case R.id.menu_tivi_tructuyen: 
+			Utils.getDialogMessges(MainActivity.this,"Chuyên mục này sẽ sớm mở trong thời gian tới để phục vụ quý khán giả");
 			break;
 		}
 	}
@@ -1214,7 +1223,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void actionXemnhieu() {
-		String url = Utils.host + "get_posts?count=10&page=4";
+		String url = Utils.host + "get_posts?count=50&page=2";
 		new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
 				MainActivity.smooth, callBackSearch).execute(url);
 	}
