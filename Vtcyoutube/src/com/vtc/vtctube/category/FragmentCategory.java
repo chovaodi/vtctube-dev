@@ -207,7 +207,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 				+ " WHERE cateId='" + MainActivity.currentCate + "'";
 		listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
 
-		String url = Utils.host + "get_posts?count=10&page=1&cat="
+		String url = Utils.host + "get_posts?count=20&page=1&cat="
 				+ MainActivity.currentCate;
 		new AysnRequestHttp((ViewGroup) v, Utils.LOAD_FIRST_DATA,
 				MainActivity.smooth, callBack).execute(url);
@@ -244,18 +244,8 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 
 				break;
 			case PinnedAdapter.XEMNHIEU:
-				listVideoXemnhieu = new ArrayList<ItemPost>();
-				adapter.clear();
-				adapter.notifyDataSetChanged();
-				Utils.disableEnableControls(false, (ViewGroup) v);
-				int page = 1;
-				if (pageCount != 0)
-					page = random.nextInt(pageCount);
-				String url = Utils.host + "get_posts?count=10&page=" + page
-						+ "&cat=" + MainActivity.currentCate;
-
-				new AysnRequestHttp((ViewGroup) v, Utils.LOAD_XEMNHIEU,
-						MainActivity.smooth, callBack).execute(url);
+				MainActivity.smooth.setVisibility(View.VISIBLE);
+				loadDataXemnhieu();
 				break;
 			case PinnedAdapter.YEUTHICH:
 				mPullToRefreshLayout.setRefreshComplete();
@@ -306,6 +296,21 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 		}
 	}
 
+	public void loadDataXemnhieu() {
+		listVideoXemnhieu = new ArrayList<ItemPost>();
+		adapter.clear();
+		adapter.notifyDataSetChanged();
+		Utils.disableEnableControls(false, (ViewGroup) v);
+		int page = 1;
+		if (pageCount != 0)
+			page = random.nextInt(pageCount);
+		String url = Utils.host + "get_posts?count=20&page=" + page + "&cat="
+				+ MainActivity.currentCate;
+
+		new AysnRequestHttp((ViewGroup) v, Utils.LOAD_XEMNHIEU,
+				null, callBack).execute(url);
+	}
+
 	public void setViewTab(List<ItemPost> list) {
 		adapter.clear();
 		adapter.notifyDataSetChanged();
@@ -322,6 +327,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 
 		@Override
 		public void getResult(int type, String result) {
+			MainActivity.smooth.setVisibility(View.GONE);
 			if (result.length() == 0) {
 				MainActivity.lblError.setVisibility(View.VISIBLE);
 			} else {
@@ -342,9 +348,9 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 					adapter.notifyDataSetChanged();
 					listViewNew = new ArrayList<ItemPost>();
 				}
-				mPullToRefreshLayout.setRefreshComplete();
 			}
-
+			mPullToRefreshLayout.setRefreshComplete();
+			
 			try {
 				if (listViewNew == null)
 					listViewNew = new ArrayList<ItemPost>();
@@ -431,12 +437,14 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 		 * Simulate Refresh with 4 seconds sleep
 		 */
 
-		if (isLoadLocal&&tabIndex==PinnedAdapter.MOINHAT) {
-			String url = Utils.host + "get_posts?count=5&page=1&cat="
+		if (tabIndex == PinnedAdapter.MOINHAT) {
+			String url = Utils.host + "get_posts?count=10&page=1&cat="
 					+ MainActivity.currentCate;
 			new AysnRequestHttp((ViewGroup) v, Utils.REFRESH, null, callBack)
 					.execute(url);
 
+		} else if (tabIndex == PinnedAdapter.XEMNHIEU) {
+			loadDataXemnhieu();
 		} else {
 			mPullToRefreshLayout.setRefreshComplete();
 		}
