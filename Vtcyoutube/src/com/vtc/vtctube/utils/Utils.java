@@ -148,7 +148,7 @@ public class Utils {
 		activity.getWindowManager().getDefaultDisplay()
 				.getMetrics(displaymetrics);
 		int width = displaymetrics.widthPixels;
-		dialog.getWindow().setLayout(2 * width / 3, LayoutParams.WRAP_CONTENT);
+		dialog.getWindow().setLayout(3 * width / 4, LayoutParams.WRAP_CONTENT);
 
 		dialog.show();
 		TextView lblMess = (TextView) dialog.findViewById(R.id.lblMessage);

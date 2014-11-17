@@ -3,6 +3,9 @@ package com.vtc.vtctube.like;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,10 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
+import com.vtc.vtctube.MainActivity.ResultSearchCallBack;
 import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemPost;
+import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
@@ -27,6 +33,7 @@ public class FragmentResent extends Fragment {
 	public static SmoothProgressBar smooth;
 	private String queryResent;
 	private ResultOnclickTab callBackOnlick = null;
+	private ResultSearchCallBack callBackSearch;
 
 	private List<ItemPost> listData = null;
 	private int key;
@@ -49,10 +56,51 @@ public class FragmentResent extends Fragment {
 		if (callBackOnlick == null) {
 			callBackOnlick = new ResultOnclickTab();
 		}
+		if (callBackSearch == null) {
+			callBackSearch = new ResultSearchCallBack();
+		}
 
 		if (listData == null) {
 			listData = new ArrayList<ItemPost>();
 		}
+	}
+
+	public class ResultSearchCallBack implements IResult {
+
+		@Override
+		public void getResult(int type, String result) {
+			try {
+				JSONObject jsonObj = new JSONObject(result);
+				String status = jsonObj.getString("status");
+				int count_total = jsonObj.getInt("count_total");
+				if (status.equals("ok") && count_total > 0) {
+					listData = new ArrayList<ItemPost>();
+					JSONArray jsonArray = jsonObj.getJSONArray("posts");
+					for (int i = 0; i < jsonArray.length(); i++) {
+						ItemPost item = new ItemPost();
+						JSONObject json = (JSONObject) jsonArray.get(i);
+						item = Utils.getItemPost(json, 0, 0);
+						listData.add(item);
+					}
+					addView();
+
+				}
+			} catch (Exception e) {
+			}
+		}
+
+		@Override
+		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCLickView(ItemPost item) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 
 	public static FragmentResent newInstance(int num) {
@@ -112,7 +160,7 @@ public class FragmentResent extends Fragment {
 
 		@Override
 		public void onCLickView(ItemPost item) {
-			Utils.getVideoView(item, getActivity(),listData);
+			Utils.getVideoView(item, getActivity(), listData);
 
 		}
 	}
@@ -121,6 +169,13 @@ public class FragmentResent extends Fragment {
 		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 		if (key == R.id.menu_video_yeuthich) {
 			listData = Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH);
+			if (listData.size() == 0) {
+				String url = Utils.host + "get_posts?count=50&page=2";
+				new AysnRequestHttp((ViewGroup) v, Utils.LOAD_XEMNHIEU,
+						MainActivity.smooth, callBackSearch).execute(url);
+			}else{
+				addView();
+			}
 
 		} else {
 			queryResent = "SELECT * FROM " + DatabaseHelper.TB_RESENT;
@@ -128,8 +183,12 @@ public class FragmentResent extends Fragment {
 					queryResent, PinnedAdapter.MOINHAT);
 			listData = Utils.checkLikeVideo(listData,
 					Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH));
+			addView();
 		}
 
+	}
+
+	public void addView() {
 		for (int i = 0; i < listData.size(); i++) {
 			if (listData.get(i).getStatus().equals("publish")) {
 				listData.get(i).setType(PinnedAdapter.ITEM);
