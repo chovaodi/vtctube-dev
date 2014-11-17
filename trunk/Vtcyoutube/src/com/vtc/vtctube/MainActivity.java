@@ -239,14 +239,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 		header = getLayoutInflater().inflate(R.layout.account_layout, null);
 		View fotter = getLayoutInflater().inflate(R.layout.footer, null);
 		fotter.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
-		
+
 		listview.addHeaderView(header);
 		listview.addFooterView(fotter);
 
@@ -433,7 +433,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 				} else {
 					Utils.hideSoftKeyboard(MainActivity.this);
 					leftMenu.toggleMenu();
-					actionSearch(edSearch.getText().toString());
+					actionSearch(edSearch.getText().toString().trim()
+							.replaceAll(" ", "%20"));
 				}
 				return true;
 			}
@@ -576,19 +577,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		positionPreview = id;
 		switch (id) {
 		case R.id.menu_trangchu:
-			MainActivity.lblError.setVisibility(View.GONE);
-			FragmentHome fragment = (FragmentHome) fragmentManager
-					.findFragmentByTag(Utils.TAG_HOME);
-			if (fragment == null) {
-				ft.addToBackStack(null);
-				ft.replace(R.id.container, FragmentHome.newInstance(1),
-						Utils.TAG_HOME);
-			} else {
-				ft.replace(R.id.container, fragment, Utils.TAG_HOME);
-			}
-			ft.commit();
-			FragmentCategory.frament = null;
-			MainActivity.callBackCLick.onClick(false, "");
+			setHome();
 			break;
 
 		case R.id.menu_video_moinhat:
@@ -600,15 +589,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 
 		case R.id.menu_video_yeuthich:
-			String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
-			if (myDbHelper.getCountRow(DatabaseHelper.TB_LIKE, sqlLike) > 0) {
-				addFragmentResent(R.id.menu_video_yeuthich, getResources()
-						.getString(R.string.lblmenu_yeuthich));
-			} else {
-				positionPreview = 0;
-				positionActive = Integer.MAX_VALUE;
-				Utils.getDialogMessges(MainActivity.this,"Bạn chưa yêu thích video nào, chúng tôi có hàng ngàn video hay cho bạn thưởng thức");
-			}
+			// String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
+			// if (myDbHelper.getCountRow(DatabaseHelper.TB_LIKE, sqlLike) > 0)
+			// {
+			addFragmentResent(R.id.menu_video_yeuthich, getResources()
+					.getString(R.string.lblmenu_yeuthich));
+			// } else {
+			// positionPreview = 0;
+			// positionActive = Integer.MAX_VALUE;
+			// setHome();
+			// Utils.getDialogMessges(MainActivity.this,"Bạn chưa yêu thích video nào, chúng tôi có hàng ngàn video hay cho bạn thưởng thức");
+			// }
 
 			break;
 		case R.id.menu_video_daxem:
@@ -619,7 +610,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			} else {
 				positionPreview = 0;
 				positionActive = Integer.MAX_VALUE;
-				Utils.getDialogMessges(MainActivity.this,"Bạn chưa xem video nào, chúng tôi có hàng ngàn video hay cho bạn thưởng thức");
+				setHome();
+				Utils.getDialogMessges(MainActivity.this,
+						"Bạn chưa xem video nào, chúng tôi có hàng ngàn video hay cho bạn thưởng thức");
 			}
 
 			break;
@@ -629,10 +622,28 @@ public class MainActivity extends SherlockFragmentActivity implements
 		case R.id.menu_nhataitro:
 			addFragmentAbout();
 			break;
-		case R.id.menu_tivi_tructuyen: 
-			Utils.getDialogMessges(MainActivity.this,"Chuyên mục này sẽ sớm mở trong thời gian tới để phục vụ quý khán giả");
+		case R.id.menu_tivi_tructuyen:
+			Utils.getDialogMessges(MainActivity.this,
+					"Chuyên mục này sẽ sớm mở trong thời gian tới để phục vụ quý khán giả");
+			setHome();
 			break;
 		}
+	}
+
+	public void setHome() {
+		MainActivity.lblError.setVisibility(View.GONE);
+		FragmentHome fragment = (FragmentHome) fragmentManager
+				.findFragmentByTag(Utils.TAG_HOME);
+		if (fragment == null) {
+			ft.addToBackStack(null);
+			ft.replace(R.id.container, FragmentHome.newInstance(1),
+					Utils.TAG_HOME);
+		} else {
+			ft.replace(R.id.container, fragment, Utils.TAG_HOME);
+		}
+		ft.commit();
+		FragmentCategory.frament = null;
+		MainActivity.callBackCLick.onClick(false, "");
 	}
 
 	public ArrayList<String> getQuerySearch(String sql) {

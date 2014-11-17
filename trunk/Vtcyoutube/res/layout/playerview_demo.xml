@@ -130,19 +130,26 @@
                 android:id="@+id/lblTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textColor="#565656"
                 android:textSize="15dp" />
 
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:background="#50565656"
+                android:layout_height="1px"
+                android:visibility="gone"
+                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" >
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -154,7 +161,7 @@
                     <com.vtc.vtctube.font.RobotoLightTextView
                         android:id="@+id/lblLuotxem"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="Lượt xem: "
                         android:textColor="#9197a3"
                         android:textSize="14dp" />
