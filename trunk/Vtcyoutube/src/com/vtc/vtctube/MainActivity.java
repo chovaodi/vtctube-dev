@@ -77,6 +77,7 @@ import com.vtc.vtctube.category.FragmentCategory;
 import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.category.RightLikeAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.like.FragmentLike;
 import com.vtc.vtctube.like.FragmentResent;
 import com.vtc.vtctube.menu.MenuDrawer;
 import com.vtc.vtctube.menu.MenuDrawer.OnDrawerStateChangeListener;
@@ -589,17 +590,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 
 		case R.id.menu_video_yeuthich:
-			// String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
-			// if (myDbHelper.getCountRow(DatabaseHelper.TB_LIKE, sqlLike) > 0)
-			// {
-			addFragmentResent(R.id.menu_video_yeuthich, getResources()
-					.getString(R.string.lblmenu_yeuthich));
-			// } else {
-			// positionPreview = 0;
-			// positionActive = Integer.MAX_VALUE;
-			// setHome();
-			// Utils.getDialogMessges(MainActivity.this,"Bạn chưa yêu thích video nào, chúng tôi có hàng ngàn video hay cho bạn thưởng thức");
-			// }
+			addFragmentLike(R.id.menu_video_yeuthich,
+					getResources().getString(R.string.lblmenu_yeuthich));
 
 			break;
 		case R.id.menu_video_daxem:
@@ -900,13 +892,33 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentResent fragment = (FragmentResent) fragmentManager
 				.findFragmentByTag(Utils.TAG_RESENT);
 		if (fragment == null) {
-			fragment = FragmentResent.newInstance(id);
+			fragment = new FragmentResent();
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_RESENT);
 		} else {
-			FragmentResent fResent = new FragmentResent();
-			fResent.onResumeData(id);
-			ft.show(fragment);
+			// FragmentResent
+			ft.replace(R.id.container, fragment, Utils.TAG_RESENT);
+		}
+
+		ft.commit();
+
+	}
+
+	public void addFragmentLike(int id, String title) {
+		MainActivity.callBackCLick.onClick(false, title);
+		FragmentTransaction ft = fragmentManager.beginTransaction();
+		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+		fragmentManager = getSupportFragmentManager();
+
+		FragmentLike fragment = (FragmentLike) fragmentManager
+				.findFragmentByTag(Utils.TAG_LIKE);
+		if (fragment == null) {
+			fragment = new FragmentLike();
+			ft.addToBackStack(null);
+			ft.replace(R.id.container, fragment, Utils.TAG_LIKE);
+		} else {
+			//
+			ft.replace(R.id.container, fragment, Utils.TAG_LIKE);
 		}
 
 		ft.commit();
@@ -1147,7 +1159,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 			onBackView();
 			return;
 		}
-
+		Fragment like = getSupportFragmentManager().findFragmentByTag(
+				Utils.TAG_LIKE);
+		if (like != null && like.isVisible()) {
+			onBackView();
+			return;
+		}
 		Fragment myFragment = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_CATE);
 		if (myFragment != null && myFragment.isVisible()) {

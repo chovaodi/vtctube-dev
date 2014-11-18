@@ -25,7 +25,7 @@ import com.vtc.vtctube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
-public class FragmentResent extends Fragment {
+public class FragmentLike extends Fragment {
 	private static PinnedAdapter adapter = null;
 	private static ListView listvideo;
 
@@ -39,7 +39,7 @@ public class FragmentResent extends Fragment {
 
 	int mNum;
 	private View v;
-	private static FragmentResent f = null;
+	private static FragmentLike f = null;
 
 	// private PullToRefreshLayout mPullToRefreshLayout;
 	public static String[] cateName;
@@ -104,8 +104,8 @@ public class FragmentResent extends Fragment {
 
 	}
 
-	public static FragmentResent newInstance(int num) {
-		f = new FragmentResent();
+	public static FragmentLike newInstance(int num) {
+		f = new FragmentLike();
 		// Supply num input as an argument.
 		Bundle args = new Bundle();
 		args.putInt("num", num);
@@ -166,12 +166,14 @@ public class FragmentResent extends Fragment {
 
 	public void addViewPost() {
 		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
-		queryResent = "SELECT * FROM " + DatabaseHelper.TB_RESENT;
-		listData = Utils.getVideoLocal(DatabaseHelper.TB_RESENT, queryResent,
-				PinnedAdapter.MOINHAT);
-		listData = Utils.checkLikeVideo(listData,
-				Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH));
-		addView();
+		listData = Utils.getVideoLike(sqlLike, PinnedAdapter.YEUTHICH);
+		if (listData.size() == 0) {
+			String url = Utils.host + "get_posts?count=20&page=5";
+			new AysnRequestHttp((ViewGroup) v, Utils.LOAD_XEMNHIEU,
+					MainActivity.smooth, callBackSearch).execute(url);
+		} else {
+			addView();
+		}
 
 	}
 

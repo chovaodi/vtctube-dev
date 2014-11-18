@@ -26,6 +26,7 @@ public class ItemPost {
 		option = PinnedAdapter.MOINHAT;
 		countview = "300";
 		title = "Video chi tiết";
+		url="";
 	}
 
 	public void setKeyRemove(int keyRemove) {
