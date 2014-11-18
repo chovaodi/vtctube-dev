@@ -196,6 +196,7 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 		if (item.getCateId().equals("1")) {
 			Intent intent = new Intent(context, LichPhatsongAcitivity.class);
 			intent.putExtra("content", item.getContent());
+			intent.putExtra("title", item.getTitle());
 			context.startActivity(intent);
 
 		} else {

@@ -10,7 +10,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.vtc.vtctube.R;
 
 public class LichPhatsongAcitivity extends SherlockActivity {
-	private String content;
+	private String content, title;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -32,8 +32,10 @@ public class LichPhatsongAcitivity extends SherlockActivity {
 
 		Intent intent = getIntent();
 		content = intent.getStringExtra("content");
+		title = intent.getStringExtra("title");
+		
 		TextView lblContent = (TextView) findViewById(R.id.content);
-		lblContent.setText(Html.fromHtml(content));
+		lblContent.setText(Html.fromHtml("<b>"+title+"</b><br>"+content));
 
 		// loadComment();
 	}

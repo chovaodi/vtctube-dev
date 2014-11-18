@@ -611,13 +611,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 		case R.id.menu_danhgia:
 			sendEmail();
 			break;
+
 		case R.id.menu_nhataitro:
 			addFragmentAbout();
 			break;
 		case R.id.menu_tivi_tructuyen:
-			Utils.getDialogMessges(MainActivity.this,
-					"Chuyên mục này sẽ sớm mở trong thời gian tới để phục vụ quý khán giả");
-			setHome();
+			addNewFeed();
 			break;
 		}
 	}
@@ -968,6 +967,25 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
+	public void addNewFeed() {
+		MainActivity.callBackCLick.onClick(true, "Thông báo mới");
+		FragmentTransaction ft = fragmentManager.beginTransaction();
+		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+		FragmentNewfeed fragment = null;
+		fragment = (FragmentNewfeed) fragmentManager
+				.findFragmentByTag(Utils.TAG_NEWFEED);
+		if (fragment == null) {
+			fragment = FragmentNewfeed.newInstance();
+			ft.addToBackStack(null);
+			ft.replace(R.id.container, fragment, Utils.TAG_NEWFEED);
+		} else {
+			ft.show(fragment);
+		}
+
+		ft.commit();
+
+	}
+
 	public class ResultCallBackCLick implements IClickCate {
 
 		@Override
@@ -1159,6 +1177,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 			onBackView();
 			return;
 		}
+		
+		Fragment newfeed = getSupportFragmentManager().findFragmentByTag(
+				Utils.TAG_NEWFEED);
+		if (newfeed != null && newfeed.isVisible()) {
+			onBackView();
+			return;
+		}
+		
 		Fragment like = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_LIKE);
 		if (like != null && like.isVisible()) {
