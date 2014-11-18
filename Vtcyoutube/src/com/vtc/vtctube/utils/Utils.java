@@ -65,6 +65,7 @@ public class Utils {
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyCGlpgcQnFX6At3jUT0j79ryrd0K0fmjls";
 	public static String ADMOB_ID = "ca-app-pub-8362644350234649/3664611615";
 
+	public static String TAG_NEWFEED = "TAG_NEWFEED";
 	public static String TAG_ABOUT = "TAG_ABOUT";
 	public static String TAG_LIKE = "TAG_LIKE";
 	public static String TAG_HOME = "TAG_HOME";

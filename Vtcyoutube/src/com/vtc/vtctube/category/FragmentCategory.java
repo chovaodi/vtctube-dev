@@ -207,7 +207,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 				+ " WHERE cateId='" + MainActivity.currentCate + "'";
 		listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
 
-		String url = Utils.host + "get_posts?count=20&page=1&cat="
+		String url = Utils.host + "get_posts?count=10&page=1&cat="
 				+ MainActivity.currentCate;
 		new AysnRequestHttp((ViewGroup) v, Utils.LOAD_FIRST_DATA,
 				MainActivity.smooth, callBack).execute(url);
@@ -304,11 +304,11 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 		int page = 1;
 		if (pageCount != 0)
 			page = random.nextInt(pageCount);
-		String url = Utils.host + "get_posts?count=20&page=" + page + "&cat="
+		String url = Utils.host + "get_posts?count=10&page=" + page + "&cat="
 				+ MainActivity.currentCate;
 
-		new AysnRequestHttp((ViewGroup) v, Utils.LOAD_XEMNHIEU,
-				null, callBack).execute(url);
+		new AysnRequestHttp((ViewGroup) v, Utils.LOAD_XEMNHIEU, null, callBack)
+				.execute(url);
 	}
 
 	public void setViewTab(List<ItemPost> list) {
@@ -349,8 +349,9 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 					listViewNew = new ArrayList<ItemPost>();
 				}
 			}
-			mPullToRefreshLayout.setRefreshComplete();
-			
+			if (mPullToRefreshLayout != null)
+				mPullToRefreshLayout.setRefreshComplete();
+
 			try {
 				if (listViewNew == null)
 					listViewNew = new ArrayList<ItemPost>();
@@ -471,7 +472,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 
 				if (listvideo.getFooterViewsCount() == 0)
 					listvideo.addFooterView(fotter);
-				String url = Utils.host + "get_posts?count=5&page=" + page
+				String url = Utils.host + "get_posts?count=10&page=" + page
 						+ "&cat=" + MainActivity.currentCate;
 
 				int keyOption = Utils.LOAD_MORE;

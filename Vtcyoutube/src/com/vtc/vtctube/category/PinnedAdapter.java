@@ -123,6 +123,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 					Intent intent = new Intent(context,
 							LichPhatsongAcitivity.class);
 					intent.putExtra("content", item.getContent());
+					intent.putExtra("title", item.getTitle());
 					context.startActivity(intent);
 
 				} else {

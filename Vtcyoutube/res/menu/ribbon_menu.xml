@@ -30,7 +30,7 @@
     <item
         android:id="@+id/menu_tivi_tructuyen"
         android:icon="@drawable/ic_xemtivionline"
-        android:title="Xem tivi trực tuyến">
+        android:title="Thông báo mới">
     </item>
     <item
         android:id="@+id/menu_danhgia"
