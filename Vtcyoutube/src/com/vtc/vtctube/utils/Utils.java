@@ -66,6 +66,7 @@ public class Utils {
 	public static String ADMOB_ID = "ca-app-pub-8362644350234649/3664611615";
 
 	public static String TAG_ABOUT = "TAG_ABOUT";
+	public static String TAG_LIKE = "TAG_LIKE";
 	public static String TAG_HOME = "TAG_HOME";
 	public static String TAG_CATE = "TAG_CATE";
 	public static String TAG_RESENT = "TAG_RESENT";
@@ -345,13 +346,15 @@ public class Utils {
 				item.setContent(json.getString("content"));
 				item.setVideoId(getIdVideo(json.getString("content")));
 			}
-			String urlThumnail = json.getJSONObject("thumbnail_images")
-					.getJSONObject("full").getString("url");
-			item.setUrl(urlThumnail);
 
 			item.setOption(tabIndex);
 			item.setCountview(json.getJSONObject("custom_fields")
 					.getJSONArray("post_views_count").get(0).toString());
+			
+			String urlThumnail = json.getJSONObject("thumbnail_images")
+					.getJSONObject("full").getString("url");
+			item.setUrl(urlThumnail);
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
