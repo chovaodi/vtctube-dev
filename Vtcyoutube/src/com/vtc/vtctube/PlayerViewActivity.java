@@ -421,7 +421,12 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 		@Override
 		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			setViewTab();
+			if (type == Utils.HOANTAC) {
+				listYeuthich.closeAnimate(postion);
+			} else {
+				listYeuthich.closeOpenedItems();
+				setViewTab();
+			}
 		}
 
 		@Override
