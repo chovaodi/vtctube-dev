@@ -5,22 +5,39 @@
     android:background="@android:color/white"
     android:orientation="horizontal" >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/back"
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:background="#f06464"
-        android:gravity="center_vertical|right" >
+        android:gravity="center_vertical" >
+
+        <com.vtc.vtctube.font.RobotoTextviewBold
+            android:id="@+id/btnHoantac"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:text="Hoàn tác"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+             />
 
         <com.vtc.vtctube.font.RobotoTextviewBold
             android:id="@+id/btnXoa"
             android:layout_width="110dp"
             android:layout_height="match_parent"
-            android:textColor="@android:color/white"
-            android:gravity="center"
             android:background="@android:color/transparent"
-            android:text="Xóa" />
-    </RelativeLayout>
+            android:gravity="center"
+            android:text="Xóa"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/front"

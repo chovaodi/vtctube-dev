@@ -296,7 +296,7 @@ public class Utils {
 		ItemPost item = new ItemPost();
 		try {
 			item.setIdPost(json.getInt("id"));
-			item.setStatus(json.getString("slug"));
+			item.setSlug(json.getString("slug"));
 			item.setTitle(json.getString("title"));
 			item.setStatus(json.getString("status"));
 			JSONArray jsonArray = json.getJSONArray("categories");
@@ -328,7 +328,8 @@ public class Utils {
 		ItemPost item = new ItemPost();
 		try {
 			item.setIdPost(json.getInt("id"));
-			item.setStatus(json.getString("slug"));
+			item.setSlug(json.getString("slug"));
+			
 			JSONArray jsonArray = json.getJSONArray("categories");
 			if (jsonArray.length() > 0) {
 				JSONObject jsonObject = jsonArray.getJSONObject(0);

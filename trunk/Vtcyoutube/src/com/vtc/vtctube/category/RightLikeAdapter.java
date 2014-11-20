@@ -75,6 +75,7 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 			holder.loadingBanner = (ProgressBar) convertView
 					.findViewById(R.id.loadingBanner);
 			holder.btnXoa = (TextView) convertView.findViewById(R.id.btnXoa);
+			holder.btnHoantac = (TextView) convertView.findViewById(R.id.btnHoantac);
 
 			holder.lineFront = (LinearLayout) convertView
 					.findViewById(R.id.front);
@@ -100,7 +101,16 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 				getVideoView(item);
 			}
 		});
-
+		holder.btnHoantac.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				callBack.pushResutClickItem(Utils.HOANTAC,
+						getPosition(item), false);
+				
+			}
+		});
+		
 		holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
 
 		holder.btnXoa.setOnClickListener(new OnClickListener() {
@@ -190,6 +200,7 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 		public LinearLayout lineFront, btnLike;
 		public ProgressBar loadingBanner;
 		private TextView btnXoa;
+		private TextView btnHoantac;
 	}
 
 	public void getVideoView(ItemPost item) {
