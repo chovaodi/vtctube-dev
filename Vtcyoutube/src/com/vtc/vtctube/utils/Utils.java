@@ -126,6 +126,7 @@ public class Utils {
 
 	public static void shareButton(ItemPost item, Activity activity) {
 		String shareLink = "http://vtctube.vn/";
+		Log.d("item",item.getSlug()+"");
 		if (item.getSlug() != null && item.getSlug().length() > 0) {
 			shareLink = "http://vtctube.vn/" + item.getSlug() + "-" + ".html";
 		}
@@ -279,6 +280,7 @@ public class Utils {
 					item.setStatus(c.getString(4));
 					item.setTitle(c.getString(5));
 					item.setSlug(c.getString(6));
+					
 					item.setCountview(c.getInt(7) + "");
 					item.setLike(true);
 					item.setKeyRemove(LOAD_LIKE);
@@ -299,6 +301,7 @@ public class Utils {
 			item.setSlug(json.getString("slug"));
 			item.setTitle(json.getString("title"));
 			item.setStatus(json.getString("status"));
+			
 			JSONArray jsonArray = json.getJSONArray("categories");
 			if (jsonArray.length() > 0) {
 				JSONObject jsonObject = jsonArray.getJSONObject(0);
