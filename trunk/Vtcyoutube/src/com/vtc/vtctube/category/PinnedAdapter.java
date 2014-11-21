@@ -98,6 +98,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		final ItemPost item = getItem(position);
+
 		if (typeView == TYPE_VIEW_DETAIL) {
 			holder.btnLike.setVisibility(View.GONE);
 			holder.btnShare.setVisibility(View.GONE);

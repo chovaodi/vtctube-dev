@@ -5,16 +5,12 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.AbsListView;
-import android.widget.TextView;
 
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
@@ -26,8 +22,7 @@ public class FragmentNewfeed extends Fragment {
 	private WebView webview_fbview;
 
 	public static FragmentNewfeed newInstance() {
-		if (frament == null)
-			frament = new FragmentNewfeed();
+		frament = new FragmentNewfeed();
 		return frament;
 	}
 
@@ -65,7 +60,6 @@ public class FragmentNewfeed extends Fragment {
 				getActivity()), "Android");
 		webview_fbview.setVisibility(View.VISIBLE);
 
-	
 	}
 
 	private class webChromeClient extends WebChromeClient {
@@ -80,8 +74,6 @@ public class FragmentNewfeed extends Fragment {
 			return true;
 		}
 	}
-
-	
 
 	public class JavaScriptInterface {
 		Context mContext;
@@ -102,7 +94,7 @@ public class FragmentNewfeed extends Fragment {
 				+ "<meta name='viewport' content=width=device-width', initial-scale=1, maximum-scale=1>"
 				+ "<head>"
 				+ "<style type='text/css'>"
-			
+
 				+ "p { text-align: justify; width: auto; }"
 				+ "@font-face {"
 				+ "font-family: MyFont;"

@@ -616,6 +616,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			addFragmentAbout();
 			break;
 		case R.id.menu_tivi_tructuyen:
+			
 			addNewFeed();
 			break;
 		}
@@ -960,7 +961,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_ABOUT);
 		} else {
-			ft.show(fragment);
+			ft.replace(R.id.container, fragment, Utils.TAG_ABOUT);
 		}
 
 		ft.commit();
@@ -979,7 +980,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_NEWFEED);
 		} else {
-			ft.show(fragment);
+			ft.replace(R.id.container, fragment, Utils.TAG_NEWFEED);
 		}
 
 		ft.commit();
