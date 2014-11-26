@@ -1,5 +1,13 @@
 package com.vtc.vtctube;
 
+import org.json.JSONObject;
+
+import com.vtc.vtctube.FragmentNewfeed.ResultCallBack;
+import com.vtc.vtctube.model.ItemPost;
+import com.vtc.vtctube.services.AysnRequestHttp;
+import com.vtc.vtctube.utils.IResult;
+import com.vtc.vtctube.utils.Utils;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -10,6 +18,7 @@ import android.widget.TextView;
 
 public class FragmentAbout extends Fragment {
 	private static FragmentAbout frament = null;
+	private TextView lblTextDesc;
 
 	public static FragmentAbout newInstance() {
 		if (frament == null)
@@ -22,9 +31,41 @@ public class FragmentAbout extends Fragment {
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.aboutus, container, false);
-		TextView lblTextDesc = (TextView) view.findViewById(R.id.lblTextDesc);
-		lblTextDesc.setText(Html.fromHtml(getActivity().getResources()
-				.getString(R.string.aboutus)));
+		lblTextDesc = (TextView) view.findViewById(R.id.lblTextDesc);
+		ResultCallBack callBack = new ResultCallBack();
+		MainActivity.smooth.setVisibility(View.VISIBLE);
+		new AysnRequestHttp((ViewGroup) view, Utils.LOAD_FIRST_DATA, null,
+				callBack)
+				.execute("http://vtctube.vn/api/get_page?slug=gioi-thieu");
 		return view;
+	}
+
+	public class ResultCallBack implements IResult {
+
+		@Override
+		public void getResult(int type, String result) {
+			MainActivity.smooth.setVisibility(View.GONE);
+			try {
+				JSONObject jsonObject = new JSONObject(result);
+				String msg = jsonObject.getJSONObject("page").getString(
+						"content");
+				lblTextDesc.setText(Html.fromHtml(msg));
+			} catch (Exception e) {
+				MainActivity.lblError.setVisibility(View.VISIBLE);
+			}
+		}
+
+		@Override
+		public void pushResutClickItem(int type, int postion, boolean isLike) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCLickView(ItemPost item) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 }

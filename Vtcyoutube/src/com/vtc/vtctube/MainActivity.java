@@ -292,14 +292,18 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 					clickMenu(positionActive);
 				}
-				if (mSimpleFacebook.isLogin()) {
-					getProfile();
-				}
 
 				if (mGoogleApiClient.isConnected()) {
 					getProfileInformation();
+					return;
+				}
+				
+				if (mSimpleFacebook.isLogin()) {
+					getProfile();
+					return;
 				}
 
+				
 				Utils.hideSoftKeyboard(MainActivity.this);
 
 			}
@@ -1388,8 +1392,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 				setAccInfo();
 
 			} else {
-				Toast.makeText(getApplicationContext(),
-						"Person information is null", Toast.LENGTH_LONG).show();
+				//Toast.makeText(getApplicationContext(),
+				//		"Person information is null", Toast.LENGTH_LONG).show();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
