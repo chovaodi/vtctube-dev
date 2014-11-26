@@ -34,6 +34,7 @@ public class FragmentNewfeed extends Fragment {
 		webview_fbview = (WebView) view.findViewById(R.id.contentView);
 		settingWebview(webview_fbview);
 		ResultCallBack callBack = new ResultCallBack();
+		MainActivity.smooth.setVisibility(View.VISIBLE);
 		new AysnRequestHttp((ViewGroup) view, Utils.LOAD_FIRST_DATA, null,
 				callBack)
 				.execute("http://vtctube.vn/api/get_page?slug=thong-bao");
@@ -114,6 +115,7 @@ public class FragmentNewfeed extends Fragment {
 
 		@Override
 		public void getResult(int type, String result) {
+			MainActivity.smooth.setVisibility(View.GONE);
 			try {
 				JSONObject jsonObject = new JSONObject(result);
 				String msg = jsonObject.getJSONObject("page").getString(

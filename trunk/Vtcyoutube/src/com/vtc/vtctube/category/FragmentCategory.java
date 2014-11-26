@@ -206,7 +206,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 		queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 				+ " WHERE cateId='" + MainActivity.currentCate + "'";
 		listVideoLike = Utils.getVideoLike(queryLikeVideo, tabIndex);
-
+		Utils.disableEnableControls(false, (ViewGroup) v);
 		String url = Utils.host + "get_posts?count=10&page=1&cat="
 				+ MainActivity.currentCate;
 		new AysnRequestHttp((ViewGroup) v, Utils.LOAD_FIRST_DATA,
