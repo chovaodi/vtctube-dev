@@ -85,7 +85,7 @@
             android:layout_marginTop="10dp"
             android:singleLine="true"
             android:textColor="@color/text_color"
-            android:inputType="text"
+            android:inputType="textNoSuggestions"
             android:imeOptions="actionDone"
             android:background="@drawable/bgr_search"
             android:ems="10" >

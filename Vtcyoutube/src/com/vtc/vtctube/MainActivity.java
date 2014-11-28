@@ -466,8 +466,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 				} else {
 					Utils.hideSoftKeyboard(MainActivity.this);
 					leftMenu.toggleMenu();
-					actionSearch(edSearch.getText().toString().trim()
-							.replaceAll(" ", "%20"));
+					String query = edSearch.getText().toString().trim()
+							.replaceAll("[-+.^:,@#$%&*()<>{}]", "");
+					actionSearch(query.replaceAll("", "%20"));
 				}
 				return true;
 			}
