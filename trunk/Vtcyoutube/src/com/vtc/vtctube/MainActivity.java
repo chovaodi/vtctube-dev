@@ -1,6 +1,8 @@
 package com.vtc.vtctube;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,10 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.SQLException;
@@ -24,6 +30,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
 import android.text.InputType;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -162,6 +169,28 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		PackageInfo info;
+		try {
+			info = getPackageManager().getPackageInfo("com.vtc.vtctube",
+					PackageManager.GET_SIGNATURES);
+			for (Signature signature : info.signatures) {
+				MessageDigest md;
+				md = MessageDigest.getInstance("SHA");
+				md.update(signature.toByteArray());
+				String something = new String(Base64.encode(md.digest(), 0));
+				// String something = new
+				// String(Base64.encodeBytes(md.digest()));
+				Log.e("hash key", something);
+			}
+		} catch (NameNotFoundException e1) {
+			Log.e("name not found", e1.toString());
+		} catch (NoSuchAlgorithmException e) {
+			Log.e("no such an algorithm", e.toString());
+		} catch (Exception e) {
+			Log.e("exception", e.toString());
+		}
+
 		mainView = (ViewGroup) getWindow().getDecorView().findViewById(
 				android.R.id.content);
 		adapter = new RightLikeAdapter(PinnedAdapter.TYPE_VIEW_CATE,
@@ -297,13 +326,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 					getProfileInformation();
 					return;
 				}
-				
+
 				if (mSimpleFacebook.isLogin()) {
 					getProfile();
 					return;
 				}
 
-				
 				Utils.hideSoftKeyboard(MainActivity.this);
 
 			}
@@ -620,7 +648,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			addFragmentAbout();
 			break;
 		case R.id.menu_tivi_tructuyen:
-			
+
 			addNewFeed();
 			break;
 		}
@@ -1182,14 +1210,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 			onBackView();
 			return;
 		}
-		
+
 		Fragment newfeed = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_NEWFEED);
 		if (newfeed != null && newfeed.isVisible()) {
 			onBackView();
 			return;
 		}
-		
+
 		Fragment like = getSupportFragmentManager().findFragmentByTag(
 				Utils.TAG_LIKE);
 		if (like != null && like.isVisible()) {
@@ -1392,8 +1420,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 				setAccInfo();
 
 			} else {
-				//Toast.makeText(getApplicationContext(),
-				//		"Person information is null", Toast.LENGTH_LONG).show();
+				// Toast.makeText(getApplicationContext(),
+				// "Person information is null", Toast.LENGTH_LONG).show();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
