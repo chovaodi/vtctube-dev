@@ -75,7 +75,8 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 			holder.loadingBanner = (ProgressBar) convertView
 					.findViewById(R.id.loadingBanner);
 			holder.btnXoa = (TextView) convertView.findViewById(R.id.btnXoa);
-			holder.btnHoantac = (TextView) convertView.findViewById(R.id.btnHoantac);
+			holder.btnHoantac = (TextView) convertView
+					.findViewById(R.id.btnHoantac);
 
 			holder.lineFront = (LinearLayout) convertView
 					.findViewById(R.id.front);
@@ -102,15 +103,15 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 			}
 		});
 		holder.btnHoantac.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				callBack.pushResutClickItem(Utils.HOANTAC,
-						getPosition(item), false);
-				
+				callBack.pushResutClickItem(Utils.HOANTAC, getPosition(item),
+						false);
+
 			}
 		});
-		
+
 		holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
 
 		holder.btnXoa.setOnClickListener(new OnClickListener() {
@@ -147,11 +148,10 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 			}
 		});
 
-//		Bitmap bmp = imageLoader.loadImageSync(item.getUrl(),
-//				Utils.getOptions(context, R.drawable.img_erorrs));
-//		if (bmp != null) {
-//			holder.imgIcon.setImageBitmap(bmp);
-//		} else {
+		if (item.getCateId().equals("1")) {
+			holder.imgIcon.setImageDrawable(context.getResources().getDrawable(
+					R.drawable.error_home));
+		} else {
 			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
 					Utils.getOptions(context, R.drawable.img_erorrs),
 					new SimpleImageLoadingListener() {
@@ -172,7 +172,7 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 							// holder.loadingBanner.setVisibility(View.GONE);
 						}
 					});
-	//	}
+		}
 
 		return convertView;
 	}

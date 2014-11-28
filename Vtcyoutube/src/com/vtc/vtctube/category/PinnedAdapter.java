@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.internal.mc;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -148,10 +147,16 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 
 		holder.txtTitle.setText(Html.fromHtml(item.getTitle()));
 
-//		Bitmap bmp = imageLoader.loadImageSync(item.getUrl(), Utils.getOptions(context, R.drawable.img_erorrs));
-//		if (bmp != null) {
-//			holder.imgIcon.setImageBitmap(bmp);
-//		} else {
+		// Bitmap bmp = imageLoader.loadImageSync(item.getUrl(),
+		// Utils.getOptions(context, R.drawable.img_erorrs));
+		// if (bmp != null) {
+		// holder.imgIcon.setImageBitmap(bmp);
+		// } else {
+
+		if (item.getCateId().equals("1")) {
+			holder.imgIcon.setImageDrawable(context.getResources().getDrawable(
+					R.drawable.error_home));
+		} else {
 
 			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
 					Utils.getOptions(context, R.drawable.img_erorrs),
@@ -173,7 +178,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 							// holder.loadingBanner.setVisibility(View.GONE);
 						}
 					});
-	//	}
+		}
 
 		holder.btnLike.setOnClickListener(new OnClickListener() {
 

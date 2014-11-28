@@ -53,10 +53,10 @@ public class FragmentNewfeed extends Fragment {
 		webview_fbview.requestFocus(View.FOCUS_DOWN);
 		webview_fbview.setPadding(0, 0, 0, 0);
 		webview_fbview.setWebChromeClient(new webChromeClient());
-		webview_fbview.setInitialScale(0);
+		webview_fbview.setInitialScale(100);
 		webview_fbview.clearCache(true);
 		webview_fbview.clearHistory();
-		webview_fbview.getSettings().setDefaultFontSize(14);
+		webview_fbview.getSettings().setDefaultFontSize(18);
 		webview_fbview.addJavascriptInterface(new JavaScriptInterface(
 				getActivity()), "Android");
 		webview_fbview.setVisibility(View.VISIBLE);
@@ -92,7 +92,7 @@ public class FragmentNewfeed extends Fragment {
 
 	private String getHtmlLink(String content) {
 		String linkhtml = "<html>"
-				+ "<meta name='viewport' content=width=device-width', initial-scale=1, maximum-scale=1>"
+				+ "<meta name='viewport',content=\"width=device-width, initial-scale=1.0\">"
 				+ "<head>"
 				+ "<style type='text/css'>"
 
@@ -104,8 +104,8 @@ public class FragmentNewfeed extends Fragment {
 				+ " </style>"
 				+ "</head>"
 
-				+ "<body style='margin:0; padding: 0; font-size:16px; font-family: MyFont!important;'>"
-				+ "<div style='padding:10px'>" + content + "</div>"
+				+ "<body style=\"margin:0; padding: 0; font-size:18px; font-family: MyFont!important;\">"
+				+ "<div style='padding: 10px;'>" + content + "</div>"
 				+ "</body></html>";
 
 		return linkhtml;
