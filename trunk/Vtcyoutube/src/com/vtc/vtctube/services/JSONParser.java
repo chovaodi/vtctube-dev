@@ -57,7 +57,7 @@ public class JSONParser {
 			return "";
 		} catch (ClientProtocolException e) {
 			return "";
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return "";
 		}
 
