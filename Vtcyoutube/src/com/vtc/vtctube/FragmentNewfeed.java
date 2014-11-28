@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
@@ -20,6 +21,7 @@ import com.vtc.vtctube.utils.Utils;
 public class FragmentNewfeed extends Fragment {
 	private static FragmentNewfeed frament = null;
 	private WebView webview_fbview;
+	private ProgressBar progressBar1;
 
 	public static FragmentNewfeed newInstance() {
 		frament = new FragmentNewfeed();
@@ -32,7 +34,9 @@ public class FragmentNewfeed extends Fragment {
 
 		View view = inflater.inflate(R.layout.newfeed, container, false);
 		webview_fbview = (WebView) view.findViewById(R.id.contentView);
+		progressBar1 = (ProgressBar) view.findViewById(R.id.progressBar1);
 		settingWebview(webview_fbview);
+
 		ResultCallBack callBack = new ResultCallBack();
 		MainActivity.smooth.setVisibility(View.VISIBLE);
 		new AysnRequestHttp((ViewGroup) view, Utils.LOAD_FIRST_DATA, null,
@@ -60,6 +64,16 @@ public class FragmentNewfeed extends Fragment {
 		webview_fbview.addJavascriptInterface(new JavaScriptInterface(
 				getActivity()), "Android");
 		webview_fbview.setVisibility(View.VISIBLE);
+		webview_fbview.setWebChromeClient(new WebChromeClient() {
+			public void onProgressChanged(WebView view, int progress) {
+				if (progress < 100 && progressBar1.getVisibility() == View.GONE) {
+					progressBar1.setVisibility(View.VISIBLE);
+				}
+				if (progress == 100) {
+					progressBar1.setVisibility(View.GONE);
+				}
+			}
+		});
 
 	}
 
@@ -96,7 +110,7 @@ public class FragmentNewfeed extends Fragment {
 				+ "<head>"
 				+ "<style type='text/css'>"
 
-				+ "p { text-align: justify; width: auto; }"
+				+ "p { text-align: left; width: auto; }"
 				+ "@font-face {"
 				+ "font-family: MyFont;"
 				+ "src: url('file:///android_asset/fonts/Roboto-Light.ttf')}"
