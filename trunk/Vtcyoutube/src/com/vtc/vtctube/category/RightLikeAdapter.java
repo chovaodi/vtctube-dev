@@ -1,5 +1,6 @@
 package com.vtc.vtctube.category;
 
+import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -106,8 +107,7 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 			@Override
 			public void onClick(View v) {
-				callBack.pushResutClickItem(Utils.HOANTAC, getPosition(item),
-						false);
+				remove(item);
 
 			}
 		});
@@ -118,32 +118,7 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 			@Override
 			public void onClick(View v) {
-
-				if (item.getKeyRemove() == Utils.LOAD_LIKE) {
-
-					if (item.isLike()) {
-						MainActivity.myDbHelper.deleteLikeVideo(
-								DatabaseHelper.TB_LIKE, item.getIdPost());
-						callBack.pushResutClickItem(item.getOption(),
-								getPosition(item), false);
-
-					} else {
-						String sqlCheck = "SELECT * FROM "
-								+ DatabaseHelper.TB_LIKE + " WHERE id='"
-								+ item.getIdPost() + "'";
-						if (MainActivity.myDbHelper.getCountRow(
-								DatabaseHelper.TB_LIKE, sqlCheck) == 0) {
-							MainActivity.myDbHelper.insertVideoLike(
-									item.getIdPost(), item.getCateId(),
-									item.getVideoId(), item.getUrl(),
-									item.getStatus(), item.getTitle(),
-									item.getSlug(), item.getCountview());
-							callBack.pushResutClickItem(item.getOption(),
-									getPosition(item), true);
-						}
-
-					}
-				}
+				remove(item);
 
 			}
 		});
@@ -175,6 +150,34 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 		}
 
 		return convertView;
+	}
+
+	public void remove(ItemPost item) {
+
+		if (item.getKeyRemove() == Utils.LOAD_LIKE) {
+
+			if (item.isLike()) {
+				MainActivity.myDbHelper.deleteLikeVideo(DatabaseHelper.TB_LIKE,
+						item.getIdPost());
+				callBack.pushResutClickItem(item.getOption(),
+						getPosition(item), false);
+
+			} else {
+				String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
+						+ " WHERE id='" + item.getIdPost() + "'";
+				if (MainActivity.myDbHelper.getCountRow(DatabaseHelper.TB_LIKE,
+						sqlCheck) == 0) {
+					MainActivity.myDbHelper.insertVideoLike(item.getIdPost(),
+							item.getCateId(), item.getVideoId(), item.getUrl(),
+							item.getStatus(), item.getTitle(), item.getSlug(),
+							item.getCountview());
+					callBack.pushResutClickItem(item.getOption(),
+							getPosition(item), true);
+				}
+
+			}
+		}
+
 	}
 
 	@Override
