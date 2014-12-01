@@ -124,8 +124,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private ImageView imgAvata;
 	private SearchView searchView;
-	private LinearLayout lineAdmob;
-	private AdView adView;
+	// private LinearLayout lineAdmob;
+	// private AdView adView;
 	private ProgressBar prLoadLike;
 
 	public static ImageLoader imageLoader = null;
@@ -256,14 +256,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		listYeuthich.setAdapter(adapter);
 		setContentView(R.layout.fragment_content);
-		lineAdmob = (LinearLayout) findViewById(R.id.adview);
-		adView = new AdView(this);
-		adView.setAdSize(AdSize.SMART_BANNER);
-		adView.setAdUnitId(Utils.ADMOB_ID);
-		lineAdmob.addView(adView);
-
-		AdRequest adRequest = new AdRequest.Builder().build();
-		adView.loadAd(adRequest);
+		// lineAdmob = (LinearLayout) findViewById(R.id.adview);
+		// adView = new AdView(this);
+		// adView.setAdSize(AdSize.SMART_BANNER);
+		// adView.setAdUnitId(Utils.ADMOB_ID);
+		// lineAdmob.addView(adView);
+		//
+		// AdRequest adRequest = new AdRequest.Builder().build();
+		// adView.loadAd(adRequest);
 
 		listview = (ListView) findViewById(R.id.listView1);
 		header = getLayoutInflater().inflate(R.layout.account_layout, null);
@@ -719,13 +719,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		mSimpleFacebook = SimpleFacebook.getInstance(this);
-		adView.resume();
+		// adView.resume();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		adView.pause();
+		// adView.pause();
 	}
 
 	@Override

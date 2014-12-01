@@ -27,13 +27,13 @@
             android:textSize="15dp"
             android:visibility="gone" />
 
-        <LinearLayout
+     <!--    <LinearLayout
             android:id="@+id/adview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:orientation="vertical" >
-        </LinearLayout>
+        </LinearLayout> -->
 
         <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
             android:id="@+id/google_now"
