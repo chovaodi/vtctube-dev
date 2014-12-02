@@ -178,6 +178,11 @@ public class FragmentLike extends Fragment {
 	}
 
 	public void addView() {
+		if(listData==null||listData.size()==0){
+			MainActivity.lblError.setVisibility(View.VISIBLE);
+			return;
+		}
+		
 		for (int i = 0; i < listData.size(); i++) {
 			if (listData.get(i).getStatus().equals("publish")) {
 				listData.get(i).setType(PinnedAdapter.ITEM);

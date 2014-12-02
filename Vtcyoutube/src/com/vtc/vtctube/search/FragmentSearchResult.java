@@ -238,7 +238,7 @@ public class FragmentSearchResult extends Fragment implements
 					url = Utils.host + "get_search_results?search=" + keyword
 							+ "&count=" + pageSize + "&page=" + page;
 				} else {
-					url = Utils.host + "get_posts?count=5&page=" + page
+					url = Utils.host + "get_posts?count=10&page=" + page
 							+ "&cat=" + MainActivity.currentCate;
 				}
 				new AysnRequestHttp((ViewGroup) view, Utils.LOAD_MORE,
