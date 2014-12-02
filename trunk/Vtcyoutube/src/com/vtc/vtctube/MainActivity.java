@@ -317,7 +317,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 					clickMenu(positionActive);
 				}
-
+				
+				Utils.hideSoftKeyboard(MainActivity.this);
+				
 				if (mGoogleApiClient.isConnected()) {
 					getProfileInformation();
 					return;
@@ -328,7 +330,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 					return;
 				}
 
-				Utils.hideSoftKeyboard(MainActivity.this);
+				
 
 			}
 		});
