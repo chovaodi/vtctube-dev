@@ -103,6 +103,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	private ItemPost itemActive = null;
 	private boolean isLoadding = false;
 	private int inPostActive;
+	private ProgressBar progressBar1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -132,6 +133,8 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		setContentView(R.layout.playerview_demo);
 		listYeuthich = (SwipeListView) findViewById(R.id.listViewYeuthich);
 		Utils.settingControlRemove(width, listYeuthich, PlayerViewActivity.this);
+		progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
+		progressBar1.setVisibility(View.VISIBLE);
 
 		listYeuthich.setAdapter(adapter);
 		setData();
@@ -535,7 +538,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		webview_fbview.getSettings().setUseWideViewPort(true);
 		webview_fbview.requestFocus(View.FOCUS_DOWN);
 		webview_fbview.setPadding(0, 0, 0, 0);
-		// webview_fbview.setWebViewClient(new webViewClient());
+		webview_fbview.setWebViewClient(new webViewClient());
 		webview_fbview.setWebChromeClient(new webChromeClient());
 		webview_fbview.setInitialScale(100);
 		webview_fbview.clearCache(true);
@@ -545,17 +548,21 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 				PlayerViewActivity.this), "Android");
 
 		webview_fbview.setVisibility(View.VISIBLE);
-		webview_fbview.setWebViewClient(new WebViewClient() {
-			@Override
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				Log.d("url", url);
-
-				if (url.equalsIgnoreCase("https://m.facebook.com/plugins/login_success.php?refsrc=https%3A%2F%2Fm.facebook.com%2Fplugins%2Fcomments.php&refid=9&_rdr#_=_")) {
-					loadComment("http://vtctube.vn/" + itemActive.getSlug());
-				}
-				return super.shouldOverrideUrlLoading(view, url);
-			}
-		});
+		// webview_fbview.setWebViewClient(new WebViewClient() {
+		// @Override
+		// public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		// Log.d("url", url);
+		//
+		// if
+		// (url.equalsIgnoreCase("https://m.facebook.com/plugins/login_success.php?refsrc=https%3A%2F%2Fm.facebook.com%2Fplugins%2Fcomments.php&refid=9&_rdr#_=_"))
+		// {
+		// loadComment("http://vtctube.vn/" + itemActive.getSlug());
+		// }
+		// return super.shouldOverrideUrlLoading(view, url);
+		// }
+		//
+		//
+		// });
 	}
 
 	public class JavaScriptInterface {
@@ -573,7 +580,9 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	}
 
 	private void loadComment(String url) {
-		String script = "<div id=\"fb-root\"></div><script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = \"//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=648492845199272&version=v2.0\";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>";
+		String script = "<div id=\"fb-root\"></div><script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = \"//connect.facebook.net/en_US/sdk.js#xfbml=1&appId="
+				+ getResources().getString(R.string.app_id)
+				+ "&version=v2.0\";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>";
 
 		String commentBox = "<div class=\"fb-comments\" data-href=\"" + url
 				+ "\" data-numposts=\"30\" data-colorscheme=\"light\"></div>";
@@ -601,27 +610,17 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	private class webViewClient extends WebViewClient {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			progressBar1.setVisibility(View.VISIBLE);
 			webview_fbview.loadUrl(url);
 			return true;
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
-			int pos = url.indexOf("code=");
-			if (pos > 0) {
-				// webView.loadDataWithBaseURL("", WEB_DATA_LOADING,
-				// "text/html",
-				// "UTF-8", "");
-				// String tmp = url.split("&")[0];
-				// String code = tmp.substring(pos + 5);
-
-			} else {
-				try {
-					// dialogLoading.dismiss();
-				} catch (Exception exception) {
-				}
+			if (url.equalsIgnoreCase("https://m.facebook.com/plugins/login_success.php?refsrc=https%3A%2F%2Fm.facebook.com%2Fplugins%2Fcomments.php&refid=9&_rdr#_=_")) {
+				loadComment("http://vtctube.vn/" + itemActive.getSlug());
 			}
-			// loaddingcmt.setVisibility(View.GONE);
+			progressBar1.setVisibility(View.GONE);
 
 			super.onPageFinished(view, url);
 		}
