@@ -9,7 +9,7 @@ import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.vtc.vtctube.model.AccountModel;
 
 public class GlobalApplication extends Application {
-	private static final String APP_ID = "691296997625912";
+	private static final String APP_ID = "317523165114160";
 	private static final String APP_NAMESPACE = "VTC 565";
 	public static String dataCate = "";
 	private AccountModel accountModel;

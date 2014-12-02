@@ -62,8 +62,8 @@ public class Utils {
 	public final static int LOAD_XEMNHIEU = 7;
 	public static ItemPost itemCurrent = null;
 
-	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyCGlpgcQnFX6At3jUT0j79ryrd0K0fmjls";
-	public static String ADMOB_ID = "ca-app-pub-8362644350234649/3664611615";
+	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyB2JZj7bv31W5ZgcRCfeFHrX1msFBB4Ao0";
+	public static String ADMOB_ID = "ca-app-pub-4081287034753832/4823119301";
 
 	public static String TAG_NEWFEED = "TAG_NEWFEED";
 	public static String TAG_ABOUT = "TAG_ABOUT";
@@ -131,7 +131,7 @@ public class Utils {
 			shareLink = "http://vtctube.vn/" + item.getSlug() + "-" + ".html";
 		}
 		String userEntry = item.getTitle() + "\n"
-				+ "VTCTube-Xem thỏa thích. Chỉ cần Click\n" + shareLink;
+				+ "VTCTube-Xem thá»�a thÃ­ch. Chá»‰ cáº§n Click\n" + shareLink;
 
 		Intent textShareIntent = new Intent(Intent.ACTION_SEND);
 		textShareIntent.putExtra(Intent.EXTRA_TEXT, userEntry);
