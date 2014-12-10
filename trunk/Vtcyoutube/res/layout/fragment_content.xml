@@ -35,6 +35,13 @@
             android:orientation="vertical" >
         </LinearLayout> -->
 
+        <ProgressBar
+            android:layout_gravity="center"
+            android:id="@+id/progressBar1"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
             android:id="@+id/google_now"
             style="@style/GNowProgressBar"
@@ -83,6 +90,7 @@
                     android:background="@drawable/facebook_bgr"
                     android:text="Login with Facebook"
                     android:textColor="@android:color/white" />
+
             </LinearLayout>
         </LinearLayout>
     </com.vtc.vtctube.SlidingLayer>
