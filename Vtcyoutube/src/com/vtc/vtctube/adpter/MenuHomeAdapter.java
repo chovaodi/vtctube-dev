@@ -57,7 +57,7 @@ public class MenuHomeAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			// Utilities.log("convert null " + position);
 			holder = new ViewHolder();
@@ -72,9 +72,7 @@ public class MenuHomeAdapter extends BaseAdapter {
 		}
 
 		holder.text.setText(arr.get(position).getTitle());
-		Bitmap bmp = imageLoader
-				.loadImageSync("http://vtctube.vn/category-thumbs/"
-						+ arr.get(position).getSlug());
+		Bitmap bmp = arr.get(position).getThumnail();
 		if (bmp != null) {
 			holder.icon.setImageBitmap(bmp);
 		} else {
@@ -95,6 +93,11 @@ public class MenuHomeAdapter extends BaseAdapter {
 						@Override
 						public void onLoadingComplete(String imageUri,
 								View view, Bitmap loadedImage) {
+							try {
+								arr.get(position).setThumnail(loadedImage);
+							} catch (Exception e) {
+
+							}
 						}
 					});
 		}

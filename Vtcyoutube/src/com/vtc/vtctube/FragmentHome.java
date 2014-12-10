@@ -22,10 +22,9 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.co.senab.actionbarpulltorefresh.library.HeaderTransformer;
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,9 +32,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -50,27 +50,25 @@ import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
 public class FragmentHome extends SherlockFragment {
-	int mNum;
 	private GridView gridView;
-	private View v;
-
+	private View view;
+	private FrameLayout frameLayout;
 	// private PullToRefreshLayout mPullToRefreshLayout;
 	ResultCallBack callBack = null;
 	public static List<ItemCategory> listData = null;
 	public static String[] cateName;
 	private ImageLoader imageLoader;
 
+	private static FragmentHome f = null;
+
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
 	 * argument.
 	 */
 	static FragmentHome newInstance(int num) {
-		FragmentHome f = new FragmentHome();
-
-		// Supply num input as an argument.
-		Bundle args = new Bundle();
-		args.putInt("num", num);
-		f.setArguments(args);
+		if (f == null) {
+			f = new FragmentHome();
+		}
 
 		return f;
 	}
@@ -81,7 +79,6 @@ public class FragmentHome extends SherlockFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mNum = getArguments() != null ? getArguments().getInt("num") : 1;
 		callBack = new ResultCallBack();
 	}
 
@@ -91,25 +88,50 @@ public class FragmentHome extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		view = inflater.inflate(R.layout.fragment_home, container, false);
+		frameLayout = (FrameLayout) view.findViewById(R.id.frame_top);
+
 		imageLoader = ImageLoader.getInstance();
 		imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()
 				.getApplicationContext()));
-		v = inflater.inflate(R.layout.fragment_home, container, false);
-		ImageView img = (ImageView) v.findViewById(R.id.imageView1);
+		MainActivity.progressBar.setVisibility(View.VISIBLE);
+		new CountDownTimer(300, 100) {
+
+			@Override
+			public void onTick(long millisUntilFinished) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onFinish() {
+				MainActivity.progressBar.setVisibility(View.GONE);
+				frameLayout.setVisibility(View.VISIBLE);
+				addview();
+			}
+		}.start();
+
+		return view;
+	}
+
+	public void addview() {
+
+		ImageView img = (ImageView) view.findViewById(R.id.imageView1);
 		img.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				MainActivity.smooth.setVisibility(View.GONE);
-				Utils.getVideoView(AcitivityLoadding.itemPost, getActivity(),null);
+				Utils.getVideoView(AcitivityLoadding.itemPost, getActivity(),
+						null);
 			}
 		});
-		 String idPostHome="xxx";
-		if(AcitivityLoadding.itemPost!=null){
-			 idPostHome=AcitivityLoadding.itemPost.getVideoId();
+		String idPostHome = "xxx";
+		if (AcitivityLoadding.itemPost != null) {
+			idPostHome = AcitivityLoadding.itemPost.getVideoId();
 		}
-		imageLoader.displayImage("http://img.youtube.com/vi/"
-				+ idPostHome + "/maxresdefault.jpg", img,
+		imageLoader.displayImage("http://img.youtube.com/vi/" + idPostHome
+				+ "/maxresdefault.jpg", img,
 				Utils.getOptions(getActivity(), R.drawable.bgr_home_video),
 				new SimpleImageLoadingListener() {
 					@Override
@@ -128,7 +150,7 @@ public class FragmentHome extends SherlockFragment {
 					}
 				});
 		String url = Utils.getUrlHttp(Utils.host, "get_category_index");
-		Log.d("url",url);
+		Log.d("url", url);
 		if (GlobalApplication.dataCate.length() > 0) {
 			showView(GlobalApplication.dataCate);
 		} else {
@@ -137,78 +159,12 @@ public class FragmentHome extends SherlockFragment {
 						.readJsonFile(Utils.GET_CATE_INDEX);
 				showView(GlobalApplication.dataCate);
 			} else {
-				new AysnRequestHttp((ViewGroup) v, Utils.LOAD_FIRST_DATA,
+				new AysnRequestHttp((ViewGroup) view, Utils.LOAD_FIRST_DATA,
 						MainActivity.smooth, callBack).execute(url);
 			}
 		}
-		new AysnRequestHttp((ViewGroup) v, Utils.REFRESH, null, callBack)
+		new AysnRequestHttp((ViewGroup) view, Utils.REFRESH, null, callBack)
 				.execute(url);
-		return v;
-	}
-
-	static class CustomisedHeaderTransformer extends HeaderTransformer {
-
-		private View mHeaderView;
-		private TextView mMainTextView;
-		private TextView mProgressTextView;
-
-		@Override
-		public void onViewCreated(Activity activity, View headerView) {
-			mHeaderView = headerView;
-			mMainTextView = (TextView) headerView.findViewById(R.id.ptr_text);
-			mProgressTextView = (TextView) headerView
-					.findViewById(R.id.ptr_text_secondary);
-		}
-
-		@Override
-		public void onReset() {
-			mMainTextView.setVisibility(View.VISIBLE);
-			mMainTextView.setText(R.string.pull_to_refresh_pull_label);
-
-			mProgressTextView.setVisibility(View.GONE);
-			mProgressTextView.setText("");
-		}
-
-		@Override
-		public void onPulled(float percentagePulled) {
-			mProgressTextView.setVisibility(View.VISIBLE);
-			mProgressTextView
-					.setText(Math.round(100f * percentagePulled) + "%");
-		}
-
-		@Override
-		public void onRefreshStarted() {
-			mMainTextView.setText(R.string.pull_to_refresh_refreshing_label);
-			mProgressTextView.setVisibility(View.GONE);
-		}
-
-		@Override
-		public void onReleaseToRefresh() {
-			mMainTextView.setText(R.string.pull_to_refresh_release_label);
-		}
-
-		@Override
-		public void onRefreshMinimized() {
-			// In this header transformer, we will ignore this call
-		}
-
-		@Override
-		public boolean showHeaderView() {
-			final boolean changeVis = mHeaderView.getVisibility() != View.VISIBLE;
-			if (changeVis) {
-				mHeaderView.setVisibility(View.VISIBLE);
-			}
-			return changeVis;
-		}
-
-		@Override
-		public boolean hideHeaderView() {
-			final boolean changeVis = mHeaderView.getVisibility() == View.VISIBLE;
-			if (changeVis) {
-				mHeaderView.setVisibility(View.GONE);
-			}
-			return changeVis;
-		}
 	}
 
 	public void showView(String result) {
@@ -232,7 +188,7 @@ public class FragmentHome extends SherlockFragment {
 				}
 			}
 
-			gridView = (GridView) v.findViewById(R.id.list);
+			gridView = (GridView) view.findViewById(R.id.list);
 			// View header = getActivity().getLayoutInflater().inflate(
 			// R.layout.header, null);
 

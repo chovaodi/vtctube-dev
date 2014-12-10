@@ -1,8 +1,6 @@
 package com.vtc.vtctube;
 
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +11,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.SQLException;
@@ -30,7 +24,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
 import android.text.InputType;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -162,30 +155,32 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private boolean isLoadding = false;
 	private boolean isMenuCate = false;
 
+	public static ProgressBar progressBar;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-//		PackageInfo info;
-//		try {
-//			info = getPackageManager().getPackageInfo("com.vtc.vtctube",
-//					PackageManager.GET_SIGNATURES);
-//			for (Signature signature : info.signatures) {
-//				MessageDigest md;
-//				md = MessageDigest.getInstance("SHA");
-//				md.update(signature.toByteArray());
-//				String something = new String(Base64.encode(md.digest(), 0));
-//				// String something = new
-//				// String(Base64.encodeBytes(md.digest()));
-//				Log.e("hash key", something);
-//			}
-//		} catch (NameNotFoundException e1) {
-//			Log.e("name not found", e1.toString());
-//		} catch (NoSuchAlgorithmException e) {
-//			Log.e("no such an algorithm", e.toString());
-//		} catch (Exception e) {
-//			Log.e("exception", e.toString());
-//		}
+		// PackageInfo info;
+		// try {
+		// info = getPackageManager().getPackageInfo("com.vtc.vtctube",
+		// PackageManager.GET_SIGNATURES);
+		// for (Signature signature : info.signatures) {
+		// MessageDigest md;
+		// md = MessageDigest.getInstance("SHA");
+		// md.update(signature.toByteArray());
+		// String something = new String(Base64.encode(md.digest(), 0));
+		// // String something = new
+		// // String(Base64.encodeBytes(md.digest()));
+		// Log.e("hash key", something);
+		// }
+		// } catch (NameNotFoundException e1) {
+		// Log.e("name not found", e1.toString());
+		// } catch (NoSuchAlgorithmException e) {
+		// Log.e("no such an algorithm", e.toString());
+		// } catch (Exception e) {
+		// Log.e("exception", e.toString());
+		// }
 
 		mainView = (ViewGroup) getWindow().getDecorView().findViewById(
 				android.R.id.content);
@@ -292,6 +287,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				}
 			}
 		});
+		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
 
 		MenuAdapter menuAdapter = new MenuAdapter(MainActivity.this);
 		for (int i = 0; i < listItemMenu.size(); i++) {
@@ -317,9 +313,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 					clickMenu(positionActive);
 				}
-				
+
 				Utils.hideSoftKeyboard(MainActivity.this);
-				
+
 				if (mGoogleApiClient.isConnected()) {
 					getProfileInformation();
 					return;
@@ -329,8 +325,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 					getProfile();
 					return;
 				}
-
-				
 
 			}
 		});
@@ -1189,71 +1183,77 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		MainActivity.lblError.setVisibility(View.GONE);
-		final int left = leftMenu.getDrawerState();
-		if (left == MenuDrawer.STATE_OPEN || left == MenuDrawer.STATE_OPENING) {
-			leftMenu.closeMenu();
-			return;
-		}
-		final int right = rightMenu.getDrawerState();
-		if (right == MenuDrawer.STATE_OPEN || right == MenuDrawer.STATE_OPENING) {
-			rightMenu.closeMenu();
-			return;
-		}
-		positionPreview = 0;
-		positionActive = Integer.MAX_VALUE;
+		try {
+			MainActivity.lblError.setVisibility(View.GONE);
+			final int left = leftMenu.getDrawerState();
+			if (left == MenuDrawer.STATE_OPEN
+					|| left == MenuDrawer.STATE_OPENING) {
+				leftMenu.closeMenu();
+				return;
+			}
+			final int right = rightMenu.getDrawerState();
+			if (right == MenuDrawer.STATE_OPEN
+					|| right == MenuDrawer.STATE_OPENING) {
+				rightMenu.closeMenu();
+				return;
+			}
+			positionPreview = 0;
+			positionActive = Integer.MAX_VALUE;
 
-		Fragment myAbout = getSupportFragmentManager().findFragmentByTag(
-				Utils.TAG_ABOUT);
-		if (myAbout != null && myAbout.isVisible()) {
-			onBackView();
-			return;
-		}
+			Fragment myAbout = getSupportFragmentManager().findFragmentByTag(
+					Utils.TAG_ABOUT);
+			if (myAbout != null && myAbout.isVisible()) {
+				onBackView();
+				return;
+			}
 
-		Fragment newfeed = getSupportFragmentManager().findFragmentByTag(
-				Utils.TAG_NEWFEED);
-		if (newfeed != null && newfeed.isVisible()) {
-			onBackView();
-			return;
-		}
+			Fragment newfeed = getSupportFragmentManager().findFragmentByTag(
+					Utils.TAG_NEWFEED);
+			if (newfeed != null && newfeed.isVisible()) {
+				onBackView();
+				return;
+			}
 
-		Fragment like = getSupportFragmentManager().findFragmentByTag(
-				Utils.TAG_LIKE);
-		if (like != null && like.isVisible()) {
-			onBackView();
-			return;
-		}
-		Fragment myFragment = getSupportFragmentManager().findFragmentByTag(
-				Utils.TAG_CATE);
-		if (myFragment != null && myFragment.isVisible()) {
-			onBackView();
-			return;
-		}
+			Fragment like = getSupportFragmentManager().findFragmentByTag(
+					Utils.TAG_LIKE);
+			if (like != null && like.isVisible()) {
+				onBackView();
+				return;
+			}
+			Fragment myFragment = getSupportFragmentManager()
+					.findFragmentByTag(Utils.TAG_CATE);
+			if (myFragment != null && myFragment.isVisible()) {
+				onBackView();
+				return;
+			}
 
-		Fragment myFragmentSearch = getSupportFragmentManager()
-				.findFragmentByTag(Utils.TAG_SEARCH);
-		if (myFragmentSearch != null && myFragmentSearch.isVisible()) {
-			onBackView();
-			return;
-		}
-		Fragment myFragmentResent = getSupportFragmentManager()
-				.findFragmentByTag(Utils.TAG_RESENT);
-		if (myFragmentResent != null && myFragmentResent.isVisible()) {
-			onBackView();
-			return;
-		}
-		Fragment myFragmentXemnhieu = getSupportFragmentManager()
-				.findFragmentByTag(Utils.TAG_XEMNHIEU);
-		if (myFragmentXemnhieu != null && myFragmentXemnhieu.isVisible()) {
-			onBackView();
-			return;
-		}
+			Fragment myFragmentSearch = getSupportFragmentManager()
+					.findFragmentByTag(Utils.TAG_SEARCH);
+			if (myFragmentSearch != null && myFragmentSearch.isVisible()) {
+				onBackView();
+				return;
+			}
+			Fragment myFragmentResent = getSupportFragmentManager()
+					.findFragmentByTag(Utils.TAG_RESENT);
+			if (myFragmentResent != null && myFragmentResent.isVisible()) {
+				onBackView();
+				return;
+			}
+			Fragment myFragmentXemnhieu = getSupportFragmentManager()
+					.findFragmentByTag(Utils.TAG_XEMNHIEU);
+			if (myFragmentXemnhieu != null && myFragmentXemnhieu.isVisible()) {
+				onBackView();
+				return;
+			}
 
-		Fragment myFragmentNew = getSupportFragmentManager().findFragmentByTag(
-				Utils.TAG_NEWVIDEO);
-		if (myFragmentNew != null && myFragmentNew.isVisible()) {
-			onBackView();
-			return;
+			Fragment myFragmentNew = getSupportFragmentManager()
+					.findFragmentByTag(Utils.TAG_NEWVIDEO);
+			if (myFragmentNew != null && myFragmentNew.isVisible()) {
+				onBackView();
+				return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		finish();
 		System.exit(0);
