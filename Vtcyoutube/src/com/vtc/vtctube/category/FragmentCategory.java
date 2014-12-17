@@ -244,7 +244,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 
 				break;
 			case PinnedAdapter.XEMNHIEU:
-				MainActivity.smooth.setVisibility(View.VISIBLE);
+				MainActivity.progressBar.setVisibility(View.VISIBLE);
 				loadDataXemnhieu();
 				break;
 			case PinnedAdapter.YEUTHICH:
@@ -327,7 +327,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 
 		@Override
 		public void getResult(int type, String result) {
-			MainActivity.smooth.setVisibility(View.GONE);
+			MainActivity.progressBar.setVisibility(View.GONE);
 			if (result.length() == 0) {
 				MainActivity.lblError.setVisibility(View.VISIBLE);
 			} else {
@@ -335,7 +335,6 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 			}
 			isLoadding = false;
 			Utils.disableEnableControls(true, (ViewGroup) v);
-			MainActivity.smooth.setVisibility(View.GONE);
 			if (type == Utils.REFRESH) {
 				if (result.length() > 0) {
 					for (int i = 0; i < listViewNew.size(); i++) {

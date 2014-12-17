@@ -724,24 +724,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		try {
-			if (requestCode != 102)
-				mSimpleFacebook.onActivityResult(this, requestCode, resultCode,
-						data);
-			if (requestCode == RC_SIGN_IN) {
-				if (!mGoogleApiClient.isConnecting()) {
-					mGoogleApiClient.connect();
-				}
-
-				mIntentInProgress = false;
-
-				if (!mGoogleApiClient.isConnecting()) {
-					mGoogleApiClient.connect();
-				}
+	 try{
+		if (requestCode != 102)
+			mSimpleFacebook.onActivityResult(this, requestCode, resultCode,
+					data);
+		if (requestCode == RC_SIGN_IN) {
+			if (!mGoogleApiClient.isConnecting()) {
+				mGoogleApiClient.connect();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+
+			mIntentInProgress = false;
+
+			if (!mGoogleApiClient.isConnecting()) {
+				mGoogleApiClient.connect();
+			}
 		}
+	 }catch(Exception e){
+		 
+	 }
 
 	}
 
