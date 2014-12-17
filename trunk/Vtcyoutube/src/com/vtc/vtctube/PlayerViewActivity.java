@@ -28,8 +28,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.JsResult;
@@ -108,6 +108,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		mainView = (ViewGroup) getWindow().getDecorView().findViewById(
 				android.R.id.content);
 
@@ -117,7 +118,6 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);
 
-		getActionBar().hide();
 		rightMenu = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW,
 				Position.RIGHT);
 		rightMenu.setDropShadowColor(Color.parseColor("#503f3f3f"));
@@ -138,7 +138,6 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 		listYeuthich.setAdapter(adapter);
 		setData();
-		getActionBar().setTitle(title);
 
 		btnLienquan = (Button) findViewById(R.id.btnLienquan);
 		btnChitiet = (Button) findViewById(R.id.btnChitiet);

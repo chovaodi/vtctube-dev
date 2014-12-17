@@ -156,6 +156,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private boolean isMenuCate = false;
 
 	public static ProgressBar progressBar;
+	public static String currentTag = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -723,19 +724,23 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode != 102)
-			mSimpleFacebook.onActivityResult(this, requestCode, resultCode,
-					data);
-		if (requestCode == RC_SIGN_IN) {
-			if (!mGoogleApiClient.isConnecting()) {
-				mGoogleApiClient.connect();
-			}
+		try {
+			if (requestCode != 102)
+				mSimpleFacebook.onActivityResult(this, requestCode, resultCode,
+						data);
+			if (requestCode == RC_SIGN_IN) {
+				if (!mGoogleApiClient.isConnecting()) {
+					mGoogleApiClient.connect();
+				}
 
-			mIntentInProgress = false;
+				mIntentInProgress = false;
 
-			if (!mGoogleApiClient.isConnecting()) {
-				mGoogleApiClient.connect();
+				if (!mGoogleApiClient.isConnecting()) {
+					mGoogleApiClient.connect();
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -891,6 +896,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		FragmentSearchResult fragment = null;
+		currentTag = tag;
 		fragment = (FragmentSearchResult) fragmentManager
 				.findFragmentByTag(tag);
 		if (fragment == null) {
@@ -916,6 +922,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		FragmentResent fragment = (FragmentResent) fragmentManager
 				.findFragmentByTag(Utils.TAG_RESENT);
+		currentTag = Utils.TAG_RESENT;
 		if (fragment == null) {
 			fragment = new FragmentResent();
 			ft.addToBackStack(null);
@@ -937,6 +944,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		FragmentLike fragment = (FragmentLike) fragmentManager
 				.findFragmentByTag(Utils.TAG_LIKE);
+		currentTag = Utils.TAG_LIKE;
 		if (fragment == null) {
 			fragment = new FragmentLike();
 			ft.addToBackStack(null);
@@ -958,6 +966,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentCategory fragment = null;
 		fragment = (FragmentCategory) fragmentManager
 				.findFragmentByTag(Utils.TAG_CATE);
+		currentTag = Utils.TAG_CATE;
 		if (fragment == null) {
 
 			fragment = FragmentCategory.newInstance(cate, title);
@@ -981,6 +990,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentAbout fragment = null;
 		fragment = (FragmentAbout) fragmentManager
 				.findFragmentByTag(Utils.TAG_ABOUT);
+		currentTag = Utils.TAG_ABOUT;
 		if (fragment == null) {
 			fragment = FragmentAbout.newInstance();
 			ft.addToBackStack(null);
@@ -1000,6 +1010,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentNewfeed fragment = null;
 		fragment = (FragmentNewfeed) fragmentManager
 				.findFragmentByTag(Utils.TAG_NEWFEED);
+		currentTag = Utils.TAG_NEWFEED;
 		if (fragment == null) {
 			fragment = FragmentNewfeed.newInstance();
 			ft.addToBackStack(null);
@@ -1201,57 +1212,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 			positionActive = Integer.MAX_VALUE;
 
 			Fragment myAbout = getSupportFragmentManager().findFragmentByTag(
-					Utils.TAG_ABOUT);
+					currentTag);
 			if (myAbout != null && myAbout.isVisible()) {
 				onBackView();
 				return;
 			}
 
-			Fragment newfeed = getSupportFragmentManager().findFragmentByTag(
-					Utils.TAG_NEWFEED);
-			if (newfeed != null && newfeed.isVisible()) {
-				onBackView();
-				return;
-			}
-
-			Fragment like = getSupportFragmentManager().findFragmentByTag(
-					Utils.TAG_LIKE);
-			if (like != null && like.isVisible()) {
-				onBackView();
-				return;
-			}
-			Fragment myFragment = getSupportFragmentManager()
-					.findFragmentByTag(Utils.TAG_CATE);
-			if (myFragment != null && myFragment.isVisible()) {
-				onBackView();
-				return;
-			}
-
-			Fragment myFragmentSearch = getSupportFragmentManager()
-					.findFragmentByTag(Utils.TAG_SEARCH);
-			if (myFragmentSearch != null && myFragmentSearch.isVisible()) {
-				onBackView();
-				return;
-			}
-			Fragment myFragmentResent = getSupportFragmentManager()
-					.findFragmentByTag(Utils.TAG_RESENT);
-			if (myFragmentResent != null && myFragmentResent.isVisible()) {
-				onBackView();
-				return;
-			}
-			Fragment myFragmentXemnhieu = getSupportFragmentManager()
-					.findFragmentByTag(Utils.TAG_XEMNHIEU);
-			if (myFragmentXemnhieu != null && myFragmentXemnhieu.isVisible()) {
-				onBackView();
-				return;
-			}
-
-			Fragment myFragmentNew = getSupportFragmentManager()
-					.findFragmentByTag(Utils.TAG_NEWVIDEO);
-			if (myFragmentNew != null && myFragmentNew.isVisible()) {
-				onBackView();
-				return;
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1260,6 +1226,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void onBackView() {
+
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.popBackStack();
 		MainActivity.callBackCLick.onClick(false, "");
