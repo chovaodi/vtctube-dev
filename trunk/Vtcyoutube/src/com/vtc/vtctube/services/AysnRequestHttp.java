@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
@@ -37,7 +38,7 @@ public class AysnRequestHttp extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPreExecute() {
 		if (keyOption != Utils.AYSN_LOAD && process != null)
-			process.setVisibility(View.VISIBLE);
+			MainActivity.progressBar.setVisibility(View.VISIBLE);
 		// Utils.disableEnableControls(false, viewgruop);
 	}
 
@@ -45,7 +46,7 @@ public class AysnRequestHttp extends AsyncTask<String, Integer, String> {
 	protected void onPostExecute(String result) {
 		Log.d("result",result.length()+"222");
 		if (process != null)
-			process.setVisibility(View.GONE);
+			MainActivity.progressBar.setVisibility(View.GONE);
 		this.iResult.getResult(keyOption, result);
 	}
 }
