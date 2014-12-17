@@ -252,12 +252,15 @@ public class Utils {
 
 	public static DisplayImageOptions getOptions(Context activity, int draw) {
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.showImageForEmptyUri(draw).showImageOnFail(draw)
-				.showImageOnLoading(draw).resetViewBeforeLoading(false)
-				.cacheOnDisc(true).imageScaleType(ImageScaleType.EXACTLY)
-				.bitmapConfig(Bitmap.Config.RGB_565)
+				.showImageForEmptyUri(draw)
+				.showImageOnFail(draw)
+				.showImageOnLoading(draw)
 				.resetViewBeforeLoading(false)
-				.displayer(new FadeInBitmapDisplayer(300)).build();
+				.cacheOnDisc(true)
+				.cacheInMemory(true)
+				.imageScaleType(ImageScaleType.EXACTLY)
+				.bitmapConfig(Bitmap.Config.RGB_565)
+				.displayer(new FadeInBitmapDisplayer(0)).build();
 		return options;
 	}
 
