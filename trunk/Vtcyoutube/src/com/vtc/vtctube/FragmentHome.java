@@ -22,7 +22,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -35,13 +34,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
 import com.vtc.vtctube.adpter.MenuHomeAdapter;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.model.ItemPost;
@@ -57,7 +52,6 @@ public class FragmentHome extends SherlockFragment {
 	ResultCallBack callBack = null;
 	public static List<ItemCategory> listData = null;
 	public static String[] cateName;
-	private ImageLoader imageLoader;
 
 	private static FragmentHome f = null;
 
@@ -91,9 +85,6 @@ public class FragmentHome extends SherlockFragment {
 		view = inflater.inflate(R.layout.fragment_home, container, false);
 		frameLayout = (FrameLayout) view.findViewById(R.id.frame_top);
 
-		imageLoader = ImageLoader.getInstance();
-		imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()
-				.getApplicationContext()));
 		MainActivity.progressBar.setVisibility(View.VISIBLE);
 		new CountDownTimer(300, 100) {
 
@@ -130,25 +121,12 @@ public class FragmentHome extends SherlockFragment {
 		if (AcitivityLoadding.itemPost != null) {
 			idPostHome = AcitivityLoadding.itemPost.getVideoId();
 		}
-		imageLoader.displayImage("http://img.youtube.com/vi/" + idPostHome
-				+ "/maxresdefault.jpg", img,
-				Utils.getOptions(getActivity(), R.drawable.bgr_home_video),
-				new SimpleImageLoadingListener() {
-					@Override
-					public void onLoadingStarted(String imageUri, View view) {
-					}
 
-					@Override
-					public void onLoadingFailed(String imageUri, View view,
-							FailReason failReason) {
+		Picasso.with(getActivity())
+				.load("http://img.youtube.com/vi/" + idPostHome
+						+ "/maxresdefault.jpg")
+				.placeholder(R.drawable.bgr_home_video).into(img);
 
-					}
-
-					@Override
-					public void onLoadingComplete(String imageUri, View view,
-							Bitmap loadedImage) {
-					}
-				});
 		String url = Utils.getUrlHttp(Utils.host, "get_category_index");
 		Log.d("url", url);
 		if (GlobalApplication.dataCate.length() > 0) {

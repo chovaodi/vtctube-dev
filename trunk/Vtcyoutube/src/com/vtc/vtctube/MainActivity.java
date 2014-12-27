@@ -60,8 +60,7 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 import com.sromku.simple.fb.Permission.Type;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Feed;
@@ -117,7 +116,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	// private AdView adView;
 	private ProgressBar prLoadLike;
 
-	public static ImageLoader imageLoader = null;
 	public static DatabaseHelper myDbHelper;
 	public static SmoothProgressBar smooth;
 	public static ResultCallBackCLick callBackCLick;
@@ -211,11 +209,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		globalApp = (GlobalApplication) getApplicationContext();
 
 		listItemMenu = Utils.getMenu(MainActivity.this, R.menu.ribbon_menu);
-		if (imageLoader == null) {
-			imageLoader = ImageLoader.getInstance();
-			imageLoader.init(ImageLoaderConfiguration
-					.createDefault(MainActivity.this.getApplicationContext()));
-		}
+
 		callBackSearch = new ResultSearchCallBack();
 
 		leftMenu = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW,
@@ -687,20 +681,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			if (lblUserName.getText().equals("Đăng nhập")) {
 				if (globalApp.getAccountModel().getType() == AccountModel.LOGIN_FACE) {
-					imageLoader.displayImage(getLinkAvataFace(globalApp
-							.getAccountModel().getUserID()), imgAvata, Utils
-							.getOptions(MainActivity.this,
-									R.drawable.img_erorrs));
+
+					Picasso.with(MainActivity.this)
+							.load(getLinkAvataFace(globalApp.getAccountModel()
+									.getUserID()))
+							.placeholder(R.drawable.img_erorrs).into(imgAvata);
+
 					lblAccountId.setText(globalApp.getAccountModel()
 							.getUserID());
 
 				} else {
 					lblAccountId
 							.setText(globalApp.getAccountModel().getEmail());
-
-					imageLoader.displayImage(globalApp.getAccountModel()
-							.getUrlPhoto(), imgAvata, Utils.getOptions(
-							MainActivity.this, R.drawable.img_erorrs));
+					Picasso.with(MainActivity.this)
+							.load(globalApp.getAccountModel().getUrlPhoto())
+							.placeholder(R.drawable.img_erorrs).into(imgAvata);
 				}
 			}
 			lblUserName.setText(globalApp.getAccountModel().getUserName());
@@ -724,24 +719,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-	 try{
-		if (requestCode != 102)
-			mSimpleFacebook.onActivityResult(this, requestCode, resultCode,
-					data);
-		if (requestCode == RC_SIGN_IN) {
-			if (!mGoogleApiClient.isConnecting()) {
-				mGoogleApiClient.connect();
-			}
+		try {
+			if (requestCode != 102)
+				mSimpleFacebook.onActivityResult(this, requestCode, resultCode,
+						data);
+			if (requestCode == RC_SIGN_IN) {
+				if (!mGoogleApiClient.isConnecting()) {
+					mGoogleApiClient.connect();
+				}
 
-			mIntentInProgress = false;
+				mIntentInProgress = false;
 
-			if (!mGoogleApiClient.isConnecting()) {
-				mGoogleApiClient.connect();
+				if (!mGoogleApiClient.isConnecting()) {
+					mGoogleApiClient.connect();
+				}
 			}
+		} catch (Exception e) {
+
 		}
-	 }catch(Exception e){
-		 
-	 }
 
 	}
 

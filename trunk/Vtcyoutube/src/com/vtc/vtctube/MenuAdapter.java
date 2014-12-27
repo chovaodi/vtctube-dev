@@ -12,8 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.vtc.vtctube.model.ItemMeu;
 
 public class MenuAdapter extends BaseAdapter {
@@ -25,17 +23,11 @@ public class MenuAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private Context context;
 	private TreeSet<Integer> mSeparatorsSet = new TreeSet<Integer>();
-	private ImageLoader imageLoader;
 	private List<ItemMeu> mData = new ArrayList<ItemMeu>();
 
 	public MenuAdapter(Context mContext) {
 		mInflater = LayoutInflater.from(mContext);
 		context = mContext;
-
-		imageLoader = ImageLoader.getInstance();
-		imageLoader.init(ImageLoaderConfiguration.createDefault(context
-				.getApplicationContext()));
-
 	}
 
 	public void addItem(final ItemMeu item) {

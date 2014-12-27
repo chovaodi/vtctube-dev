@@ -18,10 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
@@ -44,7 +41,6 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 
 	private Context context;
 
-	public static ImageLoader imageLoader = null;
 	private IResult callBack;
 	private int typeView;
 
@@ -54,12 +50,6 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 		this.context = context;
 		this.callBack = callBack;
 		this.typeView = type;
-
-		if (imageLoader == null) {
-			imageLoader = ImageLoader.getInstance();
-			imageLoader.init(ImageLoaderConfiguration.createDefault(context
-					.getApplicationContext()));
-		}
 
 	}
 
@@ -158,26 +148,9 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 					R.drawable.error_home));
 		} else {
 
-			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
-					Utils.getOptions(context, R.drawable.img_erorrs),
-					new SimpleImageLoadingListener() {
-						@Override
-						public void onLoadingStarted(String imageUri, View view) {
-							// holder.loadingBanner.setVisibility(View.VISIBLE);
-						}
+			Picasso.with(context).load(item.getUrl())
+					.placeholder(R.drawable.img_erorrs).into(holder.imgIcon);
 
-						@Override
-						public void onLoadingFailed(String imageUri, View view,
-								FailReason failReason) {
-							// holder.spinner.setVisibility(View.GONE);
-						}
-
-						@Override
-						public void onLoadingComplete(String imageUri,
-								View view, Bitmap loadedImage) {
-							// holder.loadingBanner.setVisibility(View.GONE);
-						}
-					});
 		}
 
 		holder.btnLike.setOnClickListener(new OnClickListener() {
