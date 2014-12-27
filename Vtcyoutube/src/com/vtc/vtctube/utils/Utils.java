@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
@@ -35,9 +34,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.PlayerViewActivity;
 import com.vtc.vtctube.R;
@@ -126,7 +122,7 @@ public class Utils {
 
 	public static void shareButton(ItemPost item, Activity activity) {
 		String shareLink = "http://vtctube.vn/";
-		Log.d("item",item.getSlug()+"");
+		Log.d("item", item.getSlug() + "");
 		if (item.getSlug() != null && item.getSlug().length() > 0) {
 			shareLink = "http://vtctube.vn/" + item.getSlug() + "-" + ".html";
 		}
@@ -250,20 +246,6 @@ public class Utils {
 		}
 	}
 
-	public static DisplayImageOptions getOptions(Context activity, int draw) {
-		DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.showImageForEmptyUri(draw)
-				.showImageOnFail(draw)
-				.showImageOnLoading(draw)
-				.resetViewBeforeLoading(false)
-				.cacheOnDisc(true)
-				.cacheInMemory(true)
-				.imageScaleType(ImageScaleType.EXACTLY)
-				.bitmapConfig(Bitmap.Config.RGB_565)
-				.displayer(new FadeInBitmapDisplayer(0)).build();
-		return options;
-	}
-
 	public static ArrayList<ItemPost> getVideoLike(String sql, int tabIndex) {
 		ArrayList<ItemPost> listAccount = null;
 		try {
@@ -283,7 +265,7 @@ public class Utils {
 					item.setStatus(c.getString(4));
 					item.setTitle(c.getString(5));
 					item.setSlug(c.getString(6));
-					
+
 					item.setCountview(c.getInt(7) + "");
 					item.setLike(true);
 					item.setKeyRemove(LOAD_LIKE);
@@ -304,7 +286,7 @@ public class Utils {
 			item.setSlug(json.getString("slug"));
 			item.setTitle(json.getString("title"));
 			item.setStatus(json.getString("status"));
-			
+
 			JSONArray jsonArray = json.getJSONArray("categories");
 			if (jsonArray.length() > 0) {
 				JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -335,7 +317,7 @@ public class Utils {
 		try {
 			item.setIdPost(json.getInt("id"));
 			item.setSlug(json.getString("slug"));
-			
+
 			JSONArray jsonArray = json.getJSONArray("categories");
 			if (jsonArray.length() > 0) {
 				JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -358,11 +340,10 @@ public class Utils {
 			item.setOption(tabIndex);
 			item.setCountview(json.getJSONObject("custom_fields")
 					.getJSONArray("post_views_count").get(0).toString());
-			
+
 			String urlThumnail = json.getJSONObject("thumbnail_images")
 					.getJSONObject("full").getString("url");
 			item.setUrl(urlThumnail);
-
 
 		} catch (Exception e) {
 			e.printStackTrace();

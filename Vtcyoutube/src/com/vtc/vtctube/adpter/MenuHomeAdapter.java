@@ -3,33 +3,24 @@ package com.vtc.vtctube.adpter;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.model.ItemCategory;
-import com.vtc.vtctube.utils.Utils;
 
 public class MenuHomeAdapter extends BaseAdapter {
 	ViewHolder holder;
 	Context mContext;
 	List<ItemCategory> arr;
-	private ImageLoader imageLoader;
 
 	public MenuHomeAdapter(Context mContext, List<ItemCategory> arr) {
 		this.mContext = mContext;
 		this.arr = arr;
-		imageLoader = ImageLoader.getInstance();
-		imageLoader.init(ImageLoaderConfiguration.createDefault(mContext
-				.getApplicationContext()));
 	}
 
 	@Override
@@ -72,35 +63,12 @@ public class MenuHomeAdapter extends BaseAdapter {
 		}
 
 		holder.text.setText(arr.get(position).getTitle());
-		Bitmap bmp = arr.get(position).getThumnail();
-		if (bmp != null) {
-			holder.icon.setImageBitmap(bmp);
-		} else {
-			imageLoader.displayImage("http://vtctube.vn/category-thumbs/"
-					+ arr.get(position).getSlug() + ".png", holder.icon,
-					Utils.getOptions(mContext, R.drawable.error_home),
-					new SimpleImageLoadingListener() {
-						@Override
-						public void onLoadingStarted(String imageUri, View view) {
-						}
 
-						@Override
-						public void onLoadingFailed(String imageUri, View view,
-								FailReason failReason) {
+		Picasso.with(mContext)
+				.load("http://vtctube.vn/category-thumbs/"
+						+ arr.get(position).getSlug() + ".png")
+				.placeholder(R.drawable.error_home).into(holder.icon);
 
-						}
-
-						@Override
-						public void onLoadingComplete(String imageUri,
-								View view, Bitmap loadedImage) {
-							try {
-								arr.get(position).setThumnail(loadedImage);
-							} catch (Exception e) {
-
-							}
-						}
-					});
-		}
 		return convertView;
 	}
 

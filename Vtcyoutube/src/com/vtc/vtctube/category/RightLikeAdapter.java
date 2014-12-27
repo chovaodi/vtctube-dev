@@ -1,9 +1,7 @@
 package com.vtc.vtctube.category;
 
-import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
@@ -41,7 +36,6 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 	private Context context;
 
-	public static ImageLoader imageLoader = null;
 	private IResult callBack;
 
 	public RightLikeAdapter(int type, Context context, IResult callBack) {
@@ -49,12 +43,6 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 		mInflater = LayoutInflater.from(context);
 		this.context = context;
 		this.callBack = callBack;
-
-		if (imageLoader == null) {
-			imageLoader = ImageLoader.getInstance();
-			imageLoader.init(ImageLoaderConfiguration.createDefault(context
-					.getApplicationContext()));
-		}
 
 	}
 
@@ -127,26 +115,10 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 			holder.imgIcon.setImageDrawable(context.getResources().getDrawable(
 					R.drawable.error_home));
 		} else {
-			imageLoader.displayImage(item.getUrl(), holder.imgIcon,
-					Utils.getOptions(context, R.drawable.img_erorrs),
-					new SimpleImageLoadingListener() {
-						@Override
-						public void onLoadingStarted(String imageUri, View view) {
-							// holder.loadingBanner.setVisibility(View.VISIBLE);
-						}
 
-						@Override
-						public void onLoadingFailed(String imageUri, View view,
-								FailReason failReason) {
-							// holder.spinner.setVisibility(View.GONE);
-						}
+			Picasso.with(context).load(item.getUrl())
+					.placeholder(R.drawable.img_erorrs).into(holder.imgIcon);
 
-						@Override
-						public void onLoadingComplete(String imageUri,
-								View view, Bitmap loadedImage) {
-							// holder.loadingBanner.setVisibility(View.GONE);
-						}
-					});
 		}
 
 		return convertView;
