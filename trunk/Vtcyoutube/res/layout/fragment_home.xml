@@ -5,30 +5,7 @@
     android:background="@android:color/white"
     android:orientation="vertical"
     tools:context=".MainActivity" >
-<com.pedrovgs.draggablepanel.DraggableView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:draggable_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/draggable_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/black"
-        draggable_view:bottom_view_id="@+id/list"
-        draggable_view:top_view_id="@+id/frame_top"
-        draggable_view:top_view_margin_bottom="@dimen/top_fragment_margin"
-        draggable_view:top_view_margin_right="@dimen/top_fragment_margin"
-        draggable_view:top_view_x_scale_factor="@dimen/x_scale_factor"
-        draggable_view:top_view_y_scale_factor="@dimen/y_scale_factor" >
-    <GridView
-        android:id="@+id/list"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="0dp"
-        android:background="@android:color/transparent"
-        android:horizontalSpacing="30dp"
-        android:listSelector="@android:color/transparent"
-        android:numColumns="3"
-        android:scrollbars="none" >
-    </GridView>
+
     <FrameLayout
         android:id="@+id/frame_top"
         android:visibility="invisible"
@@ -56,5 +33,16 @@
         </FrameLayout>
     </FrameLayout>
 
- </com.pedrovgs.draggablepanel.DraggableView>
+    <GridView
+        android:id="@+id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="0dp"
+        android:background="@android:color/transparent"
+        android:horizontalSpacing="30dp"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="3"
+        android:scrollbars="none" >
+    </GridView>
+
 </LinearLayout>
