@@ -54,11 +54,26 @@
             android:src="@drawable/video_like" />
     </LinearLayout>
 
-        <com.google.android.youtube.player.YouTubePlayerView
-            android:id="@+id/youtube_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <com.pedrovgs.draggablepanel.DraggableView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:draggable_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/draggable_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/black"
+        draggable_view:bottom_view_id="@+id/detail_content"
+        draggable_view:top_view_id="@+id/youtube_view"
+        draggable_view:top_view_margin_bottom="@dimen/top_fragment_margin"
+        draggable_view:top_view_margin_right="@dimen/top_fragment_margin"
+        draggable_view:top_view_x_scale_factor="@dimen/x_scale_factor"
+        draggable_view:top_view_y_scale_factor="@dimen/y_scale_factor" >
 
+ <LinearLayout
+     android:id="@+id/detail_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        
         <FrameLayout
             android:id="@+id/tab_menu"
             android:layout_width="match_parent"
@@ -224,6 +239,11 @@
                 </RelativeLayout>
             </LinearLayout>
         </FrameLayout>
-   
+        </LinearLayout>
+        <com.google.android.youtube.player.YouTubePlayerView
+            android:id="@+id/youtube_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.pedrovgs.draggablepanel.DraggableView>
 
 </LinearLayout>
