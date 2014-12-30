@@ -8,5 +8,11 @@
     <dimen name="offset_width">0dp</dimen>
     <dimen name="layer_height">260dp</dimen>
     <dimen name="shadow">3dp</dimen>
+<!-- Draggable panel -->
+    <item name="x_scale_factor" format="float" type="dimen">2.3</item>
+    <item name="y_scale_factor" format="float" type="dimen">2.3</item>
 
+    <dimen name="top_fragment_height">200dip</dimen>
+    <dimen name="top_fragment_margin">10dip</dimen>
+<!-- Draggable panel -->
 </resources>

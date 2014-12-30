@@ -13,5 +13,5 @@
     <color name="pocket_color_3">#27b5f3</color>
     <color name="pocket_color_4">#27b5f3</color>
     <color name="text_color">#515151</color>
-
+<color name="black">#FF000000</color>
 </resources>
