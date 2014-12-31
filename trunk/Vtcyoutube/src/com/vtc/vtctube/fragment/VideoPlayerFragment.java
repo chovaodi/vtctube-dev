@@ -31,8 +31,9 @@ import android.widget.TextView;
 import com.fortysevendeg.swipelistview.SwipeListView;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
-import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.pedrovgs.draggablepanel.DraggableListener;
+import com.pedrovgs.draggablepanel.DraggableView;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.category.PinnedAdapter;
@@ -73,9 +74,9 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
     private ListView listvideo;
     private WebView webview_fbview;
     private ProgressBar loadingListview;
-    //private YouTubePlayerView youTubeView;
+    // private YouTubePlayerView youTubeView;
     private YouTubePlayerSupportFragment mYoutubeFragment;
-    private YouTubePlayer player;
+    private YouTubePlayer mPlayer;
     private MenuDrawer rightMenu;
     private RightLikeAdapter adapter = null;
     private PinnedAdapter adapterTab;
@@ -87,26 +88,25 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
     private ProgressBar progressBar1;
     private FragmentActivity mActivity;
 
+    private DraggableView mView;
+
     @Override
     public void onAttach(Activity activity) {
-        mActivity = (FragmentActivity)activity;
+        mActivity = (FragmentActivity) activity;
         super.onAttach(activity);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.playerview_demo, container, false);
-        //
-        
-        //
-        return view;
+        mView = (DraggableView) inflater.inflate(R.layout.playerview_demo, container, false);
+        hookDraggablePanelListeners();
+        return mView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View view = getView();
-        //mActivity.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         mainView = (ViewGroup) mActivity.getWindow().getDecorView().findViewById(android.R.id.content);
 
         adapter = new RightLikeAdapter(PinnedAdapter.TYPE_VIEW_CATE, mActivity, callBackOnlick);
@@ -239,11 +239,13 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         webview_fbview = (WebView) view.findViewById(R.id.contentView);
         settingWebView();
         setDataview(Utils.itemCurrent);
-        //youTubeView = (YouTubePlayerView) view.findViewById(R.id.youtube_view);
-        //youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
+        // youTubeView = (YouTubePlayerView)
+        // view.findViewById(R.id.youtube_view);
+        // youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
         mYoutubeFragment = (YouTubePlayerSupportFragment) getFragmentManager().findFragmentById(R.id.youtube_player_fragment);
         mYoutubeFragment.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
-        //getFragmentManager().beginTransaction().replace(R.id.frm_play_video, mYoutubeFragment).commit();
+        // getFragmentManager().beginTransaction().replace(R.id.frm_play_video,
+        // mYoutubeFragment).commit();
         rightMenu.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
 
             @Override
@@ -253,14 +255,18 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
                 }
                 if (newState == MenuDrawer.STATE_CLOSED) {
                     if (inPostActive != itemActive.getIdPost() && itemActive != null && !itemActive.getVideoId().equals(id)) {
-                        player.cueVideo(itemActive.getVideoId());
+                        mPlayer.cueVideo(itemActive.getVideoId());
                         setDataview(itemActive);
                     }
                 }
             }
         });
     }
-    
+
+    public void updateData() {
+
+    }
+
     public class ResultCallBackLoad implements IResult {
 
         @Override
@@ -470,7 +476,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         public void onCLickView(ItemPost item) {
             try {
                 if (!item.getVideoId().equals(title)) {
-                    player.cueVideo(item.getVideoId());
+                    mPlayer.cueVideo(item.getVideoId());
                     setDataview(item);
                 }
             } catch (Exception e) {
@@ -576,7 +582,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
     @Override
     public void onInitializationSuccess(Provider provider, YouTubePlayer player, boolean wasRestored) {
-        this.player = player;
+        this.mPlayer = player;
         if (!wasRestored && videoId.length() > 0) {
             player.cueVideo(videoId);
         }
@@ -587,4 +593,53 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         return (YouTubePlayerSupportFragment) getFragmentManager().findFragmentById(R.id.youtube_player_fragment);
     }
 
+    public void maximize() {
+        mView.maximize();
+    }
+
+    /**
+     * Hook the DraggableListener to DraggablePanel to pause or resume the video when the
+     * DragglabePanel is maximized or closed.
+     */
+    private void hookDraggablePanelListeners() {
+        mView.setDraggableListener(new DraggableListener() {
+            @Override
+            public void onMaximized() {
+                playVideo();
+            }
+
+            @Override
+            public void onMinimized() {
+                playVideo();
+            }
+
+            @Override
+            public void onClosedToLeft() {
+                pauseVideo();
+            }
+
+            @Override
+            public void onClosedToRight() {
+                pauseVideo();
+            }
+        });
+    }
+    
+    /**
+     * Pause the video reproduced in the YouTubePlayer.
+     */
+    private void pauseVideo() {
+      if (mPlayer.isPlaying()) {
+          mPlayer.pause();
+      }
+    }
+
+    /**
+     * Resume the video reproduced in the YouTubePlayer.
+     */
+    private void playVideo() {
+      if (!mPlayer.isPlaying()) {
+          mPlayer.play();
+      }
+    }
 }
