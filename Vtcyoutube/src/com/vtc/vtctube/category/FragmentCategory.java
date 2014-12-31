@@ -12,6 +12,7 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.fragment.VideoPlayerFragment;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
@@ -66,6 +68,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 	private static List<ItemPost> listVideoXemnhieu = null;
 	private Random random = new Random();
 	public static FragmentCategory frament = null;
+	private VideoPlayerFragment mVideoPlayerFragment;
 
 	public FragmentCategory() {
 		page = 1;
@@ -293,6 +296,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 		@Override
 		public void onCLickView(ItemPost item) {
 			Utils.getVideoView(item, getActivity(), listViewNew);
+			displayPlayVideo();
 		}
 	}
 
@@ -487,4 +491,17 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 		// TODO Auto-generated method stub
 
 	}
+	
+	private void displayPlayVideo() {
+        // update the main content by replacing fragments
+        // VideoPlayerFragment fragment = new VideoPlayerFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        if (mVideoPlayerFragment == null) {
+            mVideoPlayerFragment = new VideoPlayerFragment();
+            fragmentManager.beginTransaction().add(R.id.screen_content, mVideoPlayerFragment).commit();
+        } else {
+            mVideoPlayerFragment.updateData();
+            mVideoPlayerFragment.maximize();
+        }
+    }
 }

@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
+import com.google.android.gms.internal.mf;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -130,7 +131,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         progressBar1.setVisibility(View.VISIBLE);
 
         listYeuthich.setAdapter(adapter);
-        setData();
 
         btnLienquan = (Button) view.findViewById(R.id.btnLienquan);
         btnChitiet = (Button) view.findViewById(R.id.btnChitiet);
@@ -148,7 +148,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         });
 
         lblYeuthich = (TextView) view.findViewById(R.id.lblYeuthich);
-        lblYeuthich.setSelected(Utils.itemCurrent.isLike());
         lblYeuthich.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -227,25 +226,12 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
         loadingListview = (ProgressBar) view.findViewById(R.id.loadingListview);
         loadingListview.setVisibility(View.GONE);
-        if (Utils.listLienquan != null && Utils.listLienquan.size() > 0) {
-            addViewItemLienquan(Utils.listLienquan);
-        } else {
-            ResultCallBackLoad callBackLoad = new ResultCallBackLoad();
-            loadingListview.setVisibility(View.VISIBLE);
-            String url = Utils.host + "get_posts?count=5&page=6";
-            new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU, MainActivity.smooth, callBackLoad).execute(url);
-        }
 
         webview_fbview = (WebView) view.findViewById(R.id.contentView);
         settingWebView();
-        setDataview(Utils.itemCurrent);
-        // youTubeView = (YouTubePlayerView)
-        // view.findViewById(R.id.youtube_view);
-        // youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
-        mYoutubeFragment = (YouTubePlayerSupportFragment) getFragmentManager().findFragmentById(R.id.youtube_player_fragment);
-        mYoutubeFragment.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
-        // getFragmentManager().beginTransaction().replace(R.id.frm_play_video,
-        // mYoutubeFragment).commit();
+        mYoutubeFragment = new YouTubePlayerSupportFragment();// (YouTubePlayerSupportFragment)
+                                                              // getFragmentManager().findFragmentById(R.id.youtube_player_fragment);
+        getFragmentManager().beginTransaction().replace(R.id.youtube_player_fragment, mYoutubeFragment).commit();
         rightMenu.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
 
             @Override
@@ -261,10 +247,26 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
                 }
             }
         });
+        updateData();
     }
 
     public void updateData() {
-
+        setData();
+        lblYeuthich.setSelected(Utils.itemCurrent.isLike());
+        if (Utils.listLienquan != null && Utils.listLienquan.size() > 0) {
+            addViewItemLienquan(Utils.listLienquan);
+        } else {
+            ResultCallBackLoad callBackLoad = new ResultCallBackLoad();
+            loadingListview.setVisibility(View.VISIBLE);
+            String url = Utils.host + "get_posts?count=5&page=6";
+            new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU, MainActivity.smooth, callBackLoad).execute(url);
+        }
+        setDataview(Utils.itemCurrent);
+        if (mPlayer != null) {
+            mPlayer.cueVideo(videoId);
+        } else {
+            mYoutubeFragment.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
+        }
     }
 
     public class ResultCallBackLoad implements IResult {
@@ -440,7 +442,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
     }
 
-    public void setDataview(ItemPost item) {
+    private void setDataview(ItemPost item) {
         itemActive = item;
         cate = item.getCateId();
         slug = item.getSlug();
@@ -598,8 +600,8 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
     }
 
     /**
-     * Hook the DraggableListener to DraggablePanel to pause or resume the video when the
-     * DragglabePanel is maximized or closed.
+     * Hook the DraggableListener to DraggablePanel to pause or resume the video
+     * when the DragglabePanel is maximized or closed.
      */
     private void hookDraggablePanelListeners() {
         mView.setDraggableListener(new DraggableListener() {
@@ -624,22 +626,22 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
             }
         });
     }
-    
+
     /**
      * Pause the video reproduced in the YouTubePlayer.
      */
     private void pauseVideo() {
-      if (mPlayer.isPlaying()) {
-          mPlayer.pause();
-      }
+        if (mPlayer.isPlaying()) {
+            mPlayer.pause();
+        }
     }
 
     /**
      * Resume the video reproduced in the YouTubePlayer.
      */
     private void playVideo() {
-      if (!mPlayer.isPlaying()) {
-          mPlayer.play();
-      }
+        if (!mPlayer.isPlaying()) {
+            mPlayer.play();
+        }
     }
 }
