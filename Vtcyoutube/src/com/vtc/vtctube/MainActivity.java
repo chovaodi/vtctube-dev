@@ -72,6 +72,7 @@ import com.vtc.vtctube.category.FragmentCategory;
 import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.category.RightLikeAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
+import com.vtc.vtctube.fragment.VideoPlayerFragment;
 import com.vtc.vtctube.like.FragmentLike;
 import com.vtc.vtctube.like.FragmentResent;
 import com.vtc.vtctube.menu.MenuDrawer;
@@ -448,7 +449,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
 				if (edSearch.getText().toString().length() == 0) {
 					Utils.getDialogMessges(MainActivity.this,
-							"Vui lòng nhập từ khóa tìm kiếm");
+							"Vui lÃ²ng nháº­p tá»« khÃ³a tÃ¬m kiáº¿m");
 
 				} else {
 					Utils.hideSoftKeyboard(MainActivity.this);
@@ -470,7 +471,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		emailIntent.setType("text/plain");
 
 		emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Đánh giá VTCTube");
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Ä�Ã¡nh giÃ¡ VTCTube");
 		emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi All....");
 
 		try {
@@ -602,7 +603,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 
 		case R.id.menu_video_moinhat:
-			Log.d("Chovaodi", "Mới nhất");
+			Log.d("Chovaodi", "Má»›i nháº¥t");
 			actionNewvideo();
 			break;
 		case R.id.menu_video_xemnhieu:
@@ -624,7 +625,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				positionActive = Integer.MAX_VALUE;
 				setHome();
 				Utils.getDialogMessges(MainActivity.this,
-						"Bạn chưa xem video nào, chúng tôi có hàng ngàn video hay cho bạn thưởng thức");
+						"Báº¡n chÆ°a xem video nÃ o, chÃºng tÃ´i cÃ³ hÃ ng ngÃ n video hay cho báº¡n thÆ°á»Ÿng thá»©c");
 			}
 
 			break;
@@ -679,7 +680,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void setAccInfo() {
 		if (globalApp.getAccountModel() != null) {
 
-			if (lblUserName.getText().equals("Đăng nhập")) {
+			if (lblUserName.getText().equals("Ä�Äƒng nháº­p")) {
 				if (globalApp.getAccountModel().getType() == AccountModel.LOGIN_FACE) {
 
 					Picasso.with(MainActivity.this)
@@ -788,8 +789,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		String shareLink = "http://vtctube.vn/" + slug + "-" + ".html";
 		Feed feed = new Feed.Builder().setMessage(title)
-				.setName("VTCTube-Xem thỏa thích. Chỉ cần Click")
-				.setCaption("").setDescription("Trải nghiệm mới với VTCTube")
+				.setName("VTCTube-Xem thá»�a thÃ­ch. Chá»‰ cáº§n Click")
+				.setCaption("").setDescription("Tráº£i nghiá»‡m má»›i vá»›i VTCTube")
 				.setPicture(thumnail).setLink(shareLink).build();
 		SimpleFacebook.getInstance().publish(feed, true, onPublishListener);
 	}
@@ -797,7 +798,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	OnPublishListener onPublishListener = new OnPublishListener() {
 		@Override
 		public void onComplete(String postId) {
-			Toast.makeText(MainActivity.this, "Chia sẽ thành công",
+			Toast.makeText(MainActivity.this, "Chia sáº½ thÃ nh cÃ´ng",
 					Toast.LENGTH_LONG).show();
 		}
 
@@ -885,7 +886,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		Utils.hideSoftKeyboard(MainActivity.this);
 
-		MainActivity.callBackCLick.onClick(false, "Tìm kiếm");
+		MainActivity.callBackCLick.onClick(false, "TÃ¬m kiáº¿m");
 		FragmentManager fragmentManager = MainActivity.this
 				.getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -979,7 +980,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void addFragmentAbout() {
-		MainActivity.callBackCLick.onClick(true, "Giới thiệu");
+		MainActivity.callBackCLick.onClick(true, "Giá»›i thiá»‡u");
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		FragmentAbout fragment = null;
@@ -999,7 +1000,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void addNewFeed() {
-		MainActivity.callBackCLick.onClick(true, "Thông báo mới");
+		MainActivity.callBackCLick.onClick(true, "ThÃ´ng bÃ¡o má»›i");
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		FragmentNewfeed fragment = null;
@@ -1046,7 +1047,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		// Create the search view
 		searchView = new SearchView(getSupportActionBar().getThemedContext());
-		searchView.setQueryHint("Tìm kiếm");
+		searchView.setQueryHint("TÃ¬m kiáº¿m");
 		searchView.setOnQueryTextListener(this);
 		searchView.setOnSuggestionListener(this);
 
@@ -1071,7 +1072,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		if (isMenuCate) {
-			SubMenu subMenu1 = menu.addSubMenu("Danh mục");
+			SubMenu subMenu1 = menu.addSubMenu("Danh má»¥c");
 			for (int i = 0; i < FragmentHome.listData.size(); i++) {
 				subMenu1.add(0, Integer.parseInt(FragmentHome.listData.get(i)
 						.getIdCategory()), Menu.NONE, FragmentHome.listData
@@ -1393,4 +1394,5 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onConnectionSuspended(int arg0) {
 		mGoogleApiClient.connect();
 	}
+	
 }

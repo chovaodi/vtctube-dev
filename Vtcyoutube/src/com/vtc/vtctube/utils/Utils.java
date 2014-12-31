@@ -116,8 +116,8 @@ public class Utils {
 			List<ItemPost> list) {
 		itemCurrent = item;
 		listLienquan = list;
-		Intent intent = new Intent(activity, PlayerViewActivity.class);
-		activity.startActivity(intent);
+		//Intent intent = new Intent(activity, PlayerViewActivity.class);
+		//activity.startActivity(intent);
 	}
 
 	public static void shareButton(ItemPost item, Activity activity) {
