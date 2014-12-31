@@ -9,8 +9,8 @@
     <FrameLayout
         android:id="@+id/frame_top"
         android:layout_width="match_parent"
-        android:visibility="invisible"
-        android:layout_height="350dp" >
+        android:layout_height="350dp"
+        android:visibility="invisible" >
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -21,9 +21,8 @@
                 android:id="@+id/imageView1"
                 android:layout_width="match_parent"
                 android:layout_height="330dp"
-                android:scaleType="fitXY"
                 android:background="@color/abs__background_holo_light"
-                 />
+                android:scaleType="fitXY" />
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -45,5 +44,11 @@
         android:numColumns="3"
         android:scrollbars="none" >
     </GridView>
+    <!-- Draggable View -->
+
+    <FrameLayout
+        android:id="@+id/frame_play_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -251,8 +251,8 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		webview_fbview = (WebView) findViewById(R.id.contentView);
 		settingWebView();
 		setDataview(Utils.itemCurrent);
-		youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
-		youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
+		//youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+		//youTubeView.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
 
 		rightMenu
 				.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
@@ -510,7 +510,7 @@ public class PlayerViewActivity extends YouTubeFailureRecoveryActivity {
 
 	@Override
 	protected YouTubePlayer.Provider getYouTubePlayerProvider() {
-		return (YouTubePlayerView) findViewById(R.id.youtube_view);
+		return null;// (YouTubePlayerView) findViewById(R.id.youtube_view);
 	}
 
 	@Override

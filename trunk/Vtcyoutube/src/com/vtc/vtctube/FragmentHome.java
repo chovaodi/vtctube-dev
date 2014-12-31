@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,7 @@ import android.widget.ImageView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.squareup.picasso.Picasso;
 import com.vtc.vtctube.adpter.MenuHomeAdapter;
+import com.vtc.vtctube.fragment.VideoPlayerFragment;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
@@ -115,6 +117,7 @@ public class FragmentHome extends SherlockFragment {
 				MainActivity.smooth.setVisibility(View.GONE);
 				Utils.getVideoView(AcitivityLoadding.itemPost, getActivity(),
 						null);
+				displayPlayVideo();
 			}
 		});
 		String idPostHome = "xxx";
@@ -222,4 +225,12 @@ public class FragmentHome extends SherlockFragment {
 		}
 	}
 
+	private void displayPlayVideo() {
+        // update the main content by replacing fragments
+        VideoPlayerFragment fragment = new VideoPlayerFragment();
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame_play_video, fragment).commit();
+
+    }
 }
