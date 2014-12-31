@@ -124,10 +124,6 @@ public class FragmentHome extends SherlockFragment {
                 MainActivity.smooth.setVisibility(View.GONE);
                 Utils.getVideoView(AcitivityLoadding.itemPost, getActivity(), null);
                 displayPlayVideo();
-
-                Log.d("VTCTube", "mVideoPlayerFragment: " + mVideoPlayerFragment);
-                // getFragmentManager().beginTransaction().add(R.id.screen_home,
-                // mVideoPlayerFragment).commit();
             }
         });
         String idPostHome = "xxx";
@@ -234,6 +230,7 @@ public class FragmentHome extends SherlockFragment {
             mVideoPlayerFragment = new VideoPlayerFragment();
             fragmentManager.beginTransaction().add(R.id.screen_home, mVideoPlayerFragment).commit();
         } else {
+            mVideoPlayerFragment.updateData();
             mVideoPlayerFragment.maximize();
         }
     }

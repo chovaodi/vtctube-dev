@@ -29,14 +29,21 @@ public abstract class YoutubePlayerFragment extends Fragment implements OnInitia
     @Override
     public void onDetach() {
         // TODO Auto-generated method stub
-        Log.i("VTCTube", "onDetach");
+        Log.i("VTCTube", "onDetach: " + this);
         super.onDetach();
     }
 
     @Override
     public void onAttach(Activity activity) {
         // TODO Auto-generated method stub
-        Log.i("VTCTube", "onAttach");
+        Log.i("VTCTube", "onAttach: " + this);
         super.onAttach(activity);
+    }
+    
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        Log.i("VTCTube", "onDestroy: " + this);
+        super.onDestroy();
     }
 }
