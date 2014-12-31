@@ -1,6 +1,8 @@
 package com.vtc.vtctube.fragment;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -23,4 +25,18 @@ public abstract class YoutubePlayerFragment extends Fragment implements OnInitia
     }
 
     protected abstract YouTubePlayer.Provider getYouTubePlayerProvider();
+
+    @Override
+    public void onDetach() {
+        // TODO Auto-generated method stub
+        Log.i("VTCTube", "onDetach");
+        super.onDetach();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        // TODO Auto-generated method stub
+        Log.i("VTCTube", "onAttach");
+        super.onAttach(activity);
+    }
 }

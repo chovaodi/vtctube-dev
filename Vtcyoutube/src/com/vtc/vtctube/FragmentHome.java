@@ -47,190 +47,194 @@ import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.Utils;
 
 public class FragmentHome extends SherlockFragment {
-	private GridView gridView;
-	private View view;
-	private FrameLayout frameLayout;
-	// private PullToRefreshLayout mPullToRefreshLayout;
-	ResultCallBack callBack = null;
-	public static List<ItemCategory> listData = null;
-	public static String[] cateName;
+    private GridView gridView;
+    private View view;
+    private FrameLayout frameLayout;
+    // private PullToRefreshLayout mPullToRefreshLayout;
+    ResultCallBack callBack = null;
+    public static List<ItemCategory> listData = null;
+    public static String[] cateName;
+    private VideoPlayerFragment mVideoPlayerFragment;
 
-	private static FragmentHome f = null;
+    private static FragmentHome f = null;
 
-	/**
-	 * Create a new instance of CountingFragment, providing "num" as an
-	 * argument.
-	 */
-	static FragmentHome newInstance(int num) {
-		if (f == null) {
-			f = new FragmentHome();
-		}
+    /**
+     * Create a new instance of CountingFragment, providing "num" as an
+     * argument.
+     */
+    static FragmentHome newInstance(int num) {
+        if (f == null) {
+            f = new FragmentHome();
+        }
 
-		return f;
-	}
+        return f;
+    }
 
-	/**
-	 * When creating, retrieve this instance's number from its arguments.
-	 */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		callBack = new ResultCallBack();
-	}
+    /**
+     * When creating, retrieve this instance's number from its arguments.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        callBack = new ResultCallBack();
+    }
 
-	/**
-	 * The Fragment's UI is just a simple text view showing its instance number.
-	 */
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.fragment_home, container, false);
-		frameLayout = (FrameLayout) view.findViewById(R.id.frame_top);
+    /**
+     * The Fragment's UI is just a simple text view showing its instance number.
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+        return view;
+    }
 
-		MainActivity.progressBar.setVisibility(View.VISIBLE);
-		new CountDownTimer(300, 100) {
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        frameLayout = (FrameLayout) view.findViewById(R.id.frame_top);
 
-			@Override
-			public void onTick(long millisUntilFinished) {
-				// TODO Auto-generated method stub
+        MainActivity.progressBar.setVisibility(View.VISIBLE);
+        new CountDownTimer(300, 100) {
 
-			}
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // TODO Auto-generated method stub
 
-			@Override
-			public void onFinish() {
-				MainActivity.progressBar.setVisibility(View.GONE);
-				frameLayout.setVisibility(View.VISIBLE);
-				addview();
-			}
-		}.start();
+            }
 
-		return view;
-	}
+            @Override
+            public void onFinish() {
+                MainActivity.progressBar.setVisibility(View.GONE);
+                frameLayout.setVisibility(View.VISIBLE);
+                addview();
+            }
+        }.start();
+    }
 
-	public void addview() {
+    public void addview() {
+        mVideoPlayerFragment = null;// (VideoPlayerFragment)
+                                                         // getFragmentManager().findFragmentById(R.id.fragment_play_video);
+        // getFragmentManager().beginTransaction().hide(mVideoPlayerFragment).commit();
 
-		ImageView img = (ImageView) view.findViewById(R.id.imageView1);
-		img.setOnClickListener(new OnClickListener() {
+        ImageView img = (ImageView) view.findViewById(R.id.imageView1);
+        img.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				MainActivity.smooth.setVisibility(View.GONE);
-				Utils.getVideoView(AcitivityLoadding.itemPost, getActivity(),
-						null);
-				displayPlayVideo();
-			}
-		});
-		String idPostHome = "xxx";
-		if (AcitivityLoadding.itemPost != null) {
-			idPostHome = AcitivityLoadding.itemPost.getVideoId();
-		}
+            @Override
+            public void onClick(View arg0) {
+                MainActivity.smooth.setVisibility(View.GONE);
+                Utils.getVideoView(AcitivityLoadding.itemPost, getActivity(), null);
+                displayPlayVideo();
 
-		Picasso.with(getActivity())
-				.load("http://img.youtube.com/vi/" + idPostHome
-						+ "/maxresdefault.jpg")
-				.placeholder(R.drawable.bgr_home_video).into(img);
+                Log.d("VTCTube", "mVideoPlayerFragment: " + mVideoPlayerFragment);
+                // getFragmentManager().beginTransaction().add(R.id.screen_home,
+                // mVideoPlayerFragment).commit();
+            }
+        });
+        String idPostHome = "xxx";
+        if (AcitivityLoadding.itemPost != null) {
+            idPostHome = AcitivityLoadding.itemPost.getVideoId();
+        }
 
-		String url = Utils.getUrlHttp(Utils.host, "get_category_index");
-		Log.d("url", url);
-		if (GlobalApplication.dataCate.length() > 0) {
-			showView(GlobalApplication.dataCate);
-		} else {
-			if (Utils.isExistFile(Utils.GET_CATE_INDEX)) {
-				GlobalApplication.dataCate = Utils
-						.readJsonFile(Utils.GET_CATE_INDEX);
-				showView(GlobalApplication.dataCate);
-			} else {
-				new AysnRequestHttp((ViewGroup) view, Utils.LOAD_FIRST_DATA,
-						MainActivity.smooth, callBack).execute(url);
-			}
-		}
-		new AysnRequestHttp((ViewGroup) view, Utils.REFRESH, null, callBack)
-				.execute(url);
-	}
+        Picasso.with(getActivity()).load("http://img.youtube.com/vi/" + idPostHome + "/maxresdefault.jpg")
+                .placeholder(R.drawable.bgr_home_video).into(img);
 
-	public void showView(String result) {
+        String url = Utils.getUrlHttp(Utils.host, "get_category_index");
+        Log.d("url", url);
+        if (GlobalApplication.dataCate.length() > 0) {
+            showView(GlobalApplication.dataCate);
+        } else {
+            if (Utils.isExistFile(Utils.GET_CATE_INDEX)) {
+                GlobalApplication.dataCate = Utils.readJsonFile(Utils.GET_CATE_INDEX);
+                showView(GlobalApplication.dataCate);
+            } else {
+                new AysnRequestHttp((ViewGroup) view, Utils.LOAD_FIRST_DATA, MainActivity.smooth, callBack).execute(url);
+            }
+        }
+        new AysnRequestHttp((ViewGroup) view, Utils.REFRESH, null, callBack).execute(url);
+    }
 
-		try {
-			JSONObject jsonObj = new JSONObject(result);
-			String status = jsonObj.getString("status");
-			if (status.equals("ok")) {
-				JSONArray jsonArray = jsonObj.getJSONArray("categories");
-				listData = new ArrayList<ItemCategory>();
-				cateName = new String[jsonArray.length()];
-				for (int i = 0; i < jsonArray.length(); i++) {
-					ItemCategory item = new ItemCategory();
-					JSONObject json = (JSONObject) jsonArray.get(i);
-					item.setIdCategory(json.getString("id"));
-					item.setTitle(json.getString("title"));
-					item.setSlug(json.getString("slug"));
-					item.setPostcount(json.getInt("post_count"));
-					cateName[i] = json.getString("title");
-					listData.add(item);
-				}
-			}
+    public void showView(String result) {
 
-			gridView = (GridView) view.findViewById(R.id.list);
-			// View header = getActivity().getLayoutInflater().inflate(
-			// R.layout.header, null);
+        try {
+            JSONObject jsonObj = new JSONObject(result);
+            String status = jsonObj.getString("status");
+            if (status.equals("ok")) {
+                JSONArray jsonArray = jsonObj.getJSONArray("categories");
+                listData = new ArrayList<ItemCategory>();
+                cateName = new String[jsonArray.length()];
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    ItemCategory item = new ItemCategory();
+                    JSONObject json = (JSONObject) jsonArray.get(i);
+                    item.setIdCategory(json.getString("id"));
+                    item.setTitle(json.getString("title"));
+                    item.setSlug(json.getString("slug"));
+                    item.setPostcount(json.getInt("post_count"));
+                    cateName[i] = json.getString("title");
+                    listData.add(item);
+                }
+            }
 
-			// list.addHeaderView(header);
-			gridView.setNumColumns(2);
-			gridView.setPadding(Utils.convertDpToPixel(20, getActivity()), 0,
-					Utils.convertDpToPixel(20, getActivity()), 0);
+            gridView = (GridView) view.findViewById(R.id.list);
+            // View header = getActivity().getLayoutInflater().inflate(
+            // R.layout.header, null);
 
-			MenuHomeAdapter adapter = new MenuHomeAdapter(getActivity(),
-					listData);
-			gridView.setAdapter(adapter);
-			gridView.setOnItemClickListener(new OnItemClickListener() {
+            // list.addHeaderView(header);
+            gridView.setNumColumns(2);
+            gridView.setPadding(Utils.convertDpToPixel(20, getActivity()), 0, Utils.convertDpToPixel(20, getActivity()), 0);
 
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					Utils.hideSoftKeyboard(getActivity());
-					MainActivity.callBackCLickCate.getCate(listData.get(arg2)
-							.getTitle(), listData.get(arg2).getIdCategory());
+            MenuHomeAdapter adapter = new MenuHomeAdapter(getActivity(), listData);
+            gridView.setAdapter(adapter);
+            gridView.setOnItemClickListener(new OnItemClickListener() {
 
-				}
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                    Utils.hideSoftKeyboard(getActivity());
+                    MainActivity.callBackCLickCate.getCate(listData.get(arg2).getTitle(), listData.get(arg2).getIdCategory());
 
-			});
+                }
 
-		} catch (Exception exception) {
-			exception.printStackTrace();
-		}
+            });
 
-	}
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
-	public class ResultCallBack implements IResult {
+    }
 
-		@Override
-		public void getResult(int type, String result) {
-			GlobalApplication.dataCate = result;
-			if (result.length() > 0)
-				Utils.writeJsonFile(result, false, Utils.GET_CATE_INDEX);
-			if (type == Utils.LOAD_FIRST_DATA) {
-				showView(result);
-			}
-		}
+    public class ResultCallBack implements IResult {
 
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
+        @Override
+        public void getResult(int type, String result) {
+            GlobalApplication.dataCate = result;
+            if (result.length() > 0)
+                Utils.writeJsonFile(result, false, Utils.GET_CATE_INDEX);
+            if (type == Utils.LOAD_FIRST_DATA) {
+                showView(result);
+            }
+        }
 
-		}
+        @Override
+        public void pushResutClickItem(int type, int postion, boolean isLike) {
+            // TODO Auto-generated method stub
 
-		@Override
-		public void onCLickView(ItemPost item) {
-			// TODO Auto-generated method stub
+        }
 
-		}
-	}
+        @Override
+        public void onCLickView(ItemPost item) {
+            // TODO Auto-generated method stub
 
-	private void displayPlayVideo() {
+        }
+    }
+
+    private void displayPlayVideo() {
         // update the main content by replacing fragments
-        VideoPlayerFragment fragment = new VideoPlayerFragment();
-
+        // VideoPlayerFragment fragment = new VideoPlayerFragment();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_play_video, fragment).commit();
-
+        if (mVideoPlayerFragment == null) {
+            mVideoPlayerFragment = new VideoPlayerFragment();
+            fragmentManager.beginTransaction().add(R.id.screen_home, mVideoPlayerFragment).commit();
+        } else {
+            mVideoPlayerFragment.maximize();
+        }
     }
 }
