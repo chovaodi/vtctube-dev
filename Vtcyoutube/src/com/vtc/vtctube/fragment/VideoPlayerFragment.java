@@ -22,14 +22,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
-import com.google.android.gms.internal.mf;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -62,12 +60,10 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
     private Button btnLienquan;
     private Button btnChitiet;
     private LinearLayout lineChitiet;
-    private LinearLayout lineBack;
     private ProgressBar prLoadLike;
 
     private TextView lblYeuthich;
     private TextView lblTitle;
-    private TextView lblTaskTitle;
     private TextView lblCountView;
     private TextView lblShare;
 
@@ -75,7 +71,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
     private ListView listvideo;
     private WebView webview_fbview;
     private ProgressBar loadingListview;
-    // private YouTubePlayerView youTubeView;
     private YouTubePlayerSupportFragment mYoutubeFragment;
     private YouTubePlayer mPlayer;
     private MenuDrawer rightMenu;
@@ -148,7 +143,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         btnChitiet = (Button) view.findViewById(R.id.btnChitiet);
         listvideo = (ListView) view.findViewById(R.id.listvideo);
         lblTitle = (TextView) view.findViewById(R.id.lblTitle);
-        lblTaskTitle = (TextView) view.findViewById(R.id.lblTaskTitle);
+       // lblTaskTitle = (TextView) view.findViewById(R.id.lblTaskTitle);
         lblCountView = (TextView) view.findViewById(R.id.lblLuotxem);
         lblShare = (TextView) view.findViewById(R.id.btnShareDetailt);
         lblShare.setOnClickListener(new OnClickListener() {
@@ -177,26 +172,26 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
             }
         });
 
-        ImageButton imgLike = (ImageButton) view.findViewById(R.id.btnLike);
-        imgLike.setSelected(true);
-        imgLike.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                rightMenu.toggleMenu();
-
-            }
-        });
+//        ImageButton imgLike = (ImageButton) view.findViewById(R.id.btnLike);
+//        imgLike.setSelected(true);
+//        imgLike.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                rightMenu.toggleMenu();
+//
+//            }
+//        });
         lineChitiet = (LinearLayout) view.findViewById(R.id.lineChitiet);
-        lineBack = (LinearLayout) view.findViewById(R.id.lineBack);
-        lineBack.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                mActivity.finish();
-                mActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
-            }
-        });
+//        lineBack = (LinearLayout) view.findViewById(R.id.lineBack);
+//        lineBack.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View arg0) {
+//                mActivity.finish();
+//                mActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+//            }
+//        });
 
         lblTitle.setText(title);
 
@@ -466,7 +461,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         videoId = item.getVideoId();
         inPostActive = id;
 
-        lblTaskTitle.setText(Html.fromHtml(item.getTitle()));
         lblTitle.setText(Html.fromHtml(item.getTitle()));
         lblCountView.setText("Lượt xem: " + item.getCountview());
 
