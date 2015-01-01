@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IResult;
+import com.vtc.vtctube.utils.OnDisplayVideo;
 import com.vtc.vtctube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -40,6 +42,7 @@ public class FragmentLike extends Fragment {
 	int mNum;
 	private View v;
 	private static FragmentLike f = null;
+	 private OnDisplayVideo mOnDisplayVideo;
 
 	// private PullToRefreshLayout mPullToRefreshLayout;
 	public static String[] cateName;
@@ -123,6 +126,14 @@ public class FragmentLike extends Fragment {
 		key = getArguments() != null ? getArguments().getInt("num") : 1;
 	}
 
+	@Override
+    public void onAttach(Activity activity) {
+        if(activity instanceof OnDisplayVideo) {
+            mOnDisplayVideo = (OnDisplayVideo) activity;
+        }
+        super.onAttach(activity);
+    }
+	
 	/**
 	 * The Fragment's UI is just a simple text view showing its instance number.
 	 */
@@ -160,7 +171,9 @@ public class FragmentLike extends Fragment {
 		@Override
 		public void onCLickView(ItemPost item) {
 			Utils.getVideoView(item, getActivity(), listData);
-
+			if(mOnDisplayVideo != null) {
+                mOnDisplayVideo.display();
+            }
 		}
 	}
 
