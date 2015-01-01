@@ -341,6 +341,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 							Utils.getVideoView(itemActive, MainActivity.this,
 									listVideoRanDom);
 							itemActive = null;
+							display();
 						}
 
 					}
