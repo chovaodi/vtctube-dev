@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity"
+    android:id="@+id/main_screen">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:id="@+id/main_screen">
+        android:background="@android:color/white">
 
         <FrameLayout
             android:id="@+id/container"
