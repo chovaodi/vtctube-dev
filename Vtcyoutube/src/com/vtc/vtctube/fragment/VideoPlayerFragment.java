@@ -91,6 +91,18 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
     private DraggableView mView;
 
+    private static VideoPlayerFragment sInstance = null;
+
+    private VideoPlayerFragment() {
+    }
+
+    public static VideoPlayerFragment newInstance() {
+        if(sInstance == null) {
+            sInstance = new VideoPlayerFragment();
+        }
+        return sInstance;
+    }
+    
     @Override
     public void onAttach(Activity activity) {
         mActivity = (FragmentActivity) activity;

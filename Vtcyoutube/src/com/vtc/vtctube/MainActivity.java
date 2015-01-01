@@ -87,13 +87,14 @@ import com.vtc.vtctube.utils.IClickCate;
 import com.vtc.vtctube.utils.IRShareFeed;
 import com.vtc.vtctube.utils.IRclickTocate;
 import com.vtc.vtctube.utils.IResult;
+import com.vtc.vtctube.utils.OnDisplayVideo;
 import com.vtc.vtctube.utils.Utils;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		SearchView.OnQueryTextListener, SearchView.OnSuggestionListener,
-		ConnectionCallbacks, OnConnectionFailedListener {
+		ConnectionCallbacks, OnConnectionFailedListener, OnDisplayVideo {
 	public static String currentCate;
 
 	private MenuDrawer leftMenu;
@@ -156,6 +157,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public static ProgressBar progressBar;
 	public static String currentTag = "";
+	
+	private VideoPlayerFragment mVideoPlayerFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -1394,5 +1397,22 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onConnectionSuspended(int arg0) {
 		mGoogleApiClient.connect();
 	}
+
+    @Override
+    public void display() {
+        displayVideo();
+    }
 	
+    private void displayVideo() {
+        Log.d("VTCTube", "displayVideo: " + mVideoPlayerFragment);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (mVideoPlayerFragment == null) {
+            mVideoPlayerFragment = VideoPlayerFragment.newInstance();
+            fragmentTransaction.add(R.id.main_screen, mVideoPlayerFragment, Utils.TAG_VIEW_VIDEO).addToBackStack(null).commit();
+        } else {
+            mVideoPlayerFragment.updateData();
+            mVideoPlayerFragment.maximize();
+        }
+    }
 }
