@@ -35,7 +35,6 @@ import android.widget.TextView;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
 import com.vtc.vtctube.MainActivity;
-import com.vtc.vtctube.PlayerViewActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemMeu;

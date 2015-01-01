@@ -1076,7 +1076,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		if (isMenuCate) {
-			SubMenu subMenu1 = menu.addSubMenu("Danh má»¥c");
+			SubMenu subMenu1 = menu.addSubMenu("Danh mục");
 			for (int i = 0; i < FragmentHome.listData.size(); i++) {
 				subMenu1.add(0, Integer.parseInt(FragmentHome.listData.get(i)
 						.getIdCategory()), Menu.NONE, FragmentHome.listData
