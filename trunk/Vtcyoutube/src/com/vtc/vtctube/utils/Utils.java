@@ -70,6 +70,7 @@ public class Utils {
 	public static String TAG_SEARCH = "TAG_SEARCH";
 	public static String TAG_NEWVIDEO = "TAG_NEWVIDEO";
 	public static String TAG_XEMNHIEU = "TAG_XEMNHIEU";
+	public static String TAG_VIEW_VIDEO = "TAG_VIEW_VIDEO";
 	public static List<ItemPost> listLienquan;
 
 	public static String getUrlHttp(String host, String funtionName) {

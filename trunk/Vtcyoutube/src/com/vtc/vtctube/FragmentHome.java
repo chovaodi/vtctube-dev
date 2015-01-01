@@ -22,6 +22,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentManager;
@@ -44,6 +45,7 @@ import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IResult;
+import com.vtc.vtctube.utils.OnDisplayVideo;
 import com.vtc.vtctube.utils.Utils;
 
 public class FragmentHome extends SherlockFragment {
@@ -54,9 +56,9 @@ public class FragmentHome extends SherlockFragment {
     ResultCallBack callBack = null;
     public static List<ItemCategory> listData = null;
     public static String[] cateName;
-    private VideoPlayerFragment mVideoPlayerFragment;
 
     private static FragmentHome f = null;
+    private OnDisplayVideo mOnDisplayVideo;
 
     /**
      * Create a new instance of CountingFragment, providing "num" as an
@@ -79,6 +81,13 @@ public class FragmentHome extends SherlockFragment {
         callBack = new ResultCallBack();
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        if(activity instanceof OnDisplayVideo) {
+            mOnDisplayVideo = (OnDisplayVideo) activity;
+        }
+        super.onAttach(activity);
+    }
     /**
      * The Fragment's UI is just a simple text view showing its instance number.
      */
@@ -112,10 +121,6 @@ public class FragmentHome extends SherlockFragment {
     }
 
     public void addview() {
-        mVideoPlayerFragment = null;// (VideoPlayerFragment)
-                                                         // getFragmentManager().findFragmentById(R.id.fragment_play_video);
-        // getFragmentManager().beginTransaction().hide(mVideoPlayerFragment).commit();
-
         ImageView img = (ImageView) view.findViewById(R.id.imageView1);
         img.setOnClickListener(new OnClickListener() {
 
@@ -123,7 +128,9 @@ public class FragmentHome extends SherlockFragment {
             public void onClick(View arg0) {
                 MainActivity.smooth.setVisibility(View.GONE);
                 Utils.getVideoView(AcitivityLoadding.itemPost, getActivity(), null);
-                displayPlayVideo();
+                if(mOnDisplayVideo != null) {
+                    mOnDisplayVideo.display();
+                }
             }
         });
         String idPostHome = "xxx";
@@ -222,16 +229,4 @@ public class FragmentHome extends SherlockFragment {
         }
     }
 
-    private void displayPlayVideo() {
-        // update the main content by replacing fragments
-        // VideoPlayerFragment fragment = new VideoPlayerFragment();
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        if (mVideoPlayerFragment == null) {
-            mVideoPlayerFragment = new VideoPlayerFragment();
-            fragmentManager.beginTransaction().add(R.id.screen_home, mVideoPlayerFragment).commit();
-        } else {
-            mVideoPlayerFragment.updateData();
-            mVideoPlayerFragment.maximize();
-        }
-    }
 }

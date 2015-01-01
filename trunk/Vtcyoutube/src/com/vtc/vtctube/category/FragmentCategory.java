@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -32,6 +33,7 @@ import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.IResultOnclick;
+import com.vtc.vtctube.utils.OnDisplayVideo;
 import com.vtc.vtctube.utils.Utils;
 
 public class FragmentCategory extends Fragment implements OnRefreshListener,
@@ -68,7 +70,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 	private static List<ItemPost> listVideoXemnhieu = null;
 	private Random random = new Random();
 	public static FragmentCategory frament = null;
-	private VideoPlayerFragment mVideoPlayerFragment;
+	private OnDisplayVideo mOnDisplayVideo;
 
 	public FragmentCategory() {
 		page = 1;
@@ -128,6 +130,13 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+	    if(activity instanceof OnDisplayVideo) {
+	        mOnDisplayVideo = (OnDisplayVideo) activity;
+	    }
+	    super.onAttach(activity);
+	}
 	/**
 	 * The Fragment's UI is just a simple text view showing its instance number.
 	 */
@@ -296,7 +305,9 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 		@Override
 		public void onCLickView(ItemPost item) {
 			Utils.getVideoView(item, getActivity(), listViewNew);
-			displayPlayVideo();
+			if(mOnDisplayVideo != null) {
+			    mOnDisplayVideo.display();
+			}
 		}
 	}
 
@@ -491,17 +502,4 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 		// TODO Auto-generated method stub
 
 	}
-	
-	private void displayPlayVideo() {
-        // update the main content by replacing fragments
-        // VideoPlayerFragment fragment = new VideoPlayerFragment();
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        if (mVideoPlayerFragment == null) {
-            mVideoPlayerFragment = new VideoPlayerFragment();
-            fragmentManager.beginTransaction().add(R.id.screen_content, mVideoPlayerFragment).commit();
-        } else {
-            mVideoPlayerFragment.updateData();
-            mVideoPlayerFragment.maximize();
-        }
-    }
 }
