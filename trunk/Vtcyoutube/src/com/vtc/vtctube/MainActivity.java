@@ -157,33 +157,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public static ProgressBar progressBar;
 	public static String currentTag = "";
-	
+
 	private VideoPlayerFragment mVideoPlayerFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// PackageInfo info;
-		// try {
-		// info = getPackageManager().getPackageInfo("com.vtc.vtctube",
-		// PackageManager.GET_SIGNATURES);
-		// for (Signature signature : info.signatures) {
-		// MessageDigest md;
-		// md = MessageDigest.getInstance("SHA");
-		// md.update(signature.toByteArray());
-		// String something = new String(Base64.encode(md.digest(), 0));
-		// // String something = new
-		// // String(Base64.encodeBytes(md.digest()));
-		// Log.e("hash key", something);
-		// }
-		// } catch (NameNotFoundException e1) {
-		// Log.e("name not found", e1.toString());
-		// } catch (NoSuchAlgorithmException e) {
-		// Log.e("no such an algorithm", e.toString());
-		// } catch (Exception e) {
-		// Log.e("exception", e.toString());
-		// }
 
 		mainView = (ViewGroup) getWindow().getDecorView().findViewById(
 				android.R.id.content);
@@ -239,33 +218,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 		prLoadLike = (ProgressBar) findViewById(R.id.prLoadLike);
 
 		listYeuthich = (SwipeListView) findViewById(R.id.listViewYeuthich);
-		// listYeuthich.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
-		// listYeuthich.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_NONE);
-		// listYeuthich.setSwipeActionRight(SwipeListView.SWIPE_ACTION_DISMISS);
 		Utils.settingControlRemove(width, listYeuthich, MainActivity.this);
 
 		listYeuthich.setAdapter(adapter);
 		setContentView(R.layout.fragment_content);
-		// lineAdmob = (LinearLayout) findViewById(R.id.adview);
-		// adView = new AdView(this);
-		// adView.setAdSize(AdSize.SMART_BANNER);
-		// adView.setAdUnitId(Utils.ADMOB_ID);
-		// lineAdmob.addView(adView);
-		//
-		// AdRequest adRequest = new AdRequest.Builder().build();
-		// adView.loadAd(adRequest);
 
 		listview = (ListView) findViewById(R.id.listView1);
 		header = getLayoutInflater().inflate(R.layout.account_layout, null);
 		View fotter = getLayoutInflater().inflate(R.layout.footer, null);
-		fotter.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-			}
-		});
 
 		listview.addHeaderView(header);
 		listview.addFooterView(fotter);
@@ -590,6 +550,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu(int position) {
+		if (mVideoPlayerFragment != null
+				&& mVideoPlayerFragment.isMaximize()) {
+			mVideoPlayerFragment.minimize();
+		}
+		
 		fragmentManager = getSupportFragmentManager();
 		ft = fragmentManager.beginTransaction();
 
@@ -628,7 +593,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 				positionPreview = 0;
 				positionActive = Integer.MAX_VALUE;
 				setHome();
-				Utils.getDialogMessges(MainActivity.this,
+				Utils.getDialogMessges(
+						MainActivity.this,
 						"Báº¡n chÆ°a xem video nÃ o, chÃºng tÃ´i cÃ³ hÃ ng ngÃ n video hay cho báº¡n thÆ°á»Ÿng thá»©c");
 			}
 
@@ -716,12 +682,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		// adView.pause();
-	}
-
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		try {
@@ -794,7 +754,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		String shareLink = "http://vtctube.vn/" + slug + "-" + ".html";
 		Feed feed = new Feed.Builder().setMessage(title)
 				.setName("VTCTube-Xem thá»�a thÃ­ch. Chá»‰ cáº§n Click")
-				.setCaption("").setDescription("Tráº£i nghiá»‡m má»›i vá»›i VTCTube")
+				.setCaption("")
+				.setDescription("Tráº£i nghiá»‡m má»›i vá»›i VTCTube")
 				.setPicture(thumnail).setLink(shareLink).build();
 		SimpleFacebook.getInstance().publish(feed, true, onPublishListener);
 	}
@@ -1051,7 +1012,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		// Create the search view
 		searchView = new SearchView(getSupportActionBar().getThemedContext());
-		searchView.setQueryHint("TÃ¬m kiáº¿m");
+		searchView.setQueryHint("Tìm kiếm");
 		searchView.setOnQueryTextListener(this);
 		searchView.setOnSuggestionListener(this);
 
@@ -1194,7 +1155,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		try {
 			MainActivity.lblError.setVisibility(View.GONE);
 			final int left = leftMenu.getDrawerState();
 			if (left == MenuDrawer.STATE_OPEN
@@ -1208,6 +1168,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 				rightMenu.closeMenu();
 				return;
 			}
+
+			if (mVideoPlayerFragment != null
+					&& mVideoPlayerFragment.isMaximize()) {
+				mVideoPlayerFragment.minimize();
+				return;
+			}
 			positionPreview = 0;
 			positionActive = Integer.MAX_VALUE;
 
@@ -1218,9 +1184,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				return;
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 		finish();
 		System.exit(0);
 	}
@@ -1399,21 +1363,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 		mGoogleApiClient.connect();
 	}
 
-    @Override
-    public void display() {
-        displayVideo();
-    }
-	
-    private void displayVideo() {
-        Log.d("VTCTube", "displayVideo: " + mVideoPlayerFragment);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if (mVideoPlayerFragment == null) {
-            mVideoPlayerFragment = VideoPlayerFragment.newInstance();
-            fragmentTransaction.add(R.id.main_screen, mVideoPlayerFragment, Utils.TAG_VIEW_VIDEO).addToBackStack(null).commit();
-        } else {
-            mVideoPlayerFragment.updateData();
-            mVideoPlayerFragment.maximize();
-        }
-    }
+	@Override
+	public void display() {
+		displayVideo();
+	}
+
+	private void displayVideo() {
+		Log.d("VTCTube", "displayVideo: " + mVideoPlayerFragment);
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager
+				.beginTransaction();
+		if (mVideoPlayerFragment == null) {
+			mVideoPlayerFragment = VideoPlayerFragment.newInstance();
+			fragmentTransaction
+					.add(R.id.main_screen, mVideoPlayerFragment,
+							Utils.TAG_VIEW_VIDEO).addToBackStack(null).commit();
+		} else {
+			mVideoPlayerFragment.updateData();
+			mVideoPlayerFragment.maximize();
+		}
+	}
 }
