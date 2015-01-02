@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".MainActivity"
-    android:id="@+id/screen_home" >
+    tools:context=".MainActivity">
 
     <FrameLayout
         android:id="@+id/frame_top"
@@ -45,9 +44,4 @@
         android:scrollbars="none"
         android:layout_below="@id/frame_top">
     </GridView>
-   <!--  <fragment 
-        android:name="com.vtc.vtctube.fragment.VideoPlayerFragment"
-        android:id="@+id/fragment_play_video"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/> -->
 </RelativeLayout>
