@@ -88,9 +88,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
     private static VideoPlayerFragment sInstance = null;
 
-    private VideoPlayerFragment() {
-    }
-
     public static VideoPlayerFragment newInstance() {
         if(sInstance == null) {
             sInstance = new VideoPlayerFragment();
@@ -116,9 +113,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         super.onActivityCreated(savedInstanceState);
         View view = getView();
         mainView = (ViewGroup) mActivity.getWindow().getDecorView().findViewById(android.R.id.content);
-
         adapter = new RightLikeAdapter(PinnedAdapter.TYPE_VIEW_CATE, mActivity, callBackOnlick);
-
         mActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
         rightMenu = MenuDrawer.attach(mActivity, MenuDrawer.MENU_DRAG_WINDOW, Position.RIGHT);
@@ -143,7 +138,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         btnChitiet = (Button) view.findViewById(R.id.btnChitiet);
         listvideo = (ListView) view.findViewById(R.id.listvideo);
         lblTitle = (TextView) view.findViewById(R.id.lblTitle);
-       // lblTaskTitle = (TextView) view.findViewById(R.id.lblTaskTitle);
         lblCountView = (TextView) view.findViewById(R.id.lblLuotxem);
         lblShare = (TextView) view.findViewById(R.id.btnShareDetailt);
         lblShare.setOnClickListener(new OnClickListener() {
@@ -172,29 +166,8 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
             }
         });
 
-//        ImageButton imgLike = (ImageButton) view.findViewById(R.id.btnLike);
-//        imgLike.setSelected(true);
-//        imgLike.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                rightMenu.toggleMenu();
-//
-//            }
-//        });
         lineChitiet = (LinearLayout) view.findViewById(R.id.lineChitiet);
-//        lineBack = (LinearLayout) view.findViewById(R.id.lineBack);
-//        lineBack.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View arg0) {
-//                mActivity.finish();
-//                mActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
-//            }
-//        });
-
         lblTitle.setText(title);
-
         listvideo.setVisibility(View.VISIBLE);
         lineChitiet.setVisibility(View.GONE);
 
@@ -236,8 +209,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
         webview_fbview = (WebView) view.findViewById(R.id.contentView);
         settingWebView();
-        mYoutubeFragment = new YouTubePlayerSupportFragment();// (YouTubePlayerSupportFragment)
-                                                              // getFragmentManager().findFragmentById(R.id.youtube_player_fragment);
+        mYoutubeFragment = new YouTubePlayerSupportFragment();
         getFragmentManager().beginTransaction().replace(R.id.youtube_player_fragment, mYoutubeFragment).commit();
         rightMenu.setOnDrawerStateChangeListener(new OnDrawerStateChangeListener() {
 
@@ -603,6 +575,13 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
     public void maximize() {
         mView.maximize();
+    }
+    public void minimize() {
+        mView.minimize();
+    }
+    
+    public boolean isMaximize(){
+    	return mView.isMaximized();
     }
 
     /**
