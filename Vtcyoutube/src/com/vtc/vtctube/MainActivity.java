@@ -268,6 +268,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerStateChange(int oldState, int newState) {
+				
 				if (newState == MenuDrawer.STATE_CLOSED) {
 
 					clickMenu(positionActive);
@@ -293,8 +294,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 					@Override
 					public void onDrawerStateChange(int oldState, int newState) {
+						Log.d("1111111111111","kksksks");
+						if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
+							mVideoPlayerFragment.minimize();
+						}
+					
 						if (newState == MenuDrawer.STATE_OPEN) {
-							addViewPost();
+							setDisplayView();
 						}
 						if (itemActive != null
 								& newState == MenuDrawer.STATE_CLOSED) {
@@ -413,7 +419,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
 				if (edSearch.getText().toString().length() == 0) {
 					Utils.getDialogMessges(MainActivity.this,
-							"Vui lÃ²ng nháº­p tá»« khÃ³a tÃ¬m kiáº¿m");
+							"Vui lòng nhập từ khóa tìm kiếm");
 
 				} else {
 					Utils.hideSoftKeyboard(MainActivity.this);
@@ -469,25 +475,25 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 	}
 
-	public void addViewPost() {
+	public void setDisplayView() {
 
 		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
 				PinnedAdapter.YEUTHICH);
 
 		if (listData.size() == 0) {
-			String url = Utils.host + "get_posts?count=20&page=2";
+			String url = Utils.host + "get_posts?count=10&page=5";
 			ResultCallBack callBack = new ResultCallBack();
 			if (!isLoadding && listVideoRanDom.size() == 0) {
 				prLoadLike.setVisibility(View.VISIBLE);
 				isLoadding = true;
 				new AysnRequestHttp(mainView, Utils.LOAD_FIRST_DATA, null,
 						callBack).execute(url);
-			} else if (MainActivity.listVideoRanDom.size() != adapter
-					.getCount()) {
-				addViewData(listVideoRanDom);
 			}
 		} else if (listData.size() != adapter.getCount()) {
+			if (listVideoRanDom != null) {
+				listVideoRanDom = new ArrayList<ItemPost>();
+			}
 			addViewData(listData);
 		}
 
@@ -550,11 +556,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu(int position) {
-		if (mVideoPlayerFragment != null
-				&& mVideoPlayerFragment.isMaximize()) {
+		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
 			mVideoPlayerFragment.minimize();
 		}
-		
+
 		fragmentManager = getSupportFragmentManager();
 		ft = fragmentManager.beginTransaction();
 
@@ -1155,36 +1160,32 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-			MainActivity.lblError.setVisibility(View.GONE);
-			final int left = leftMenu.getDrawerState();
-			if (left == MenuDrawer.STATE_OPEN
-					|| left == MenuDrawer.STATE_OPENING) {
-				leftMenu.closeMenu();
-				return;
-			}
-			final int right = rightMenu.getDrawerState();
-			if (right == MenuDrawer.STATE_OPEN
-					|| right == MenuDrawer.STATE_OPENING) {
-				rightMenu.closeMenu();
-				return;
-			}
+		MainActivity.lblError.setVisibility(View.GONE);
+		final int left = leftMenu.getDrawerState();
+		if (left == MenuDrawer.STATE_OPEN || left == MenuDrawer.STATE_OPENING) {
+			leftMenu.closeMenu();
+			return;
+		}
+		final int right = rightMenu.getDrawerState();
+		if (right == MenuDrawer.STATE_OPEN || right == MenuDrawer.STATE_OPENING) {
+			rightMenu.closeMenu();
+			return;
+		}
 
-			if (mVideoPlayerFragment != null
-					&& mVideoPlayerFragment.isMaximize()) {
-				mVideoPlayerFragment.minimize();
-				return;
-			}
-			positionPreview = 0;
-			positionActive = Integer.MAX_VALUE;
+		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
+			mVideoPlayerFragment.minimize();
+			return;
+		}
+		positionPreview = 0;
+		positionActive = Integer.MAX_VALUE;
 
-			Fragment myAbout = getSupportFragmentManager().findFragmentByTag(
-					currentTag);
-			if (myAbout != null && myAbout.isVisible()) {
-				onBackView();
-				return;
-			}
+		Fragment myAbout = getSupportFragmentManager().findFragmentByTag(
+				currentTag);
+		if (myAbout != null && myAbout.isVisible()) {
+			onBackView();
+			return;
+		}
 
-		
 		finish();
 		System.exit(0);
 	}
