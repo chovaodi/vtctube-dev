@@ -140,7 +140,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private SlidingLayer mSlidingLayer;
 	private Button btnFaceBook;
 	private Button btnGoogle;
-
+	private ResultCallBack callBack = new ResultCallBack();
+	
 	private int positionActive = Integer.MAX_VALUE;
 	private int positionPreview = 0;
 	private static final int RC_SIGN_IN = 0;
@@ -270,7 +271,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 					mVideoPlayerFragment.minimize();
 				}
 				if (newState == MenuDrawer.STATE_CLOSED) {
-
+					Log.d("111111111","1111111111dndn");
 					clickMenu(positionActive);
 				}
 
@@ -300,9 +301,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 					
 						if (newState == MenuDrawer.STATE_OPEN) {
 							setDisplayView();
+							Log.d("11111111","test111111111"); 
 						}
 						if (itemActive != null
-								& newState == MenuDrawer.STATE_CLOSED) {
+								&& newState == MenuDrawer.STATE_CLOSED) {
 							Utils.getVideoView(itemActive, MainActivity.this,
 									listVideoRanDom);
 							itemActive = null;
@@ -482,7 +484,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		if (listData.size() == 0) {
 			String url = Utils.host + "get_posts?count=10&page=5";
-			ResultCallBack callBack = new ResultCallBack();
+		
 			if (!isLoadding && listVideoRanDom.size() == 0) {
 				prLoadLike.setVisibility(View.VISIBLE);
 				isLoadding = true;
@@ -544,7 +546,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public void addViewData(List<ItemPost> list) {
 		adapter.clear();
-		adapter.notifyDataSetChanged();
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getStatus().equals("publish")) {
 				list.get(i).setType(PinnedAdapter.ITEM);
@@ -555,6 +556,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu(int position) {
+		Log.d("Chovaoid","Chovaoid");
 		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
 			mVideoPlayerFragment.minimize();
 		}
