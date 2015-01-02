@@ -114,8 +114,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private ImageView imgAvata;
 	private SearchView searchView;
-	// private LinearLayout lineAdmob;
-	// private AdView adView;
 	private ProgressBar prLoadLike;
 
 	public static DatabaseHelper myDbHelper;
@@ -268,7 +266,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerStateChange(int oldState, int newState) {
-				
+				if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
+					mVideoPlayerFragment.minimize();
+				}
 				if (newState == MenuDrawer.STATE_CLOSED) {
 
 					clickMenu(positionActive);
@@ -294,7 +294,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 					@Override
 					public void onDrawerStateChange(int oldState, int newState) {
-						Log.d("1111111111111","kksksks");
 						if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
 							mVideoPlayerFragment.minimize();
 						}

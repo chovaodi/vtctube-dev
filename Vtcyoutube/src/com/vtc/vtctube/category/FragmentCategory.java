@@ -13,7 +13,6 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +26,6 @@ import android.widget.ListView;
 import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.database.DatabaseHelper;
-import com.vtc.vtctube.fragment.VideoPlayerFragment;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
@@ -60,7 +58,6 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 	private String queryLikeVideo;
 
 	private static boolean isLoadding = false;
-	private boolean isLoadLocal = true;
 
 	private ResultOnclikTab callBackOnlick = new ResultOnclikTab();
 	private ResultCallBack callBack = new ResultCallBack();;
