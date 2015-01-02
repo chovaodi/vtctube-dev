@@ -146,9 +146,10 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 			holder.imgIcon.setImageDrawable(context.getResources().getDrawable(
 					R.drawable.error_home));
 		} else {
-
-			Picasso.with(context).load(item.getUrl())
-					.placeholder(R.drawable.img_erorrs).into(holder.imgIcon);
+			if (item.getUrl().length() > 0)
+				Picasso.with(context).load(item.getUrl())
+						.placeholder(R.drawable.img_erorrs)
+						.into(holder.imgIcon);
 
 		}
 

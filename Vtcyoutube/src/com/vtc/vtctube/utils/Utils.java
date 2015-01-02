@@ -62,7 +62,7 @@ public class Utils {
 
 	public static String TAG_NEWFEED = "TAG_NEWFEED";
 	public static String TAG_ABOUT = "TAG_ABOUT";
-	public static String TAG_LIKE = "TAG_LIKE";
+	public static String TAG_LIKE = "TAG_LIKE_VIDEO";
 	public static String TAG_HOME = "TAG_HOME";
 	public static String TAG_CATE = "TAG_CATE";
 	public static String TAG_RESENT = "TAG_RESENT";

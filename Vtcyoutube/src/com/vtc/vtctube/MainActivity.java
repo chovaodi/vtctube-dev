@@ -442,7 +442,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		emailIntent.setType("text/plain");
 
 		emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Ä�Ã¡nh giÃ¡ VTCTube");
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "VTCTube");
 		emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi All....");
 
 		try {
@@ -483,6 +483,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				PinnedAdapter.YEUTHICH);
 
 		if (listData.size() == 0) {
+			Log.d("1111111111","111111111111");
 			String url = Utils.host + "get_posts?count=10&page=5";
 		
 			if (!isLoadding && listVideoRanDom.size() == 0) {
@@ -492,6 +493,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						callBack).execute(url);
 			}
 		} else if (listData.size() != adapter.getCount()) {
+			Log.d("222222222222","2222222");
 			if (listVideoRanDom != null) {
 				listVideoRanDom = new ArrayList<ItemPost>();
 			}
@@ -578,7 +580,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 
 		case R.id.menu_video_moinhat:
-			Log.d("Chovaodi", "Má»›i nháº¥t");
 			actionNewvideo();
 			break;
 		case R.id.menu_video_xemnhieu:
@@ -599,9 +600,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 				positionPreview = 0;
 				positionActive = Integer.MAX_VALUE;
 				setHome();
-				Utils.getDialogMessges(
-						MainActivity.this,
-						"Báº¡n chÆ°a xem video nÃ o, chÃºng tÃ´i cÃ³ hÃ ng ngÃ n video hay cho báº¡n thÆ°á»Ÿng thá»©c");
 			}
 
 			break;
@@ -617,6 +615,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			addNewFeed();
 			break;
 		}
+		positionActive=Integer.MAX_VALUE;
 	}
 
 	public void setHome() {
@@ -857,7 +856,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		Utils.hideSoftKeyboard(MainActivity.this);
 
-		MainActivity.callBackCLick.onClick(false, "TÃ¬m kiáº¿m");
+		MainActivity.callBackCLick.onClick(false, "Tìm kiếm");
 		FragmentManager fragmentManager = MainActivity.this
 				.getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -917,7 +916,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_LIKE);
 		} else {
-			//
 			ft.replace(R.id.container, fragment, Utils.TAG_LIKE);
 		}
 
@@ -971,7 +969,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void addNewFeed() {
-		MainActivity.callBackCLick.onClick(true, "ThÃ´ng bÃ¡o má»›i");
+		MainActivity.callBackCLick.onClick(true, "Thông báo mới");
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		FragmentNewfeed fragment = null;
