@@ -549,7 +549,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void addViewData(List<ItemPost> list) {
 		adapter.clear();
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getStatus().equals("publish")) {
+			if ("publish".equals(list.get(i).getStatus())) {
 				list.get(i).setType(PinnedAdapter.ITEM);
 				adapter.add(list.get(i));
 			}
