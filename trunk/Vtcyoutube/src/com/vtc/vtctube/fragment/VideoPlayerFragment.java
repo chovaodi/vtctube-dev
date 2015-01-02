@@ -626,7 +626,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
      * Resume the video reproduced in the YouTubePlayer.
      */
     private void playVideo() {
-        if (!mPlayer.isPlaying()) {
+        if (mPlayer!=null&&!mPlayer.isPlaying()) {
             mPlayer.play();
         }
     }
