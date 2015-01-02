@@ -46,9 +46,5 @@
     </GridView>
     <!-- Draggable View -->
 
-    <FrameLayout
-        android:id="@+id/frame_play_video"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
 </LinearLayout>
