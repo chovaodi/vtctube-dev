@@ -13,6 +13,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -140,6 +141,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Log.d("category","adjksjksjk");
 		v = inflater.inflate(R.layout.category_layout, container, false);
 		lineTab = (LinearLayout) v.findViewById(R.id.lineTab);
 		lineTab.setVisibility(View.VISIBLE);
