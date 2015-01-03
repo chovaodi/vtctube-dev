@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".MainActivity"
-    android:id="@+id/main_screen">
+    tools:context=".MainActivity" >
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:background="@android:color/white" >
 
         <FrameLayout
             android:id="@+id/container"
@@ -28,20 +28,22 @@
             android:textSize="15dp"
             android:visibility="gone" />
 
-     <!--    <LinearLayout
+        <!--
+        <LinearLayout
             android:id="@+id/adview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:orientation="vertical" >
-        </LinearLayout> -->
+        </LinearLayout>
+        -->
 
         <ProgressBar
-            android:layout_gravity="center"
             android:id="@+id/progressBar1"
-            android:visibility="gone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
         <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
             android:id="@+id/google_now"
@@ -91,9 +93,13 @@
                     android:background="@drawable/facebook_bgr"
                     android:text="Login with Facebook"
                     android:textColor="@android:color/white" />
-
             </LinearLayout>
         </LinearLayout>
     </com.vtc.vtctube.SlidingLayer>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/player_screen"/>
 
 </RelativeLayout>

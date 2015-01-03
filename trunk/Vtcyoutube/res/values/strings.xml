@@ -30,6 +30,7 @@
     <string name="lblmenu_setting">Cài đặt</string>
     <string name="lblmenu_taitro">Nhà tài trợ</string>
     <string name="lblMsgrong">Không tìm thấy nội dung này. Vui lòng thử lại sau</string>
+    <string name="not_available_while_offline">Không thể thực hiện khi ngoại tuyến</string>
     <string name="help_lienhe">
 <![CDATA[  
 

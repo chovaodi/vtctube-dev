@@ -938,14 +938,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			fragment = FragmentCategory.newInstance(cate, title);
 			ft.addToBackStack(null);
-			ft.add(R.id.container, fragment, Utils.TAG_CATE);
+			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
 		} else {
 
 			FragmentCategory fragmentTmp = new FragmentCategory();
 			fragmentTmp.setCate(cate);
-			//ft.replace(R.id.container, fragment, Utils.TAG_CATE);
+			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
 		}
-
 		ft.commitAllowingStateLoss();
 
 	}
@@ -1371,6 +1370,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	private void displayVideo() {
+	    Context context = getApplicationContext();
+	    if(Utils.hasConnection(context) == false) {
+	        Toast.makeText(context, context.getResources().getString(R.string.not_available_while_offline), Toast.LENGTH_LONG).show();
+	        return;
+	    }
 		Log.d("VTCTube", "displayVideo: " + mVideoPlayerFragment);
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager
@@ -1378,7 +1382,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (mVideoPlayerFragment == null) {
 			mVideoPlayerFragment = VideoPlayerFragment.newInstance();
 			fragmentTransaction
-					.add(R.id.main_screen, mVideoPlayerFragment,
+					.replace(R.id.main_screen, mVideoPlayerFragment,
 							Utils.TAG_VIEW_VIDEO).addToBackStack(null).commit();
 		} else {
 			mVideoPlayerFragment.updateData();
