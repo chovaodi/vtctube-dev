@@ -11,7 +11,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -467,21 +466,11 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 			@Override
 			public void onMaximized() {
 				playVideo();
-				View v = mYoutubeFragment.getView();
-                Log.d("VTCTube", "View " + v);
-                if(v != null) {
-                    v.setBackgroundResource(0);
-                }
 			}
 
 			@Override
 			public void onMinimized() {
 				playVideo();
-				View v = mYoutubeFragment.getView();
-				Log.d("VTCTube", "View " + v);
-				if(v != null) {
-				    v.setBackgroundResource(R.drawable.bgr_playvideo);
-				}
 			}
 
 			@Override
