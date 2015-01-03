@@ -489,7 +489,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	 * Pause the video reproduced in the YouTubePlayer.
 	 */
 	private void pauseVideo() {
-		if (mPlayer.isPlaying()) {
+		if (mPlayer != null && mPlayer.isPlaying()) {
 			mPlayer.pause();
 		}
 	}
