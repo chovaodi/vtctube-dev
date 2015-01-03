@@ -32,23 +32,27 @@ public class FragmentLike extends Fragment {
 	private static ListView listvideo;
 
 	public static SmoothProgressBar smooth;
-	private String queryResent;
 	private ResultOnclickTab callBackOnlick = null;
 	private ResultSearchCallBack callBackSearch;
 
 	private List<ItemPost> listData = null;
-	private int key;
 
 	int mNum;
 	private View v;
 	private static FragmentLike f = null;
-	 private OnDisplayVideo mOnDisplayVideo;
+	private OnDisplayVideo mOnDisplayVideo;
 
 	// private PullToRefreshLayout mPullToRefreshLayout;
 	public static String[] cateName;
 
+	public static FragmentLike newInstance() {
+		if (f == null) {
+			f = new FragmentLike();
+		}
+		return f;
+	}
+
 	public void onResumeData(int key) {
-		this.key = key;
 		init();
 		adapter.clear();
 		addViewPost();
@@ -123,17 +127,16 @@ public class FragmentLike extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		key = getArguments() != null ? getArguments().getInt("num") : 1;
 	}
 
 	@Override
-    public void onAttach(Activity activity) {
-        if(activity instanceof OnDisplayVideo) {
-            mOnDisplayVideo = (OnDisplayVideo) activity;
-        }
-        super.onAttach(activity);
-    }
-	
+	public void onAttach(Activity activity) {
+		if (activity instanceof OnDisplayVideo) {
+			mOnDisplayVideo = (OnDisplayVideo) activity;
+		}
+		super.onAttach(activity);
+	}
+
 	/**
 	 * The Fragment's UI is just a simple text view showing its instance number.
 	 */
@@ -171,9 +174,9 @@ public class FragmentLike extends Fragment {
 		@Override
 		public void onCLickView(ItemPost item) {
 			Utils.getVideoView(item, getActivity(), listData);
-			if(mOnDisplayVideo != null) {
-                mOnDisplayVideo.display();
-            }
+			if (mOnDisplayVideo != null) {
+				mOnDisplayVideo.display();
+			}
 		}
 	}
 
@@ -191,11 +194,11 @@ public class FragmentLike extends Fragment {
 	}
 
 	public void addView() {
-		if(listData==null||listData.size()==0){
+		if (listData == null || listData.size() == 0) {
 			MainActivity.lblError.setVisibility(View.VISIBLE);
 			return;
 		}
-		
+
 		for (int i = 0; i < listData.size(); i++) {
 			if (listData.get(i).getStatus().equals("publish")) {
 				listData.get(i).setType(PinnedAdapter.ITEM);

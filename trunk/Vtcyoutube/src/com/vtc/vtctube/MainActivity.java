@@ -141,7 +141,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private Button btnFaceBook;
 	private Button btnGoogle;
 	private ResultCallBack callBack = new ResultCallBack();
-	
+
 	private int positionActive = Integer.MAX_VALUE;
 	private int positionPreview = 0;
 	private static final int RC_SIGN_IN = 0;
@@ -267,11 +267,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerStateChange(int oldState, int newState) {
-				if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
+				if (mVideoPlayerFragment != null
+						&& mVideoPlayerFragment.isMaximize()) {
 					mVideoPlayerFragment.minimize();
 				}
 				if (newState == MenuDrawer.STATE_CLOSED) {
-					Log.d("111111111","1111111111dndn");
+					Log.d("111111111", "1111111111dndn");
 					clickMenu(positionActive);
 				}
 
@@ -295,13 +296,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 					@Override
 					public void onDrawerStateChange(int oldState, int newState) {
-						if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
+						if (mVideoPlayerFragment != null
+								&& mVideoPlayerFragment.isMaximize()) {
 							mVideoPlayerFragment.minimize();
 						}
-					
+
 						if (newState == MenuDrawer.STATE_OPEN) {
 							setDisplayView();
-							Log.d("11111111","test111111111"); 
+							Log.d("11111111", "test111111111");
 						}
 						if (itemActive != null
 								&& newState == MenuDrawer.STATE_CLOSED) {
@@ -483,9 +485,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 				PinnedAdapter.YEUTHICH);
 
 		if (listData.size() == 0) {
-			Log.d("1111111111","111111111111");
+			Log.d("1111111111", "111111111111");
 			String url = Utils.host + "get_posts?count=10&page=5";
-		
+
 			if (!isLoadding && listVideoRanDom.size() == 0) {
 				prLoadLike.setVisibility(View.VISIBLE);
 				isLoadding = true;
@@ -493,7 +495,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						callBack).execute(url);
 			}
 		} else if (listData.size() != adapter.getCount()) {
-			Log.d("222222222222","2222222");
+			Log.d("222222222222", "2222222");
 			if (listVideoRanDom != null) {
 				listVideoRanDom = new ArrayList<ItemPost>();
 			}
@@ -558,7 +560,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu(int position) {
-		Log.d("Chovaoid","Chovaoid");
+		Log.d("Chovaoid", "Chovaoid");
 		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
 			mVideoPlayerFragment.minimize();
 		}
@@ -615,7 +617,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			addNewFeed();
 			break;
 		}
-		positionActive=Integer.MAX_VALUE;
+		positionActive = Integer.MAX_VALUE;
 	}
 
 	public void setHome() {
@@ -629,7 +631,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		} else {
 			ft.replace(R.id.container, fragment, Utils.TAG_HOME);
 		}
-		ft.commit();
+		ft.commitAllowingStateLoss();
 		FragmentCategory.frament = null;
 		MainActivity.callBackCLick.onClick(false, "");
 	}
@@ -876,7 +878,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.show(fragment);
 		}
 
-		ft.commit();
+		ft.commitAllowingStateLoss();
 
 	}
 
@@ -898,7 +900,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.replace(R.id.container, fragment, Utils.TAG_RESENT);
 		}
 
-		ft.commit();
+		ft.commitAllowingStateLoss();
 
 	}
 
@@ -912,14 +914,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 				.findFragmentByTag(Utils.TAG_LIKE);
 		currentTag = Utils.TAG_LIKE;
 		if (fragment == null) {
-			fragment = new FragmentLike();
+			fragment = FragmentLike.newInstance();
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_LIKE);
 		} else {
 			ft.replace(R.id.container, fragment, Utils.TAG_LIKE);
 		}
 
-		ft.commit();
+		ft.commitAllowingStateLoss();
 
 	}
 
@@ -941,10 +943,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			FragmentCategory fragmentTmp = new FragmentCategory();
 			fragmentTmp.setCate(cate);
-			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
+			//ft.replace(R.id.container, fragment, Utils.TAG_CATE);
 		}
 
-		ft.commit();
+		ft.commitAllowingStateLoss();
 
 	}
 
@@ -964,7 +966,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.replace(R.id.container, fragment, Utils.TAG_ABOUT);
 		}
 
-		ft.commit();
+		ft.commitAllowingStateLoss();
 
 	}
 
@@ -984,7 +986,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.replace(R.id.container, fragment, Utils.TAG_NEWFEED);
 		}
 
-		ft.commit();
+		ft.commitAllowingStateLoss();
 
 	}
 

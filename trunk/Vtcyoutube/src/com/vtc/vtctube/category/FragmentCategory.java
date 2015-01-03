@@ -13,7 +13,6 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -130,18 +129,18 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 
 	@Override
 	public void onAttach(Activity activity) {
-	    if(activity instanceof OnDisplayVideo) {
-	        mOnDisplayVideo = (OnDisplayVideo) activity;
-	    }
-	    super.onAttach(activity);
+		if (activity instanceof OnDisplayVideo) {
+			mOnDisplayVideo = (OnDisplayVideo) activity;
+		}
+		super.onAttach(activity);
 	}
+
 	/**
 	 * The Fragment's UI is just a simple text view showing its instance number.
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Log.d("category","adjksjksjk");
 		v = inflater.inflate(R.layout.category_layout, container, false);
 		lineTab = (LinearLayout) v.findViewById(R.id.lineTab);
 		lineTab.setVisibility(View.VISIBLE);
@@ -304,8 +303,8 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 		@Override
 		public void onCLickView(ItemPost item) {
 			Utils.getVideoView(item, getActivity(), listViewNew);
-			if(mOnDisplayVideo != null) {
-			    mOnDisplayVideo.display();
+			if (mOnDisplayVideo != null) {
+				mOnDisplayVideo.display();
 			}
 		}
 	}
