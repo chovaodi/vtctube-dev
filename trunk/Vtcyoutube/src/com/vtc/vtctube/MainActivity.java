@@ -938,7 +938,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			fragment = FragmentCategory.newInstance(cate, title);
 			ft.addToBackStack(null);
-			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
+			ft.add(R.id.container, fragment, Utils.TAG_CATE);
 		} else {
 
 			FragmentCategory fragmentTmp = new FragmentCategory();
