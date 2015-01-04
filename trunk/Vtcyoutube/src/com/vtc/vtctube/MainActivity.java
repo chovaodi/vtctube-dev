@@ -559,7 +559,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu(int position) {
-
+		isMenuCate=false;
 		fragmentManager = getSupportFragmentManager();
 		ft = fragmentManager.beginTransaction();
 
@@ -612,7 +612,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			addNewFeed();
 			break;
 		}
+		invalidateOptionsMenu();
 		positionActive = Integer.MAX_VALUE;
+		
 	}
 
 	public void setHome() {
@@ -848,9 +850,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void getCate(String title, String cate) {
+			isMenuCate=true;
 			addFragment(title, cate);
+			invalidateOptionsMenu();
 		}
-
 	}
 
 	public void addFragmentSearch(String json, String tag, int keyOption,
@@ -993,8 +996,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onClick(boolean isShowTitle, String title) {
-			isMenuCate = isShowTitle;
-
+		
 			if (isShowTitle) {
 				lblTitle.setVisibility(View.VISIBLE);
 				imgLogo.setVisibility(View.GONE);
@@ -1002,6 +1004,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				positionPreview = 0;
 				positionActive = Integer.MAX_VALUE;
 			} else {
+				
 				lblTitle.setVisibility(View.GONE);
 				imgLogo.setVisibility(View.VISIBLE);
 			}
