@@ -1107,6 +1107,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						} catch (Exception e) {
 							// TODO: handle exception
 						}
+						zoominPlay();
 
 						break;
 					case Utils.LOAD_NEWVIDEO:
