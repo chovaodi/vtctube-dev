@@ -12,16 +12,16 @@
         android:layout_margin="5dp"
         android:src="@drawable/logo" />
 
-    <com.vtc.vtctube.font.RobotoTextviewBold
+    <com.vtc.vtctube.font.RobotoLightTextView
         android:id="@+id/lblHeaderTile"
         android:layout_width="wrap_content"
         android:paddingLeft="5dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|left"
         android:text="Medium Text"
-        android:textAllCaps="true"
+        android:textAllCaps="false"
         android:visibility="gone"
-        android:textColor="#d18201"
-        android:textSize="18dp" />
+        android:textColor="#232323"
+        android:textSize="16dp" />
 
 </FrameLayout>

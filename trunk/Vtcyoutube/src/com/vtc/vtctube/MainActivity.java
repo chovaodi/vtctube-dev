@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
@@ -267,13 +268,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerStateChange(int oldState, int newState) {
-				if (mVideoPlayerFragment != null
-						&& mVideoPlayerFragment.isMaximize()) {
-					mVideoPlayerFragment.minimize();
-				}
+
 				if (newState == MenuDrawer.STATE_CLOSED) {
-					Log.d("111111111", "1111111111dndn");
 					clickMenu(positionActive);
+				}
+
+				if (newState == MenuDrawer.STATE_OPEN) {
+					zoominPlay();
 				}
 
 				Utils.hideSoftKeyboard(MainActivity.this);
@@ -303,8 +304,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 						if (newState == MenuDrawer.STATE_OPEN) {
 							setDisplayView();
-							Log.d("11111111", "test111111111");
+							zoominPlay();
 						}
+
 						if (itemActive != null
 								&& newState == MenuDrawer.STATE_CLOSED) {
 							Utils.getVideoView(itemActive, MainActivity.this,
@@ -333,7 +335,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 		Fragment newFragment = FragmentHome.newInstance(1);
-		ft.add(R.id.container, newFragment, Utils.TAG_HOME).commit();
+		ft.replace(R.id.container, newFragment, Utils.TAG_HOME).commit();
 
 		edSearch = (EditText) findViewById(R.id.edSearch);
 		edSearch.setOnEditorActionListener(new DoneOnEditorActionListener());
@@ -382,6 +384,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
+	public void zoominPlay() {
+		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
+			mVideoPlayerFragment.minimize();
+		}
+	}
+
 	public void setViewTab() {
 		String queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 		List<ItemPost> list = Utils.getVideoLike(queryLikeVideo, 1);
@@ -422,7 +430,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
 				if (edSearch.getText().toString().length() == 0) {
 					Utils.getDialogMessges(MainActivity.this,
-							"Vui lòng nhập từ khóa tìm kiếm");
+							getResources().getString(R.string.lblNullTk));
 
 				} else {
 					Utils.hideSoftKeyboard(MainActivity.this);
@@ -438,18 +446,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	protected void sendEmail() {
-		String[] TO = { "vtctube.vn@gmail.com" };
-		Intent emailIntent = new Intent(Intent.ACTION_SEND);
-		emailIntent.setData(Uri.parse("mailto:"));
-		emailIntent.setType("text/plain");
-
-		emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "VTCTube");
-		emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi All....");
-
+		Uri uri = Uri.parse("market://details?id="
+				+ MainActivity.this.getPackageName());
+		Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
 		try {
-			startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-		} catch (android.content.ActivityNotFoundException ex) {
+			startActivity(goToMarket);
+		} catch (ActivityNotFoundException e) {
+			startActivity(new Intent(Intent.ACTION_VIEW,
+					Uri.parse("http://play.google.com/store/apps/details?id="
+							+ MainActivity.this.getPackageName())));
 		}
 	}
 
@@ -479,15 +484,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void setDisplayView() {
-
 		String sqlLike = "SELECT * FROM " + DatabaseHelper.TB_LIKE;
 		List<ItemPost> listData = Utils.getVideoLike(sqlLike,
 				PinnedAdapter.YEUTHICH);
-
 		if (listData.size() == 0) {
-			Log.d("1111111111", "111111111111");
 			String url = Utils.host + "get_posts?count=10&page=5";
-
 			if (!isLoadding && listVideoRanDom.size() == 0) {
 				prLoadLike.setVisibility(View.VISIBLE);
 				isLoadding = true;
@@ -495,7 +496,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 						callBack).execute(url);
 			}
 		} else if (listData.size() != adapter.getCount()) {
-			Log.d("222222222222", "2222222");
 			if (listVideoRanDom != null) {
 				listVideoRanDom = new ArrayList<ItemPost>();
 			}
@@ -544,7 +544,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public void onCLickView(ItemPost item) {
 			// TODO Auto-generated method stub
-
 		}
 	}
 
@@ -560,10 +559,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu(int position) {
-		Log.d("Chovaoid", "Chovaoid");
-		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
-			mVideoPlayerFragment.minimize();
-		}
 
 		fragmentManager = getSupportFragmentManager();
 		ft = fragmentManager.beginTransaction();
@@ -631,7 +626,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		} else {
 			ft.replace(R.id.container, fragment, Utils.TAG_HOME);
 		}
-		ft.commitAllowingStateLoss();
+		ft.commit();
 		FragmentCategory.frament = null;
 		MainActivity.callBackCLick.onClick(false, "");
 	}
@@ -657,7 +652,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void setAccInfo() {
 		if (globalApp.getAccountModel() != null) {
 
-			if (lblUserName.getText().equals("Ä�Äƒng nháº­p")) {
+			if (lblUserName.getText().equals(getResources().getString(R.string.lbllogin))) {
 				if (globalApp.getAccountModel().getType() == AccountModel.LOGIN_FACE) {
 
 					Picasso.with(MainActivity.this)
@@ -760,9 +755,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		String shareLink = "http://vtctube.vn/" + slug + "-" + ".html";
 		Feed feed = new Feed.Builder().setMessage(title)
-				.setName("VTCTube-Xem thá»�a thÃ­ch. Chá»‰ cáº§n Click")
-				.setCaption("")
-				.setDescription("Tráº£i nghiá»‡m má»›i vá»›i VTCTube")
+				.setName(getResources().getString(R.string.lblNameshare)).setCaption("")
+				.setDescription(getResources().getString(R.string.lblDescription))
 				.setPicture(thumnail).setLink(shareLink).build();
 		SimpleFacebook.getInstance().publish(feed, true, onPublishListener);
 	}
@@ -770,7 +764,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	OnPublishListener onPublishListener = new OnPublishListener() {
 		@Override
 		public void onComplete(String postId) {
-			Toast.makeText(MainActivity.this, "Chia sáº½ thÃ nh cÃ´ng",
+			Toast.makeText(MainActivity.this, getResources().getString(R.string.lblShare),
 					Toast.LENGTH_LONG).show();
 		}
 
@@ -854,11 +848,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
-	public void addFragmentSearch(String json, String tag, int keyOption) {
+	public void addFragmentSearch(String json, String tag, int keyOption,
+			String title) {
 
 		Utils.hideSoftKeyboard(MainActivity.this);
 
-		MainActivity.callBackCLick.onClick(false, "Tìm kiếm");
+		MainActivity.callBackCLick.onClick(true, title);
 		FragmentManager fragmentManager = MainActivity.this
 				.getSupportFragmentManager();
 		FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -878,12 +873,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.show(fragment);
 		}
 
-		ft.commitAllowingStateLoss();
+		ft.commit();
 
 	}
 
 	public void addFragmentResent(int id, String title) {
-		MainActivity.callBackCLick.onClick(false, title);
+		MainActivity.callBackCLick.onClick(true, title);
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		fragmentManager = getSupportFragmentManager();
@@ -900,15 +895,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.replace(R.id.container, fragment, Utils.TAG_RESENT);
 		}
 
-		ft.commitAllowingStateLoss();
+		ft.commit();
 
 	}
 
 	public void addFragmentLike(int id, String title) {
-		MainActivity.callBackCLick.onClick(false, title);
+		MainActivity.callBackCLick.onClick(true, title);
 		FragmentTransaction ft = fragmentManager.beginTransaction();
-		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-		fragmentManager = getSupportFragmentManager();
 
 		FragmentLike fragment = (FragmentLike) fragmentManager
 				.findFragmentByTag(Utils.TAG_LIKE);
@@ -918,10 +911,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_LIKE);
 		} else {
+
 			ft.replace(R.id.container, fragment, Utils.TAG_LIKE);
 		}
 
-		ft.commitAllowingStateLoss();
+		ft.commit();
 
 	}
 
@@ -930,31 +924,31 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-		FragmentCategory fragment = null;
-		fragment = (FragmentCategory) fragmentManager
+		FragmentCategory fragment = (FragmentCategory) fragmentManager
 				.findFragmentByTag(Utils.TAG_CATE);
 		currentTag = Utils.TAG_CATE;
-		if (fragment == null) {
-
+		if (fragment == null || !fragment.isInLayout()) {
 			fragment = FragmentCategory.newInstance(cate, title);
 			ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
+
 		} else {
 
-			FragmentCategory fragmentTmp = new FragmentCategory();
-			fragmentTmp.setCate(cate);
-			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
+			// ft.hide(getSupportFragmentManager().findFragmentByTag(
+			// currentTag));
+			// ft.replace(R.id.container, fragment, Utils.TAG_CATE);
+
 		}
-		ft.commitAllowingStateLoss();
+
+		ft.commit();
 
 	}
 
 	public void addFragmentAbout() {
-		MainActivity.callBackCLick.onClick(true, "Giá»›i thiá»‡u");
+		MainActivity.callBackCLick.onClick(true, getResources().getString(R.string.lblAbout));
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-		FragmentAbout fragment = null;
-		fragment = (FragmentAbout) fragmentManager
+		FragmentAbout fragment = (FragmentAbout) fragmentManager
 				.findFragmentByTag(Utils.TAG_ABOUT);
 		currentTag = Utils.TAG_ABOUT;
 		if (fragment == null) {
@@ -965,16 +959,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.replace(R.id.container, fragment, Utils.TAG_ABOUT);
 		}
 
-		ft.commitAllowingStateLoss();
+		ft.commit();
 
 	}
 
 	public void addNewFeed() {
-		MainActivity.callBackCLick.onClick(true, "Thông báo mới");
+		MainActivity.callBackCLick.onClick(true, getResources().getString(R.string.lblThongbaomoi));
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-		FragmentNewfeed fragment = null;
-		fragment = (FragmentNewfeed) fragmentManager
+		FragmentNewfeed fragment = (FragmentNewfeed) fragmentManager
 				.findFragmentByTag(Utils.TAG_NEWFEED);
 		currentTag = Utils.TAG_NEWFEED;
 		if (fragment == null) {
@@ -985,7 +978,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ft.replace(R.id.container, fragment, Utils.TAG_NEWFEED);
 		}
 
-		ft.commitAllowingStateLoss();
+		ft.commit();
 
 	}
 
@@ -1017,7 +1010,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		// Create the search view
 		searchView = new SearchView(getSupportActionBar().getThemedContext());
-		searchView.setQueryHint("Tìm kiếm");
+		searchView.setQueryHint( getResources().getString(R.string.lblTimkiem));
 		searchView.setOnQueryTextListener(this);
 		searchView.setOnSuggestionListener(this);
 
@@ -1033,7 +1026,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		searchView.setSuggestionsAdapter(mSuggestionsAdapter);
 
-		menu.add(1, 10000, Menu.NONE, "Search")
+		menu.add(1, 10000, Menu.NONE,  getResources().getString(R.string.lblTimkiem))
 				.setIcon(
 						isLight ? R.drawable.icon_search
 								: R.drawable.icon_search)
@@ -1042,7 +1035,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		if (isMenuCate) {
-			SubMenu subMenu1 = menu.addSubMenu("Danh mục");
+			SubMenu subMenu1 = menu.addSubMenu( getResources().getString(R.string.lblDanhmuc));
 			for (int i = 0; i < FragmentHome.listData.size(); i++) {
 				subMenu1.add(0, Integer.parseInt(FragmentHome.listData.get(i)
 						.getIdCategory()), Menu.NONE, FragmentHome.listData
@@ -1064,7 +1057,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			leftMenu.toggleMenu();
 		} else if (id != 0 && id != 10000) {
 			lblTitle.setText(item.getTitle());
-			addFragment(item.getTitle().toString(), String.valueOf(id));
+			zoominPlay();
+			FragmentCategory fragmentTmp = new FragmentCategory();
+			fragmentTmp.setCate(String.valueOf(id));
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -1093,7 +1088,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 							JSONObject json = new JSONObject(result);
 							if (json.getString("status").equals("ok")) {
 								addFragmentSearch(result, Utils.TAG_SEARCH,
-										Utils.LOAD_SEARCH);
+										Utils.LOAD_SEARCH,getResources().getString(R.string.lblkqtq));
 
 							}
 						} catch (Exception e) {
@@ -1104,12 +1099,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 					case Utils.LOAD_NEWVIDEO:
 
 						addFragmentSearch(result, Utils.TAG_NEWVIDEO,
-								Utils.LOAD_NEWVIDEO);
+								Utils.LOAD_NEWVIDEO, getResources().getString(R.string.lblmenu_videomoi));
 						break;
 					case Utils.LOAD_XEMNHIEU:
 
 						addFragmentSearch(result, Utils.TAG_XEMNHIEU,
-								Utils.LOAD_XEMNHIEU);
+								Utils.LOAD_XEMNHIEU,  getResources().getString(R.string.lblmenu_xemnhieu));
 						break;
 					}
 
@@ -1172,10 +1167,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 			return;
 		}
 
-		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
-			mVideoPlayerFragment.minimize();
-			return;
-		}
+		zoominPlay();
+		
 		positionPreview = 0;
 		positionActive = Integer.MAX_VALUE;
 
@@ -1370,11 +1363,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	private void displayVideo() {
-	    Context context = getApplicationContext();
-	    if(Utils.hasConnection(context) == false) {
-	        Toast.makeText(context, context.getResources().getString(R.string.not_available_while_offline), Toast.LENGTH_LONG).show();
-	        return;
-	    }
+		Context context = getApplicationContext();
+		if (Utils.hasConnection(context) == false) {
+			Toast.makeText(
+					context,
+					context.getResources().getString(
+							R.string.not_available_while_offline),
+					Toast.LENGTH_LONG).show();
+			return;
+		}
 		Log.d("VTCTube", "displayVideo: " + mVideoPlayerFragment);
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager
