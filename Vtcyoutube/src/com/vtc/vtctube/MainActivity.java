@@ -429,8 +429,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
 				if (edSearch.getText().toString().length() == 0) {
-					Utils.getDialogMessges(MainActivity.this,
-							getResources().getString(R.string.lblNullTk));
+					Utils.getDialogMessges(MainActivity.this, getResources()
+							.getString(R.string.lblNullTk));
 
 				} else {
 					Utils.hideSoftKeyboard(MainActivity.this);
@@ -620,7 +620,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentHome fragment = (FragmentHome) fragmentManager
 				.findFragmentByTag(Utils.TAG_HOME);
 		if (fragment == null) {
-			ft.addToBackStack(null);
+			// ft.addToBackStack(null);
 			ft.replace(R.id.container, FragmentHome.newInstance(1),
 					Utils.TAG_HOME);
 		} else {
@@ -652,7 +652,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void setAccInfo() {
 		if (globalApp.getAccountModel() != null) {
 
-			if (lblUserName.getText().equals(getResources().getString(R.string.lbllogin))) {
+			if (lblUserName.getText().equals(
+					getResources().getString(R.string.lbllogin))) {
 				if (globalApp.getAccountModel().getType() == AccountModel.LOGIN_FACE) {
 
 					Picasso.with(MainActivity.this)
@@ -754,9 +755,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void setPostShare(String title, String thumnail, String slug) {
 
 		String shareLink = "http://vtctube.vn/" + slug + "-" + ".html";
-		Feed feed = new Feed.Builder().setMessage(title)
-				.setName(getResources().getString(R.string.lblNameshare)).setCaption("")
-				.setDescription(getResources().getString(R.string.lblDescription))
+		Feed feed = new Feed.Builder()
+				.setMessage(title)
+				.setName(getResources().getString(R.string.lblNameshare))
+				.setCaption("")
+				.setDescription(
+						getResources().getString(R.string.lblDescription))
 				.setPicture(thumnail).setLink(shareLink).build();
 		SimpleFacebook.getInstance().publish(feed, true, onPublishListener);
 	}
@@ -764,7 +768,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	OnPublishListener onPublishListener = new OnPublishListener() {
 		@Override
 		public void onComplete(String postId) {
-			Toast.makeText(MainActivity.this, getResources().getString(R.string.lblShare),
+			Toast.makeText(MainActivity.this,
+					getResources().getString(R.string.lblShare),
 					Toast.LENGTH_LONG).show();
 		}
 
@@ -865,7 +870,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (fragment == null) {
 			fragment = FragmentSearchResult.newInstance(json, queryCurent,
 					keyOption);
-			ft.addToBackStack(null);
+			// ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, tag);
 		} else {
 			FragmentSearchResult fragmentTmp = new FragmentSearchResult();
@@ -888,7 +893,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		currentTag = Utils.TAG_RESENT;
 		if (fragment == null) {
 			fragment = new FragmentResent();
-			ft.addToBackStack(null);
+			// ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_RESENT);
 		} else {
 			// FragmentResent
@@ -908,7 +913,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		currentTag = Utils.TAG_LIKE;
 		if (fragment == null) {
 			fragment = FragmentLike.newInstance();
-			ft.addToBackStack(null);
+			// ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_LIKE);
 		} else {
 
@@ -929,7 +934,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		currentTag = Utils.TAG_CATE;
 		if (fragment == null || !fragment.isInLayout()) {
 			fragment = FragmentCategory.newInstance(cate, title);
-			ft.addToBackStack(null);
+			// ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_CATE);
 
 		} else {
@@ -945,7 +950,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void addFragmentAbout() {
-		MainActivity.callBackCLick.onClick(true, getResources().getString(R.string.lblAbout));
+		MainActivity.callBackCLick.onClick(true,
+				getResources().getString(R.string.lblAbout));
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		FragmentAbout fragment = (FragmentAbout) fragmentManager
@@ -953,7 +959,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		currentTag = Utils.TAG_ABOUT;
 		if (fragment == null) {
 			fragment = FragmentAbout.newInstance();
-			ft.addToBackStack(null);
+			// ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_ABOUT);
 		} else {
 			ft.replace(R.id.container, fragment, Utils.TAG_ABOUT);
@@ -964,7 +970,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void addNewFeed() {
-		MainActivity.callBackCLick.onClick(true, getResources().getString(R.string.lblThongbaomoi));
+		MainActivity.callBackCLick.onClick(true,
+				getResources().getString(R.string.lblThongbaomoi));
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		// ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
 		FragmentNewfeed fragment = (FragmentNewfeed) fragmentManager
@@ -972,7 +979,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		currentTag = Utils.TAG_NEWFEED;
 		if (fragment == null) {
 			fragment = FragmentNewfeed.newInstance();
-			ft.addToBackStack(null);
+			// ft.addToBackStack(null);
 			ft.replace(R.id.container, fragment, Utils.TAG_NEWFEED);
 		} else {
 			ft.replace(R.id.container, fragment, Utils.TAG_NEWFEED);
@@ -1010,7 +1017,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		// Create the search view
 		searchView = new SearchView(getSupportActionBar().getThemedContext());
-		searchView.setQueryHint( getResources().getString(R.string.lblTimkiem));
+		searchView.setQueryHint(getResources().getString(R.string.lblTimkiem));
 		searchView.setOnQueryTextListener(this);
 		searchView.setOnSuggestionListener(this);
 
@@ -1026,7 +1033,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		searchView.setSuggestionsAdapter(mSuggestionsAdapter);
 
-		menu.add(1, 10000, Menu.NONE,  getResources().getString(R.string.lblTimkiem))
+		menu.add(1, 10000, Menu.NONE,
+				getResources().getString(R.string.lblTimkiem))
 				.setIcon(
 						isLight ? R.drawable.icon_search
 								: R.drawable.icon_search)
@@ -1035,7 +1043,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		if (isMenuCate) {
-			SubMenu subMenu1 = menu.addSubMenu( getResources().getString(R.string.lblDanhmuc));
+			SubMenu subMenu1 = menu.addSubMenu(getResources().getString(
+					R.string.lblDanhmuc));
 			for (int i = 0; i < FragmentHome.listData.size(); i++) {
 				subMenu1.add(0, Integer.parseInt(FragmentHome.listData.get(i)
 						.getIdCategory()), Menu.NONE, FragmentHome.listData
@@ -1088,7 +1097,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 							JSONObject json = new JSONObject(result);
 							if (json.getString("status").equals("ok")) {
 								addFragmentSearch(result, Utils.TAG_SEARCH,
-										Utils.LOAD_SEARCH,getResources().getString(R.string.lblkqtq));
+										Utils.LOAD_SEARCH, getResources()
+												.getString(R.string.lblkqtq));
 
 							}
 						} catch (Exception e) {
@@ -1098,13 +1108,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 						break;
 					case Utils.LOAD_NEWVIDEO:
 
-						addFragmentSearch(result, Utils.TAG_NEWVIDEO,
-								Utils.LOAD_NEWVIDEO, getResources().getString(R.string.lblmenu_videomoi));
+						addFragmentSearch(
+								result,
+								Utils.TAG_NEWVIDEO,
+								Utils.LOAD_NEWVIDEO,
+								getResources().getString(
+										R.string.lblmenu_videomoi));
 						break;
 					case Utils.LOAD_XEMNHIEU:
 
-						addFragmentSearch(result, Utils.TAG_XEMNHIEU,
-								Utils.LOAD_XEMNHIEU,  getResources().getString(R.string.lblmenu_xemnhieu));
+						addFragmentSearch(
+								result,
+								Utils.TAG_XEMNHIEU,
+								Utils.LOAD_XEMNHIEU,
+								getResources().getString(
+										R.string.lblmenu_xemnhieu));
 						break;
 					}
 
@@ -1167,15 +1185,22 @@ public class MainActivity extends SherlockFragmentActivity implements
 			return;
 		}
 
-		zoominPlay();
-		
+		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
+			mVideoPlayerFragment.minimize();
+			return;
+		}
+
 		positionPreview = 0;
 		positionActive = Integer.MAX_VALUE;
 
 		Fragment myAbout = getSupportFragmentManager().findFragmentByTag(
 				currentTag);
-		if (myAbout != null && myAbout.isVisible()) {
-			onBackView();
+		if (myAbout != null) {
+			MainActivity.lblError.setVisibility(View.GONE);
+			FragmentHome fragment = new FragmentHome();
+			getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+			FragmentCategory.frament = null;
+			MainActivity.callBackCLick.onClick(false, "");
 			return;
 		}
 
