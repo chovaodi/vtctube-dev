@@ -101,7 +101,7 @@ public class FragmentHome extends SherlockFragment {
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_top);
 
         MainActivity.progressBar.setVisibility(View.VISIBLE);
-        new CountDownTimer(300, 100) {
+        new CountDownTimer(100, 100) {
 
             @Override
             public void onTick(long millisUntilFinished) {
