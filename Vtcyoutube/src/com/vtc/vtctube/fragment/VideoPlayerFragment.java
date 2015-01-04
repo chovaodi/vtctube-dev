@@ -193,6 +193,9 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	}
 
 	public void updateData() {
+		if(adapterTab!=null){
+			adapterTab.clear();
+		}
 		lblYeuthich.setSelected(Utils.itemCurrent.isLike());
 		if (Utils.listLienquan != null && Utils.listLienquan.size() > 0) {
 			addViewItemLienquan(Utils.listLienquan);
@@ -352,21 +355,17 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 				new JavaScriptInterface(mActivity), "Android");
 
 		webview_fbview.setVisibility(View.VISIBLE);
-		// webview_fbview.setWebViewClient(new WebViewClient() {
-		// @Override
-		// public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		// Log.d("url", url);
-		//
-		// if
-		// (url.equalsIgnoreCase("https://m.facebook.com/plugins/login_success.php?refsrc=https%3A%2F%2Fm.facebook.com%2Fplugins%2Fcomments.php&refid=9&_rdr#_=_"))
-		// {
-		// loadComment("http://vtctube.vn/" + itemActive.getSlug());
-		// }
-		// return super.shouldOverrideUrlLoading(view, url);
-		// }
-		//
-		//
-		// });
+		webview_fbview.setWebViewClient(new WebViewClient() {
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+				if (url.equalsIgnoreCase("https://m.facebook.com/plugins/login_success.php?refsrc=https%3A%2F%2Fm.facebook.com%2Fplugins%2Fcomments.php&refid=9&_rdr#_=_")) {
+					loadComment("http://vtctube.vn/" + itemActive.getSlug());
+				}
+				return super.shouldOverrideUrlLoading(view, url);
+			}
+
+		});
 	}
 
 	public class JavaScriptInterface {
