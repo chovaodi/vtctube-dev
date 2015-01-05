@@ -2,12 +2,6 @@ package com.vtc.vtctube;
 
 import org.json.JSONObject;
 
-import com.vtc.vtctube.FragmentNewfeed.ResultCallBack;
-import com.vtc.vtctube.model.ItemPost;
-import com.vtc.vtctube.services.AysnRequestHttp;
-import com.vtc.vtctube.utils.IResult;
-import com.vtc.vtctube.utils.Utils;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -15,6 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.vtc.vtctube.model.ItemPost;
+import com.vtc.vtctube.services.AysnRequestHttp;
+import com.vtc.vtctube.utils.IResult;
+import com.vtc.vtctube.utils.Utils;
 
 public class FragmentAbout extends Fragment {
 	private static FragmentAbout frament = null;

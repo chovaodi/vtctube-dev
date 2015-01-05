@@ -33,13 +33,13 @@ public class AcitivityLoadding extends Activity {
 		@Override
 		public void getResult(int type, String result) {
 			Log.d("resultresult", result);
-			itemPost = new ItemPost();
+
 			try {
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
 				JSONObject page = jsonObj.getJSONObject("page");
 				if (status.equals("ok")) {
-
+					itemPost = new ItemPost();
 					itemPost.setTitle(page.getString("title"));
 					String[] content = page.getString("content")
 							.split("embed/");
@@ -49,7 +49,7 @@ public class AcitivityLoadding extends Activity {
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				itemPost = null;
 			}
 			Intent intent = new Intent(AcitivityLoadding.this,
 					MainActivity.class);
