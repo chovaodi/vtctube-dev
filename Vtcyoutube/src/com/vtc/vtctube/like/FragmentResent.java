@@ -15,12 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.vtc.vtctube.MainActivity;
 import com.vtc.vtctube.R;
 import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.database.DatabaseHelper;
 import com.vtc.vtctube.model.ItemPost;
-import com.vtc.vtctube.services.AysnRequestHttp;
 import com.vtc.vtctube.utils.IResult;
 import com.vtc.vtctube.utils.OnDisplayVideo;
 import com.vtc.vtctube.utils.Utils;
@@ -37,7 +35,6 @@ public class FragmentResent extends Fragment {
 	private ResultSearchCallBack callBackSearch;
 
 	private List<ItemPost> listData = null;
-	private int key;
 
 	int mNum;
 	private View v;
@@ -48,7 +45,6 @@ public class FragmentResent extends Fragment {
 	public static String[] cateName;
 
 	public void onResumeData(int key) {
-		this.key = key;
 		init();
 		adapter.clear();
 		addViewPost();
@@ -131,7 +127,6 @@ public class FragmentResent extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		key = getArguments() != null ? getArguments().getInt("num") : 1;
 	}
 
 	/**

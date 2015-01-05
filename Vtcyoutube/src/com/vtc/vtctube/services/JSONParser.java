@@ -1,7 +1,6 @@
 package com.vtc.vtctube.services;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -42,7 +41,7 @@ public class JSONParser {
 			int timeoutConnection = 10000;
 			HttpConnectionParams.setConnectionTimeout(httpParameters,
 					timeoutConnection);
-			int timeoutSocket = 10 * 000;
+			int timeoutSocket = 10 * 1000;
 			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
 			DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);

@@ -559,6 +559,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu(int position) {
+		MainActivity.lblError.setVisibility(View.GONE);
 		isMenuCate=false;
 		fragmentManager = getSupportFragmentManager();
 		ft = fragmentManager.beginTransaction();

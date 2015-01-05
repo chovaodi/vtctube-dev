@@ -21,13 +21,11 @@ public class MenuAdapter extends BaseAdapter {
 	private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
 
 	private LayoutInflater mInflater;
-	private Context context;
 	private TreeSet<Integer> mSeparatorsSet = new TreeSet<Integer>();
 	private List<ItemMeu> mData = new ArrayList<ItemMeu>();
 
 	public MenuAdapter(Context mContext) {
 		mInflater = LayoutInflater.from(mContext);
-		context = mContext;
 	}
 
 	public void addItem(final ItemMeu item) {
