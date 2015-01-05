@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Styled" parent="Theme.Sherlock.Light">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="background">@drawable/bgr_tasktop</item>
+        <item name="android:background">@drawable/bgr_tasktop</item>
+        <item name="backgroundSplit">@null</item>
+        <item name="android:backgroundSplit">@null</item>
+        <item name="icon">@drawable/icon_menuleft</item>
+        <item name="android:icon">@drawable/icon_menuleft</item>
+        <item name="android:titleTextStyle">@style/Widget.Styled.ActionBar.TitleTextStyle</item>
+        <item name="titleTextStyle">@style/Widget.Styled.ActionBar.TitleTextStyle</item>
+        <item name="displayOptions">showHome|showTitle</item>
+        <item name="android:displayOptions">showHome|showTitle</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.TitleTextStyle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:text">@null</item>
+    </style>
+
+</resources>

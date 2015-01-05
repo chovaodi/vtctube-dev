@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="rbm_menu_background">#303030</color>
+    <color name="rbm_item_text_color">#ffffff</color>
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="list_background">#303030</color>
+    <color name="list_background_pressed">#992416</color>
+    <color name="header_help">#e0e0e0</color>
+    <color name="blue_color">#009bdb</color>
+    <color name="red">#FF0000</color>
+    <color name="black">#ff000000</color>
+    <color name="c_qt">#07a7e1</color>
+    <color name="grey">#808080</color>
+    <color name="green_text">#26a3dd</color>
+    <color name="text_black">#333333</color> 
+    <color name="hint_color">#9c9c9c</color>
+    <color name="color_line_home">#303f3f3f</color>
+    <color name="color_line">#993f3f3f</color>
+    <color name="color_header_card">#cecece</color>
+    <color name="color_focus_line">#e0e0e0</color>
+
+    <integer-array name="gplus_colors">
+        <item>@color/gplus_color_1</item>
+        <item>@color/gplus_color_2</item>
+        <item>@color/gplus_color_3</item>
+        <item>@color/gplus_color_4</item>
+    </integer-array>
+
+   <color name="gplus_color_1">#27b5f3</color>
+    <color name="gplus_color_2">#27b5f3</color>
+    <color name="gplus_color_3">#27b5f3</color>
+    <color name="gplus_color_4">#27b5f3</color>
+
+</resources>

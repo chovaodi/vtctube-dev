@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/right_menu_home"
+        android:icon="@drawable/ic_launcher"
+        android:title="Trang chủ">
+    </item>
+    <item
+        android:id="@+id/right_menu_daxem"
+        android:icon="@drawable/ic_launcher"
+        android:title="Đã xem">
+    </item>
+    <item
+        android:id="@+id/right_menu_yeuthich"
+        android:icon="@drawable/ic_launcher"
+        android:title="Yêu thích">
+    </item>
+    <item
+        android:id="@+id/right_menu_danhgia"
+        android:icon="@drawable/ic_launcher"
+        android:title="Đánh giá">
+    </item>
+    <item
+        android:id="@+id/right_menu_gioithieu"
+        android:icon="@drawable/ic_launcher"
+        android:title="Giới thiệu">
+    </item>
+
+</menu>
