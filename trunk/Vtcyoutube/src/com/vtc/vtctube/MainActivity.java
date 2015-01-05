@@ -1199,12 +1199,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 		Fragment myAbout = getSupportFragmentManager().findFragmentByTag(
 				currentTag);
 		if (myAbout != null) {
+			isMenuCate=false;
 			MainActivity.lblError.setVisibility(View.GONE);
 			FragmentHome fragment = new FragmentHome();
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.container, fragment).commit();
 			FragmentCategory.frament = null;
 			MainActivity.callBackCLick.onClick(false, "");
+			invalidateOptionsMenu();
 			return;
 		}
 
