@@ -67,7 +67,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	private YouTubePlayer mPlayer;
 	private PinnedAdapter adapterTab;
 	private ItemPost itemActive = null;
-	private ProgressBar progressBar1;
 	private FragmentActivity mActivity;
 
 	private DraggableView mView;
@@ -104,9 +103,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 				.findViewById(android.R.id.content);
 		mActivity.overridePendingTransition(R.anim.slide_in_bottom,
 				R.anim.slide_out_bottom);
-
-		progressBar1 = (ProgressBar) view.findViewById(R.id.progressBar1);
-		progressBar1.setVisibility(View.VISIBLE);
 
 		btnLienquan = (Button) view.findViewById(R.id.btnLienquan);
 		btnChitiet = (Button) view.findViewById(R.id.btnChitiet);
@@ -413,7 +409,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	private class webViewClient extends WebViewClient {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			progressBar1.setVisibility(View.VISIBLE);
 			webview_fbview.loadUrl(url);
 			return true;
 		}
@@ -423,7 +418,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 			if (url.equalsIgnoreCase("https://m.facebook.com/plugins/login_success.php?refsrc=https%3A%2F%2Fm.facebook.com%2Fplugins%2Fcomments.php&refid=9&_rdr#_=_")) {
 				loadComment("http://vtctube.vn/" + itemActive.getSlug());
 			}
-			progressBar1.setVisibility(View.GONE);
 
 			super.onPageFinished(view, url);
 		}
