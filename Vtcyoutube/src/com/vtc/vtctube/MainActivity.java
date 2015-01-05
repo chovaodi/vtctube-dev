@@ -560,7 +560,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public void clickMenu(int position) {
 		MainActivity.lblError.setVisibility(View.GONE);
-		isMenuCate=false;
+		isMenuCate = false;
 		fragmentManager = getSupportFragmentManager();
 		ft = fragmentManager.beginTransaction();
 
@@ -615,7 +615,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 		invalidateOptionsMenu();
 		positionActive = Integer.MAX_VALUE;
-		
+
 	}
 
 	public void setHome() {
@@ -851,7 +851,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void getCate(String title, String cate) {
-			isMenuCate=true;
+			isMenuCate = true;
 			addFragment(title, cate);
 			invalidateOptionsMenu();
 		}
@@ -861,7 +861,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			String title) {
 
 		Utils.hideSoftKeyboard(MainActivity.this);
-
+		isMenuCate=false;
 		MainActivity.callBackCLick.onClick(true, title);
 		FragmentManager fragmentManager = MainActivity.this
 				.getSupportFragmentManager();
@@ -881,6 +881,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			fragmentTmp.setCate(json, queryCurent, keyOption);
 			ft.show(fragment);
 		}
+		invalidateOptionsMenu();
 
 		ft.commit();
 
@@ -997,7 +998,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onClick(boolean isShowTitle, String title) {
-		
+
 			if (isShowTitle) {
 				lblTitle.setVisibility(View.VISIBLE);
 				imgLogo.setVisibility(View.GONE);
@@ -1005,7 +1006,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				positionPreview = 0;
 				positionActive = Integer.MAX_VALUE;
 			} else {
-				
+
 				lblTitle.setVisibility(View.GONE);
 				imgLogo.setVisibility(View.VISIBLE);
 			}
@@ -1097,17 +1098,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 								DatabaseHelper.TB_QUERY_SEARCH, sqlCheck) == 0) {
 							myDbHelper.insertQuerySearch(queryCurent);
 						}
-						try {
-							JSONObject json = new JSONObject(result);
-							if (json.getString("status").equals("ok")) {
-								addFragmentSearch(result, Utils.TAG_SEARCH,
-										Utils.LOAD_SEARCH, getResources()
-												.getString(R.string.lblkqtq));
+						JSONObject json = new JSONObject(result);
+						if (json.getString("status").equals("ok")) {
+							addFragmentSearch(result, Utils.TAG_SEARCH,
+									Utils.LOAD_SEARCH, getResources()
+											.getString(R.string.lblkqtq));
 
-							}
-						} catch (Exception e) {
-							// TODO: handle exception
 						}
+						
 						zoominPlay();
 
 						break;
@@ -1203,7 +1201,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (myAbout != null) {
 			MainActivity.lblError.setVisibility(View.GONE);
 			FragmentHome fragment = new FragmentHome();
-			getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.container, fragment).commit();
 			FragmentCategory.frament = null;
 			MainActivity.callBackCLick.onClick(false, "");
 			return;
