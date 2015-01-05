@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp" >
+
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_height="70dp"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/ic_launcher" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+       <com.vtc.basetube.font.TextViewRobotoLight
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingRight="40dp"
+            android:textSize="15dp"
+            android:textColor="@color/text_black" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/issubmenu"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        android:background="@android:color/transparent"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:src="@drawable/icon_muiten"
+        android:visibility="gone" />
+
+</LinearLayout>

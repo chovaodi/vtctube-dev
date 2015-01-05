@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp" >
+
+        <LinearLayout
+            android:layout_width="130dp"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/thumnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/thumnail_demo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <com.vtc.basetube.font.TextViewRobotoLight
+                android:id="@+id/lblTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextViewRobotoLight"
+                android:textColor="@color/text_black"
+                android:textSize="15dp" />
+
+            <com.vtc.basetube.font.TextViewRobotoLight
+                android:id="@+id/lblUploader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:singleLine="true"
+                android:text="TextViewRobotoLight"
+                android:textColor="@color/hint_color"
+                android:textSize="15dp" />
+
+            <com.vtc.basetube.font.TextViewRobotoLight
+                android:id="@+id/lblMetadata"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="TextViewRobotoLight"
+                android:textColor="@color/hint_color"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:src="@drawable/icon_option" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
