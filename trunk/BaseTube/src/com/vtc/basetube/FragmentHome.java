@@ -23,17 +23,23 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.ItemVideo;
+import com.vtc.basetube.utils.OnDisplayVideo;
+import com.vtc.basetube.utils.Utils;
 
 public class FragmentHome extends SherlockFragment {
 	private ListView listvideo;
 	private View view;
 	private VideoAdapter adapterVideo = null;
+	private OnDisplayVideo mOnDisplayVideo;
 
 	private static FragmentHome framgnent = null;
 
@@ -42,7 +48,7 @@ public class FragmentHome extends SherlockFragment {
 	 * argument.
 	 */
 	static FragmentHome newInstance() {
-		if (framgnent == null) 
+		if (framgnent == null)
 			framgnent = new FragmentHome();
 		return framgnent;
 	}
@@ -57,6 +63,9 @@ public class FragmentHome extends SherlockFragment {
 
 	@Override
 	public void onAttach(Activity activity) {
+		if (activity instanceof OnDisplayVideo) {
+			mOnDisplayVideo = (OnDisplayVideo) activity;
+		}
 		super.onAttach(activity);
 	}
 
@@ -75,6 +84,17 @@ public class FragmentHome extends SherlockFragment {
 		super.onActivityCreated(savedInstanceState);
 		listvideo = (ListView) view.findViewById(R.id.listivideo);
 		addview();
+		listvideo.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				if (mOnDisplayVideo != null) {
+					mOnDisplayVideo.display();
+				}
+			}
+
+		});
 
 	}
 
