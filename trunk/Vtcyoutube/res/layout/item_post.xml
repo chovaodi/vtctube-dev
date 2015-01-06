@@ -63,6 +63,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical|left"
                         android:text="TextView"
+                        android:lines="2"
                         android:textColor="@color/text_color"
                         android:textSize="17dp" />
                 </LinearLayout>
