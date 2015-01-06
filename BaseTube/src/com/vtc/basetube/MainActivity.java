@@ -60,7 +60,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerStateChanged(int arg0) {
-
+				boolean drawerOpenLeft = mDrawerLayout
+						.isDrawerOpen(lineLeftMenu);
+				if (drawerOpenLeft) {
+					zoomoutPlayer();
+				} else {
+					zoominPlayer();
+				}
 			}
 
 			@Override
@@ -79,7 +85,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerClosed(View arg0) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -112,6 +117,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				mDrawerLayout.closeDrawer(lineLeftMenu);
 			} else {
 				mDrawerLayout.openDrawer(lineLeftMenu);
+
 			}
 		}
 		return super.onMenuItemSelected(featureId, item);
@@ -225,12 +231,23 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
+		zoomoutPlayer();
+		finish();
+		System.exit(0);
+		super.onBackPressed();
+	}
+
+	public void zoominPlayer() {
+		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMinimize()) {
+			mVideoPlayerFragment.maximize();
+			return;
+		}
+	}
+
+	public void zoomoutPlayer() {
 		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
 			mVideoPlayerFragment.minimize();
 			return;
 		}
-		finish();
-		System.exit(0);
-		super.onBackPressed();
 	}
 }

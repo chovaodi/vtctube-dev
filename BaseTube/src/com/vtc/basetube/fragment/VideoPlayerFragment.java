@@ -96,7 +96,9 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	public boolean isMaximize() {
 		return mView.isMaximized();
 	}
-
+	public boolean isMinimize() {
+		return mView.isMinimized();
+	}
 	/**
 	 * Hook the DraggableListener to DraggablePanel to pause or resume the video
 	 * when the DragglabePanel is maximized or closed.
