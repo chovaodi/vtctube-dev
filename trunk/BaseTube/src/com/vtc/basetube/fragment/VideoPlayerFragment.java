@@ -16,7 +16,7 @@ import com.vtc.basetube.R;
 import com.vtc.basetube.utils.Utils;
 
 public class VideoPlayerFragment extends YoutubePlayerFragment {
-	String videoId = "79iWPoJJnCw";
+	String videoId = "";
 
 	public static ViewGroup mainView;
 
