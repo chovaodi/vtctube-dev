@@ -52,6 +52,7 @@ public class GsonRequest<T> extends Request<T>{
     private final Listener<T> mListener;
 
     private final String mRequestBody;
+    private final String mCharset;
     
     private Gson mGson;
     private Class<T> mJavaClass;
@@ -63,6 +64,7 @@ public class GsonRequest<T> extends Request<T>{
         mJavaClass = cls;
         mListener = listener;
         mRequestBody = requestBody;
+        mCharset = PROTOCOL_CHARSET;
     }
 
     @Override
@@ -80,7 +82,12 @@ public class GsonRequest<T> extends Request<T>{
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
-            String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            String jsonString;
+            if(mCharset == null) {
+                jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            } else {
+                jsonString = new String(response.data, mCharset);
+            }
     		T parsedGSON = mGson.fromJson(jsonString, mJavaClass);
             return Response.success(parsedGSON,
                     HttpHeaderParser.parseCacheHeaders(response));

@@ -1,21 +1,29 @@
 package com.vtc.basetube.adapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageLoader.ImageCache;
+import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 import com.vtc.basetube.R;
-import com.vtc.basetube.model.Item;
 import com.vtc.basetube.model.ItemVideo;
+import com.vtc.basetube.services.request.RequestManager;
+import com.vtc.basetube.services.volley.toolbox.BitmapLruCache;
+import com.vtc.basetube.services.volley.util.BitmapUtil;
 
 public class VideoAdapter extends BaseAdapter {
 
@@ -27,8 +35,11 @@ public class VideoAdapter extends BaseAdapter {
 	private Context context;
 	private TreeSet<Integer> mSeparatorsSet = new TreeSet<Integer>();
 	private List<ItemVideo> mData = new ArrayList<ItemVideo>();
+	private ImageLoader mImageLoader;
 
 	public VideoAdapter(Context mContext) {
+	    int max_cache_size = 1000000;
+        mImageLoader = new ImageLoader(RequestManager.newInstance(mContext).getRequestQueue(), new BitmapLruCache(max_cache_size));
 		mInflater = LayoutInflater.from(mContext);
 		context = mContext;
 
@@ -112,7 +123,7 @@ public class VideoAdapter extends BaseAdapter {
 				holder.lblMetadata = (TextView) convertView
 						.findViewById(R.id.lblMetadata);
 
-				holder.thumnail = (ImageView) convertView
+				holder.thumnail = (NetworkImageView) convertView
 						.findViewById(R.id.thumnail);
 
 				break;
@@ -127,15 +138,12 @@ public class VideoAdapter extends BaseAdapter {
 
 		} else {
 			holder.txtTitle.setText(item.getTitle());
-
-//			Picasso.with(context)
-//					.load("http://img.youtube.com/vi/" + item.getId()
-//							+ "/maxresdefault.jpg")
-//					.placeholder(R.drawable.ic_launcher).into(holder.thumnail);
 			holder.lblUploader.setText(item.getUploader());
 			holder.lblMetadata.setText(item.getTime() + ","
 					+ item.getCountView());
-
+			if(item.getThumbnail() != null) {
+    	         holder.thumnail.setImageUrl(item.getThumbnail(), mImageLoader);
+			}
 		}
 		return convertView;
 	}
@@ -145,10 +153,45 @@ public class VideoAdapter extends BaseAdapter {
 		public TextView lblNameCate;
 		public TextView lblXemthem;
 
-		public ImageView thumnail;
+		public NetworkImageView thumnail;
 		public TextView lblUploader;
 		public TextView lblMetadata;
 
 	}
-
+	public  class DiskBitmapCache extends DiskBasedCache implements ImageCache {
+        
+        public DiskBitmapCache(File rootDirectory, int maxCacheSizeInBytes) {
+            super(rootDirectory, maxCacheSizeInBytes);
+        }
+     
+        public DiskBitmapCache(File cacheDir) {
+            super(cacheDir);
+        }
+     
+        public Bitmap getBitmap(String url) {
+            final Entry requestedItem = get(url);
+     
+            if (requestedItem == null)
+                return null;
+     
+            return BitmapFactory.decodeByteArray(requestedItem.data, 0, requestedItem.data.length);
+        }
+     
+        public void putBitmap(String url, Bitmap bitmap) {
+            
+            final Entry entry = new Entry();
+            
+/*          //Down size the bitmap.If not done, OutofMemoryError occurs while decoding large bitmaps.
+            // If w & h is set during image request ( using ImageLoader ) then this is not required.
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Bitmap downSized = BitmapUtil.downSizeBitmap(bitmap, 50);
+            
+            downSized.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            entry.data = data ; */
+            
+            entry.data = BitmapUtil.convertBitmapToBytes(bitmap) ;
+            put(url, entry);
+        }
+    }
 }
