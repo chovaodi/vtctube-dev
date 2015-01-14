@@ -6,6 +6,7 @@ public class ItemVideo {
 	private String uploader;
 	private String countView;
 	private String time;
+	private String mThumbnail;
 
 	public void setTitle(String title) {
 		this.title = title;
@@ -47,4 +48,11 @@ public class ItemVideo {
 		this.time = time;
 	}
 
+	public String getThumbnail() {
+	    return mThumbnail;
+	}
+	
+	public void setThumbnail(String thumbnail) {
+	    mThumbnail = thumbnail;
+	}
 }

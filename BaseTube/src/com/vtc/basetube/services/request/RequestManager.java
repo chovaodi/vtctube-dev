@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.vtc.basetube.services.volley.ssl.SslHttpStack;
 
 public class RequestManager {
     private static final String TAG = "ServerRequest";
@@ -27,7 +28,7 @@ public class RequestManager {
 
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(mContext);
+            mRequestQueue = Volley.newRequestQueue(mContext, new SslHttpStack(mContext, false));
         }
 
         return mRequestQueue;

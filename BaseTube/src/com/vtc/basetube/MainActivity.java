@@ -29,6 +29,7 @@ import com.actionbarsherlock.widget.SearchView;
 import com.vtc.basetube.adapter.MenuLeftAdapter;
 import com.vtc.basetube.fragment.VideoPlayerFragment;
 import com.vtc.basetube.model.Item;
+import com.vtc.basetube.services.youtube.YoutubeController;
 import com.vtc.basetube.utils.OnDisplayVideo;
 import com.vtc.basetube.utils.Utils;
 
@@ -93,7 +94,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 				.beginTransaction()
 				.replace(R.id.frame_container, FragmentHome.newInstance(),
 						"TAG_HOME").commit();
-
 	}
 
 	public void addMenuLeft(int menu) {
