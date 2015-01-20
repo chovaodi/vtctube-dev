@@ -14,6 +14,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:src="@drawable/ic_launcher" />
     </LinearLayout>
 
@@ -23,15 +26,15 @@
         android:layout_weight="1"
         android:orientation="vertical" >
 
-       <com.vtc.basetube.font.TextViewRobotoLight
+        <com.vtc.basetube.font.TextViewRobotoLight
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:paddingRight="40dp"
-            android:textSize="15dp"
-            android:textColor="@color/text_black" />
+            android:textColor="@color/text_black"
+            android:textSize="15dp" />
     </LinearLayout>
 
     <ImageView

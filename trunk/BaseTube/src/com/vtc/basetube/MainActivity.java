@@ -17,8 +17,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,9 +30,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.vtc.basetube.adapter.MenuLeftAdapter;
+import com.vtc.basetube.fragment.FragmentAbout;
 import com.vtc.basetube.fragment.VideoPlayerFragment;
 import com.vtc.basetube.model.Item;
-import com.vtc.basetube.services.youtube.YoutubeController;
 import com.vtc.basetube.utils.OnDisplayVideo;
 import com.vtc.basetube.utils.Utils;
 
@@ -47,11 +50,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private static final String[] COLUMNS = { BaseColumns._ID,
 			SearchManager.SUGGEST_COLUMN_TEXT_1, };
 	private VideoPlayerFragment mVideoPlayerFragment;
+	public static ProgressBar progressBar;
+
+	private String currentTag = "TAG_HOME";
+	private int idActive;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -86,14 +94,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerClosed(View arg0) {
-
+				clickMenu();
 			}
 		});
 
 		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(R.id.frame_container, FragmentHome.newInstance(),
-						"TAG_HOME").commit();
+						currentTag).addToBackStack(null).commit();
 	}
 
 	public void addMenuLeft(int menu) {
@@ -106,6 +114,45 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		leftMenu.setAdapter(adapterMenu);
+		leftMenu.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
+					long arg3) {
+				idActive = adapterMenu.getItem(pos).getRegId();
+				mDrawerLayout.closeDrawer(lineLeftMenu);
+			}
+
+		});
+
+	}
+
+	public void clickMenu() {
+		switch (idActive) {
+		case R.id.right_menu_home:
+
+			break;
+		case R.id.right_menu_daxem:
+
+			break;
+		case R.id.right_menu_yeuthich:
+
+			break;
+		case R.id.right_menu_danhgia:
+
+			break;
+		case R.id.right_menu_gioithieu:
+			
+			currentTag = "TAG_ABOUT";
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.frame_container, FragmentAbout.newInstance(),
+							currentTag).addToBackStack(null).commit();
+			break;
+
+		}
+		idActive = Integer.MAX_VALUE;
+
 	}
 
 	@Override
@@ -232,8 +279,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed() {
 		zoomoutPlayer();
-		finish();
-		System.exit(0);
+		if (!currentTag.equals("TAG_HOME")) {
+			currentTag = "TAG_HOME";
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.frame_container, FragmentHome.newInstance(),
+							currentTag).addToBackStack(null).commit();
+			Log.d("currentTag",currentTag);
+		} else {
+			finish();
+			System.exit(0);
+		}
 		super.onBackPressed();
 	}
 
