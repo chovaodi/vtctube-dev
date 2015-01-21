@@ -22,22 +22,20 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
 	private YouTubePlayerSupportFragment mYoutubeFragment;
 	private YouTubePlayer mPlayer;
-	private FragmentActivity mActivity;
 
 	private DraggableView mView;
 
 	private static VideoPlayerFragment sInstance = null;
 
 	public static VideoPlayerFragment newInstance() {
-		if (sInstance == null) {
+		if (sInstance == null)
 			sInstance = new VideoPlayerFragment();
-		}
+
 		return sInstance;
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
-		mActivity = (FragmentActivity) activity;
 		super.onAttach(activity);
 	}
 
@@ -56,7 +54,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
 		mYoutubeFragment = new YouTubePlayerSupportFragment();
 		getFragmentManager().beginTransaction()
-				.replace(R.id.youtube_player_fragment, mYoutubeFragment)
+				.replace(R.id.youtube_player_fragment, mYoutubeFragment).addToBackStack(null)
 				.commit();
 		updateData();
 	}
@@ -96,9 +94,11 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	public boolean isMaximize() {
 		return mView.isMaximized();
 	}
+
 	public boolean isMinimize() {
 		return mView.isMinimized();
 	}
+
 	/**
 	 * Hook the DraggableListener to DraggablePanel to pause or resume the video
 	 * when the DragglabePanel is maximized or closed.
