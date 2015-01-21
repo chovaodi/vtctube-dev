@@ -7,6 +7,15 @@ public class ItemVideo {
 	private String countView;
 	private String time;
 	private String mThumbnail;
+	private int type;
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public int getType() {
+		return type;
+	}
 
 	public void setTitle(String title) {
 		this.title = title;
@@ -49,10 +58,10 @@ public class ItemVideo {
 	}
 
 	public String getThumbnail() {
-	    return mThumbnail;
+		return mThumbnail;
 	}
-	
+
 	public void setThumbnail(String thumbnail) {
-	    mThumbnail = thumbnail;
+		mThumbnail = thumbnail;
 	}
 }

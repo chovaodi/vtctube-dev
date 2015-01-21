@@ -18,14 +18,13 @@ import com.vtc.basetube.model.ItemVideo;
 import com.vtc.basetube.utils.DatabaseHelper;
 import com.vtc.basetube.utils.Utils;
 
-public class FragmentLike extends Fragment {
+public class FragmentViewed extends Fragment {
 	private static Fragment fragment = null;
 	private DatabaseHelper myDbHelper;
 
 	public static Fragment newInstance() {
 		if (fragment == null)
-			fragment = new FragmentLike();
-
+			fragment = new FragmentViewed();
 		return fragment;
 	}
 
@@ -39,6 +38,9 @@ public class FragmentLike extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		VideoAdapter adapterVideo = new VideoAdapter(getActivity());
+		View view = getView();
+		ListView listvideo = (ListView) view.findViewById(R.id.listivideo);
 		myDbHelper = new DatabaseHelper(getActivity());
 		try {
 			myDbHelper.createDataBase();
@@ -49,12 +51,9 @@ public class FragmentLike extends Fragment {
 			throw sqle;
 		}
 
-		VideoAdapter adapterVideo = new VideoAdapter(getActivity());
-		View view = getView();
-		ListView listvideo = (ListView) view.findViewById(R.id.listivideo);
-		List<ItemVideo> list = Utils.getVideoData("SELECT * FROM "
-				+ DatabaseHelper.TB_DATA + " WHERE type='" + Utils.LIKE + "'",
-				myDbHelper);
+		List<ItemVideo> list = Utils.getVideoData(
+				"SELECT * FROM " + DatabaseHelper.TB_DATA + " WHERE type='"
+						+ Utils.VIEWED + "'", myDbHelper);
 		MainActivity.lblMessage.setVisibility(View.GONE);
 		if (list == null || list.size() == 0)
 			MainActivity.lblMessage.setVisibility(View.VISIBLE);
@@ -71,4 +70,5 @@ public class FragmentLike extends Fragment {
 		}
 		listvideo.setAdapter(adapterVideo);
 	}
+
 }
