@@ -33,6 +33,7 @@ import com.vtc.basetube.adapter.MenuLeftAdapter;
 import com.vtc.basetube.fragment.FragmentAbout;
 import com.vtc.basetube.fragment.FragmentCategory;
 import com.vtc.basetube.fragment.FragmentLike;
+import com.vtc.basetube.fragment.FragmentViewed;
 import com.vtc.basetube.fragment.VideoPlayerFragment;
 import com.vtc.basetube.model.Item;
 import com.vtc.basetube.utils.ICategoryMore;
@@ -57,12 +58,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private String currentTag = "TAG_HOME";
 	private int idActive;
+	public static TextView lblMessage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+		lblMessage = (TextView) findViewById(R.id.lblThongbao);
+		lblMessage.setVisibility(View.GONE);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -75,14 +79,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 				if (adapterMenu == null) {
 					addMenuLeft(R.menu.ribbon_menu);
 				}
-
-				// boolean drawerOpenLeft = mDrawerLayout
-				// .isDrawerOpen(lineLeftMenu);
-				// if (drawerOpenLeft) {
-				// zoomoutPlayer();
-				// } else {
-				// zoominPlayer();
-				// }
 			}
 
 			@Override
@@ -126,6 +122,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 					long arg3) {
 				idActive = adapterMenu.getItem(pos).getRegId();
 				mDrawerLayout.closeDrawer(lineLeftMenu);
+				lblMessage.setVisibility(View.GONE);
 			}
 
 		});
@@ -134,15 +131,18 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public void clickMenu() {
 		switch (idActive) {
+
 		case R.id.right_menu_home:
+
 			setHome();
 			break;
 		case R.id.right_menu_daxem:
+
 			currentTag = "TAG_VIEWED";
 			getSupportFragmentManager()
 					.beginTransaction()
-					.replace(R.id.frame_container, FragmentLike.newInstance(),
-							currentTag).commit();
+					.replace(R.id.frame_container,
+							FragmentViewed.newInstance(), currentTag).commit();
 			break;
 		case R.id.right_menu_yeuthich:
 			currentTag = "TAG_LIKE";
@@ -312,6 +312,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// super.onBackPressed();
 		zoomoutPlayer();
 		if (!currentTag.equals("TAG_HOME")) {
+			lblMessage.setVisibility(View.GONE);
 			currentTag = "TAG_HOME";
 			getSupportFragmentManager()
 					.beginTransaction()

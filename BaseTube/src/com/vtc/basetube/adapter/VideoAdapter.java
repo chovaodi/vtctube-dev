@@ -1,11 +1,13 @@
 package com.vtc.basetube.adapter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -25,11 +27,13 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.NetworkImageView;
+import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.model.ItemVideo;
 import com.vtc.basetube.services.request.RequestManager;
 import com.vtc.basetube.services.volley.toolbox.BitmapLruCache;
 import com.vtc.basetube.services.volley.util.BitmapUtil;
+import com.vtc.basetube.utils.DatabaseHelper;
 import com.vtc.basetube.utils.ICategoryMore;
 import com.vtc.basetube.utils.Utils;
 
@@ -45,6 +49,7 @@ public class VideoAdapter extends BaseAdapter {
 	private List<ItemVideo> mData = new ArrayList<ItemVideo>();
 	private ImageLoader mImageLoader;
 	private ICategoryMore iCategoryMore = null;
+	private DatabaseHelper myDbHelper;
 
 	public VideoAdapter(Context mContext) {
 		int max_cache_size = 1000000;
@@ -54,7 +59,15 @@ public class VideoAdapter extends BaseAdapter {
 		context = mContext;
 		if (context instanceof ICategoryMore)
 			iCategoryMore = (ICategoryMore) context;
-
+		myDbHelper = new DatabaseHelper(context);
+		try {
+			myDbHelper.createDataBase();
+			myDbHelper.openDataBase();
+		} catch (IOException ioe) {
+			throw new Error("Unable to create database");
+		} catch (SQLException sqle) {
+			throw sqle;
+		}
 	}
 
 	public void addItem(final ItemVideo item) {
@@ -166,7 +179,7 @@ public class VideoAdapter extends BaseAdapter {
 					+ item.getCountView());
 			if (item.getThumbnail() != null) {
 				holder.thumnail.setImageUrl(item.getThumbnail(), mImageLoader);
-				
+
 			}
 
 			holder.option.setOnClickListener(new OnClickListener() {
@@ -196,7 +209,13 @@ public class VideoAdapter extends BaseAdapter {
 				int id = item.getItemId();
 				switch (id) {
 				case R.id.popup_like:
-					Toast.makeText(context, "Like", Toast.LENGTH_LONG).show();
+					
+					if (myDbHelper.getCountRow("SELECT * FROM "
+							+ DatabaseHelper.TB_DATA+" WHERE videoId='"+itemvd.getId()+"'") == 0) {
+						myDbHelper.insertVideoLike(itemvd, Utils.LIKE);
+						Toast.makeText(context, "Thêm vào danh sách yêu thích", Toast.LENGTH_LONG).show();
+					}
+					
 					break;
 				case R.id.popup_share:
 					Utils.shareButton(itemvd, context);

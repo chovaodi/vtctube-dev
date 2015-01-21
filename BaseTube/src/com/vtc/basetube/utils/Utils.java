@@ -9,6 +9,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -19,6 +20,8 @@ import com.vtc.basetube.model.ItemVideo;
 public class Utils {
 	public static final String TAG = "BASE_TUBE";
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyDsQDuxjOZLCiwx9MKIa_LTPhYPHV293L8";// "AIzaSyA49SV21QaIN0oj9iUqW-u4zWi-41NDFNo";
+	public static int LIKE = 0;
+	public static int VIEWED = 1;
 
 	public static ArrayList<Item> getMenu(Activity activity, int menu) {
 
@@ -109,4 +112,31 @@ public class Utils {
 
 		return false;
 	}
+	
+	public static ArrayList<ItemVideo> getVideoData(String sql, DatabaseHelper myDbHelper) {
+		ArrayList<ItemVideo> listAccount = null;
+		try {
+			Cursor c =myDbHelper.query(DatabaseHelper.TB_DATA,
+					null, null, null, null, null, null);
+			c = myDbHelper.rawQuery(sql);
+			listAccount = new ArrayList<ItemVideo>();
+
+			if (c.moveToFirst()) {
+
+				do {
+					ItemVideo item = new ItemVideo();
+					item.setId(c.getString(0));
+					item.setType(c.getInt(1));
+					item.setTitle(c.getString(2));
+					item.setThumbnail(c.getString(3));
+					
+					listAccount.add(item);
+				} while (c.moveToNext());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return listAccount;
+	}
+
 }
