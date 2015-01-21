@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,11 +138,12 @@ public class FragmentHome extends SherlockFragment {
 							for (Category dt : data) {
 								ItemVideo item = new ItemVideo();
 								item.setTitle(dt.getTitle());
-								item.setId("79iWPoJJnCw");
+								item.setId(dt.getId());
 								item.setTime("3h trước");
 								item.setUploader("QuangNinhTV");
 								item.setCountView("30 lượt xem");
 								item.setThumbnail(dt.getThumbnail());
+								// Log.d("dt.getThumbnail()",dt.getThumbnail());
 								adapterVideo.addItem(item);
 							}
 							listvideo.setAdapter(adapterVideo);

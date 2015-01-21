@@ -166,6 +166,7 @@ public class VideoAdapter extends BaseAdapter {
 					+ item.getCountView());
 			if (item.getThumbnail() != null) {
 				holder.thumnail.setImageUrl(item.getThumbnail(), mImageLoader);
+				
 			}
 
 			holder.option.setOnClickListener(new OnClickListener() {
