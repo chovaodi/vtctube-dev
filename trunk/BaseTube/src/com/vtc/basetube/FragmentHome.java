@@ -17,13 +17,11 @@
 package com.vtc.basetube;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -36,7 +34,6 @@ import com.vtc.basetube.model.ItemVideo;
 import com.vtc.basetube.services.youtube.OnRequest;
 import com.vtc.basetube.services.youtube.YoutubeController;
 import com.vtc.basetube.utils.OnDisplayVideo;
-import com.vtc.basetube.utils.Utils;
 
 public class FragmentHome extends SherlockFragment {
 	private ListView listvideo;
@@ -80,6 +77,7 @@ public class FragmentHome extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_home, container, false);
+		MainActivity.progressBar.setVisibility(View.VISIBLE);
 		return view;
 	}
 
@@ -123,6 +121,7 @@ public class FragmentHome extends SherlockFragment {
 	public void setUpAdapter(ArrayList<Category> data) {
 		if (adapterVideo == null)
 			adapterVideo = new VideoAdapter(getActivity());
+		adapterVideo.RemoveData();
 		for (int i = 0; i < data.size(); i++) {
 			final Category cat = data.get(i);
 

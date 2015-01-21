@@ -9,21 +9,29 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.NetworkImageView;
-import com.squareup.picasso.Picasso;
 import com.vtc.basetube.R;
 import com.vtc.basetube.model.ItemVideo;
 import com.vtc.basetube.services.request.RequestManager;
 import com.vtc.basetube.services.volley.toolbox.BitmapLruCache;
 import com.vtc.basetube.services.volley.util.BitmapUtil;
+import com.vtc.basetube.utils.ICategoryMore;
+import com.vtc.basetube.utils.Utils;
 
 public class VideoAdapter extends BaseAdapter {
 
@@ -36,12 +44,16 @@ public class VideoAdapter extends BaseAdapter {
 	private TreeSet<Integer> mSeparatorsSet = new TreeSet<Integer>();
 	private List<ItemVideo> mData = new ArrayList<ItemVideo>();
 	private ImageLoader mImageLoader;
+	private ICategoryMore iCategoryMore = null;
 
 	public VideoAdapter(Context mContext) {
-	    int max_cache_size = 1000000;
-        mImageLoader = new ImageLoader(RequestManager.newInstance(mContext).getRequestQueue(), new BitmapLruCache(max_cache_size));
+		int max_cache_size = 1000000;
+		mImageLoader = new ImageLoader(RequestManager.newInstance(mContext)
+				.getRequestQueue(), new BitmapLruCache(max_cache_size));
 		mInflater = LayoutInflater.from(mContext);
 		context = mContext;
+		if (context instanceof ICategoryMore)
+			iCategoryMore = (ICategoryMore) context;
 
 	}
 
@@ -96,6 +108,7 @@ public class VideoAdapter extends BaseAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
+
 		int type = getItemViewType(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
@@ -110,6 +123,8 @@ public class VideoAdapter extends BaseAdapter {
 
 				holder.lblXemthem = (TextView) convertView
 						.findViewById(R.id.lblXemthem);
+				holder.lineMore = (LinearLayout) convertView
+						.findViewById(R.id.lineMore);
 
 				break;
 
@@ -125,6 +140,8 @@ public class VideoAdapter extends BaseAdapter {
 
 				holder.thumnail = (NetworkImageView) convertView
 						.findViewById(R.id.thumnail);
+				holder.option = (LinearLayout) convertView
+						.findViewById(R.id.option);
 
 				break;
 			}
@@ -132,20 +149,62 @@ public class VideoAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		ItemVideo item = getItem(position);
+		final ItemVideo item = getItem(position);
 		if (type == TYPE_SEPARATOR) {
 			holder.lblNameCate.setText(item.getTitle().toUpperCase());
+			holder.lineMore.setOnClickListener(new OnClickListener() {
 
+				@Override
+				public void onClick(View arg0) {
+					iCategoryMore.viewAll(121);// category Id
+				}
+			});
 		} else {
 			holder.txtTitle.setText(item.getTitle());
 			holder.lblUploader.setText(item.getUploader());
 			holder.lblMetadata.setText(item.getTime() + ","
 					+ item.getCountView());
-			if(item.getThumbnail() != null) {
-    	         holder.thumnail.setImageUrl(item.getThumbnail(), mImageLoader);
+			if (item.getThumbnail() != null) {
+				holder.thumnail.setImageUrl(item.getThumbnail(), mImageLoader);
 			}
+
+			holder.option.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					CreatePopupMenu(arg0, item);
+				}
+			});
 		}
 		return convertView;
+	}
+
+	public void CreatePopupMenu(View v, final ItemVideo itemvd) {
+
+		PopupMenu mypopupmenu = new PopupMenu(context, v);
+
+		MenuInflater inflater = mypopupmenu.getMenuInflater();
+
+		inflater.inflate(R.menu.popup_menu, mypopupmenu.getMenu());
+
+		mypopupmenu.show();
+		mypopupmenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				int id = item.getItemId();
+				switch (id) {
+				case R.id.popup_like:
+					Toast.makeText(context, "Like", Toast.LENGTH_LONG).show();
+					break;
+				case R.id.popup_share:
+					Utils.shareButton(itemvd, context);
+					break;
+				}
+				return false;
+			}
+		});
+
 	}
 
 	public static class ViewHolder {
@@ -156,42 +215,47 @@ public class VideoAdapter extends BaseAdapter {
 		public NetworkImageView thumnail;
 		public TextView lblUploader;
 		public TextView lblMetadata;
-
+		public LinearLayout option;
+		public LinearLayout lineMore;
 	}
-	public  class DiskBitmapCache extends DiskBasedCache implements ImageCache {
-        
-        public DiskBitmapCache(File rootDirectory, int maxCacheSizeInBytes) {
-            super(rootDirectory, maxCacheSizeInBytes);
-        }
-     
-        public DiskBitmapCache(File cacheDir) {
-            super(cacheDir);
-        }
-     
-        public Bitmap getBitmap(String url) {
-            final Entry requestedItem = get(url);
-     
-            if (requestedItem == null)
-                return null;
-     
-            return BitmapFactory.decodeByteArray(requestedItem.data, 0, requestedItem.data.length);
-        }
-     
-        public void putBitmap(String url, Bitmap bitmap) {
-            
-            final Entry entry = new Entry();
-            
-/*          //Down size the bitmap.If not done, OutofMemoryError occurs while decoding large bitmaps.
-            // If w & h is set during image request ( using ImageLoader ) then this is not required.
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Bitmap downSized = BitmapUtil.downSizeBitmap(bitmap, 50);
-            
-            downSized.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-            entry.data = data ; */
-            
-            entry.data = BitmapUtil.convertBitmapToBytes(bitmap) ;
-            put(url, entry);
-        }
-    }
+
+	public class DiskBitmapCache extends DiskBasedCache implements ImageCache {
+
+		public DiskBitmapCache(File rootDirectory, int maxCacheSizeInBytes) {
+			super(rootDirectory, maxCacheSizeInBytes);
+		}
+
+		public DiskBitmapCache(File cacheDir) {
+			super(cacheDir);
+		}
+
+		public Bitmap getBitmap(String url) {
+			final Entry requestedItem = get(url);
+
+			if (requestedItem == null)
+				return null;
+
+			return BitmapFactory.decodeByteArray(requestedItem.data, 0,
+					requestedItem.data.length);
+		}
+
+		public void putBitmap(String url, Bitmap bitmap) {
+
+			final Entry entry = new Entry();
+
+			/*
+			 * //Down size the bitmap.If not done, OutofMemoryError occurs while
+			 * decoding large bitmaps. // If w & h is set during image request (
+			 * using ImageLoader ) then this is not required.
+			 * ByteArrayOutputStream baos = new ByteArrayOutputStream(); Bitmap
+			 * downSized = BitmapUtil.downSizeBitmap(bitmap, 50);
+			 * 
+			 * downSized.compress(Bitmap.CompressFormat.JPEG, 100, baos); byte[]
+			 * data = baos.toByteArray(); entry.data = data ;
+			 */
+
+			entry.data = BitmapUtil.convertBitmapToBytes(bitmap);
+			put(url, entry);
+		}
+	}
 }

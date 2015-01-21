@@ -3,27 +3,27 @@
 
     <item
         android:id="@+id/right_menu_home"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_home"
         android:title="Trang chủ">
     </item>
     <item
         android:id="@+id/right_menu_daxem"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_daxem"
         android:title="Đã xem">
     </item>
     <item
         android:id="@+id/right_menu_yeuthich"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_like"
         android:title="Yêu thích">
     </item>
     <item
         android:id="@+id/right_menu_danhgia"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_danhgia"
         android:title="Đánh giá">
     </item>
     <item
         android:id="@+id/right_menu_gioithieu"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_gioithieu"
         android:title="Giới thiệu">
     </item>
 
