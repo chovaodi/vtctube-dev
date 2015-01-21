@@ -31,14 +31,17 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.vtc.basetube.adapter.MenuLeftAdapter;
 import com.vtc.basetube.fragment.FragmentAbout;
+import com.vtc.basetube.fragment.FragmentCategory;
+import com.vtc.basetube.fragment.FragmentLike;
 import com.vtc.basetube.fragment.VideoPlayerFragment;
 import com.vtc.basetube.model.Item;
+import com.vtc.basetube.utils.ICategoryMore;
 import com.vtc.basetube.utils.OnDisplayVideo;
 import com.vtc.basetube.utils.Utils;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		SearchView.OnQueryTextListener, SearchView.OnSuggestionListener,
-		OnDisplayVideo {
+		OnDisplayVideo, ICategoryMore {
 	private DrawerLayout mDrawerLayout;
 	private LinearLayout lineLeftMenu;
 	private ListView leftMenu;
@@ -69,13 +72,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerStateChanged(int arg0) {
-				boolean drawerOpenLeft = mDrawerLayout
-						.isDrawerOpen(lineLeftMenu);
-				if (drawerOpenLeft) {
-					zoomoutPlayer();
-				} else {
-					zoominPlayer();
+				if (adapterMenu == null) {
+					addMenuLeft(R.menu.ribbon_menu);
 				}
+
+				// boolean drawerOpenLeft = mDrawerLayout
+				// .isDrawerOpen(lineLeftMenu);
+				// if (drawerOpenLeft) {
+				// zoomoutPlayer();
+				// } else {
+				// zoominPlayer();
+				// }
 			}
 
 			@Override
@@ -86,9 +93,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerOpened(View arg0) {
-				if (adapterMenu == null) {
-					addMenuLeft(R.menu.ribbon_menu);
-				}
 
 			}
 
@@ -101,7 +105,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(R.id.frame_container, FragmentHome.newInstance(),
-						currentTag).addToBackStack(null).commit();
+						currentTag).commit();
+
 	}
 
 	public void addMenuLeft(int menu) {
@@ -130,28 +135,54 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void clickMenu() {
 		switch (idActive) {
 		case R.id.right_menu_home:
-
+			setHome();
 			break;
 		case R.id.right_menu_daxem:
-
+			currentTag = "TAG_VIEWED";
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.frame_container, FragmentLike.newInstance(),
+							currentTag).commit();
 			break;
 		case R.id.right_menu_yeuthich:
-
+			currentTag = "TAG_LIKE";
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.frame_container, FragmentLike.newInstance(),
+							currentTag).commit();
 			break;
 		case R.id.right_menu_danhgia:
-
+			Utils.gotoMarket(MainActivity.this);
 			break;
 		case R.id.right_menu_gioithieu:
-			
+
 			currentTag = "TAG_ABOUT";
 			getSupportFragmentManager()
 					.beginTransaction()
 					.replace(R.id.frame_container, FragmentAbout.newInstance(),
-							currentTag).addToBackStack(null).commit();
+							currentTag).commit();
 			break;
 
 		}
 		idActive = Integer.MAX_VALUE;
+
+	}
+
+	public void setHome() {
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentHome fragment = (FragmentHome) fragmentManager
+				.findFragmentByTag("TAG_HOME");
+		if (fragment == null) {
+			// ft.addToBackStack(null);
+			fragmentManager
+					.beginTransaction()
+					.replace(R.id.frame_container, FragmentHome.newInstance(),
+							"TAG_HOME").commit();
+		} else {
+			fragmentManager.beginTransaction()
+					.replace(R.id.frame_container, fragment, "TAG_HOME")
+					.commit();
+		}
 
 	}
 
@@ -278,19 +309,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
+		// super.onBackPressed();
 		zoomoutPlayer();
 		if (!currentTag.equals("TAG_HOME")) {
 			currentTag = "TAG_HOME";
 			getSupportFragmentManager()
 					.beginTransaction()
 					.replace(R.id.frame_container, FragmentHome.newInstance(),
-							currentTag).addToBackStack(null).commit();
-			Log.d("currentTag",currentTag);
+							currentTag).commit();
 		} else {
 			finish();
 			System.exit(0);
 		}
-		super.onBackPressed();
+
 	}
 
 	public void zoominPlayer() {
@@ -305,5 +336,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 			mVideoPlayerFragment.minimize();
 			return;
 		}
+	}
+
+	@Override
+	public void viewAll(int idcategory) {
+		currentTag = "TAG_CATE";
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.frame_container, FragmentCategory.newInstance(),
+						currentTag).commit();
+
 	}
 }
