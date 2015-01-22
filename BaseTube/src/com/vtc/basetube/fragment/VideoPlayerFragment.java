@@ -1,18 +1,25 @@
 package com.vtc.basetube.fragment;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.pedrovgs.draggablepanel.DraggableListener;
 import com.pedrovgs.draggablepanel.DraggableView;
+import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
+import com.vtc.basetube.adapter.VideoAdapter;
+import com.vtc.basetube.model.ItemVideo;
+import com.vtc.basetube.utils.DatabaseHelper;
 import com.vtc.basetube.utils.Utils;
 
 public class VideoPlayerFragment extends YoutubePlayerFragment {
@@ -54,9 +61,30 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
 		mYoutubeFragment = new YouTubePlayerSupportFragment();
 		getFragmentManager().beginTransaction()
-				.replace(R.id.youtube_player_fragment, mYoutubeFragment).addToBackStack(null)
-				.commit();
+				.replace(R.id.youtube_player_fragment, mYoutubeFragment)
+				.addToBackStack(null).commit();
 		updateData();
+		View view = getView();
+		ListView listvideo = (ListView) view.findViewById(R.id.listView1);
+		View header = getActivity().getLayoutInflater().inflate(
+				R.layout.header_itemvideo, null);
+		listvideo.addHeaderView(header);
+
+		VideoAdapter adapterVideo = new VideoAdapter(getActivity());
+
+		MainActivity.lblMessage.setVisibility(View.GONE);
+
+		for (int i = 0; i < 10; i++) {
+			ItemVideo item = new ItemVideo();
+			item.setTitle("Demo" + i);
+			item.setId(i + "");
+			item.setUploader("QuangNinhTV");
+			item.setTime("");
+			item.setCountView("");
+			item.setThumbnail("https://lh5.googleusercontent.com/-t_AUpjgQDnU/VMCRQop2SAI/AAAAAAAACPk/V5uOHoCqqfQ/w426-h323/522054_381988935294614_2598873010533268703_n.jpg");
+			adapterVideo.addItem(item);
+		}
+		listvideo.setAdapter(adapterVideo);
 	}
 
 	public void updateData() {
