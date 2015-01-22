@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
@@ -87,6 +88,8 @@ public class FragmentHome extends SherlockFragment {
 		listvideo = (ListView) view.findViewById(R.id.listivideo);
 		View header = getActivity().getLayoutInflater().inflate(
 				R.layout.header_home, null);
+		ImageView imgBanner=(ImageView)header.findViewById(R.id.imgBanner);
+		
 		listvideo.addHeaderView(header);
 		addview();
 		listvideo.setOnItemClickListener(new OnItemClickListener() {
