@@ -14,52 +14,62 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" > -->
+    android:orientation="vertical" >
+-->
 
-    <com.pedrovgs.draggablepanel.DraggableView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:draggable_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/draggable_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+<com.pedrovgs.draggablepanel.DraggableView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:draggable_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/draggable_view"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white"
+    draggable_view:bottom_view_id="@+id/detail_content"
+    draggable_view:top_view_id="@+id/youtube_player_fragment"
+    draggable_view:top_view_margin_bottom="@dimen/top_fragment_margin"
+    draggable_view:top_view_margin_right="@dimen/top_fragment_margin"
+    draggable_view:top_view_x_scale_factor="@dimen/x_scale_factor"
+    draggable_view:top_view_y_scale_factor="@dimen/y_scale_factor" >
+
+    <LinearLayout
+        android:id="@+id/detail_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@android:color/white"
-        draggable_view:bottom_view_id="@+id/detail_content"
-        draggable_view:top_view_id="@+id/youtube_player_fragment"
-        draggable_view:top_view_margin_bottom="@dimen/top_fragment_margin"
-        draggable_view:top_view_margin_right="@dimen/top_fragment_margin"
-        draggable_view:top_view_x_scale_factor="@dimen/x_scale_factor"
-        draggable_view:top_view_y_scale_factor="@dimen/y_scale_factor" >
+        android:orientation="vertical" >
 
-        <LinearLayout
-            android:id="@+id/detail_content"
+        <ListView
+            android:id="@+id/listView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_marginBottom="10dp"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="#809c9c9c"
+            android:dividerHeight="1px"
+            android:scrollbars="none"
+            android:scrollingCache="false" >
+        </ListView>
+    </LinearLayout>
 
-            <com.vtc.basetube.font.TextViewRobotoLight
-                android:id="@+id/textViewRobotoLight1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="TextViewRobotoLight" />
-
-        </LinearLayout>
-        <FrameLayout 
-            android:id="@+id/youtube_player_fragment"
-            android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-        <!--  <fragment
+    <FrameLayout
+        android:id="@+id/youtube_player_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <!--
+        <fragment
 		android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
         android:id="@+id/youtube_player_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/> -->
-        <!-- <com.google.android.youtube.player.YouTubePlayerView
+        android:layout_height="wrap_content"/>
+    -->
+    <!--
+             <com.google.android.youtube.player.YouTubePlayerView
             android:id="@+id/youtube_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" /> -->
-    </com.pedrovgs.draggablepanel.DraggableView>
+            android:layout_height="wrap_content" />
+    -->
 
-<!-- </LinearLayout> -->
+</com.pedrovgs.draggablepanel.DraggableView> <!-- </LinearLayout> -->
