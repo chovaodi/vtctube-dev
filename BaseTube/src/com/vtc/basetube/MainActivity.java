@@ -100,9 +100,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.frame_container, FragmentHome.newInstance(),
+				.replace(R.id.frame_container, FragmentHome.newInstance(QuangNinhTvApplication.getInstance()),
 						currentTag).commit();
-
 	}
 
 	public void addMenuLeft(int menu) {
@@ -176,7 +175,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			// ft.addToBackStack(null);
 			fragmentManager
 					.beginTransaction()
-					.replace(R.id.frame_container, FragmentHome.newInstance(),
+					.replace(R.id.frame_container, FragmentHome.newInstance(QuangNinhTvApplication.getInstance()),
 							"TAG_HOME").commit();
 		} else {
 			fragmentManager.beginTransaction()
@@ -316,7 +315,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			currentTag = "TAG_HOME";
 			getSupportFragmentManager()
 					.beginTransaction()
-					.replace(R.id.frame_container, FragmentHome.newInstance(),
+					.replace(R.id.frame_container, FragmentHome.newInstance(QuangNinhTvApplication.getInstance()),
 							currentTag).commit();
 		} else {
 			finish();

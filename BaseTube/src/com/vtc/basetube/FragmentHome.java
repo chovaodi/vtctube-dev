@@ -41,7 +41,7 @@ public class FragmentHome extends SherlockFragment {
 	private View view;
 	private VideoAdapter adapterVideo = null;
 	private OnDisplayVideo mOnDisplayVideo;
-	private final YoutubeController mController = new YoutubeController();
+	private final YoutubeController mController;
 
 	private static FragmentHome framgnent = null;
 
@@ -49,12 +49,16 @@ public class FragmentHome extends SherlockFragment {
 	 * Create a new instance of CountingFragment, providing "num" as an
 	 * argument.
 	 */
-	static FragmentHome newInstance() {
+	static FragmentHome newInstance(BaseTubeApplication app) {
 		if (framgnent == null)
-			framgnent = new FragmentHome();
+			framgnent = new FragmentHome(app);
 		return framgnent;
 	}
 
+	public FragmentHome(BaseTubeApplication app) {
+	    mController = new YoutubeController(app);
+    }
+	
 	/**
 	 * When creating, retrieve this instance's number from its arguments.
 	 */
@@ -107,21 +111,8 @@ public class FragmentHome extends SherlockFragment {
 	}
 
 	public void addview() {
-		mController.requestPlaylists(getActivity(),
-				new OnRequest<ArrayList<Category>>() {
-
-					@Override
-					public void onSuccess(ArrayList<Category> data) {
-
-						setUpAdapter(data);
-					}
-
-					@Override
-					public void onError() {
-						// TODO Auto-generated method stub
-
-					}
-				});
+		ArrayList<Category> playlists = mController.getPlaylists();
+		setUpAdapter(playlists);
 	}
 
 	public void setUpAdapter(ArrayList<Category> data) {

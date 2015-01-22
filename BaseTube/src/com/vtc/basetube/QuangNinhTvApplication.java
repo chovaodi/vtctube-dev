@@ -1,8 +1,9 @@
 package com.vtc.basetube;
 
 public class QuangNinhTvApplication extends BaseTubeApplication {
-    public static final String API_KEY = "AIzaSyCD3P8Bd1Nfo9GtMLyN53Qg7V3mQWMtrvo";
-    public static final String CHANNEL_ID = "UCgjeNGAHZI_X5vFeYYbKttA";
+    private static final String API_KEY = "AIzaSyCD3P8Bd1Nfo9GtMLyN53Qg7V3mQWMtrvo";
+    private static final String CHANNEL_ID = "UCgjeNGAHZI_X5vFeYYbKttA";
+    private static final String PLAYLISTS = BASE_CHANNEL + "playlists_quangninhtv";
 
     private static QuangNinhTvApplication sInstance;
 
@@ -27,8 +28,8 @@ public class QuangNinhTvApplication extends BaseTubeApplication {
     }
 
     @Override
-    public int getPlaylistResource() {
-        return R.raw.playlists_quangninhtv;
+    public String getPlaylistResource() {
+        return PLAYLISTS;
     }
 
 }
