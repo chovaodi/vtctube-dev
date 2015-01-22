@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +85,9 @@ public class FragmentHome extends SherlockFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		listvideo = (ListView) view.findViewById(R.id.listivideo);
+		View header = getActivity().getLayoutInflater().inflate(
+				R.layout.header_home, null);
+		listvideo.addHeaderView(header);
 		addview();
 		listvideo.setOnItemClickListener(new OnItemClickListener() {
 
