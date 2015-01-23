@@ -305,10 +305,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 							"TAG_VIDEO").addToBackStack(null).commit();
 			Log.d("VTCTube", "displayVideo: " + mVideoPlayerFragment);
 		} else {
-		    Bundle bundle = new Bundle();
-            bundle.putString("VIDEO_ID", videoId);
-            mVideoPlayerFragment.setArguments(bundle);
-			mVideoPlayerFragment.updateData();
+			mVideoPlayerFragment.updateData(videoId);
 			mVideoPlayerFragment.maximize();
 		}
 	}

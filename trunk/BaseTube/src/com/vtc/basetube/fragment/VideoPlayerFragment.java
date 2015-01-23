@@ -85,14 +85,14 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 			adapterVideo.addItem(item);
 		}
 		listvideo.setAdapter(adapterVideo);
-		updateData();
+		Bundle bundle = this.getArguments();
+        if(bundle != null) {
+            videoId = bundle.getString("VIDEO_ID");
+        }
+		updateData(videoId);
 	}
-
-	public void updateData() {
-	    Bundle bundle = this.getArguments();
-	    if(bundle != null) {
-	        videoId = bundle.getString("VIDEO_ID");
-	    }
+	public void updateData(String videoId) {
+	    
 	    Log.d(Utils.TAG, "VIDEO_ID: " + videoId);
 		if (mPlayer != null) {
 			mPlayer.cueVideo(videoId);
