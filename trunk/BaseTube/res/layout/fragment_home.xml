@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:cacheColorHint="@android:color/transparent"
-        android:divider="#509c9c9c"
-        android:dividerHeight="0.5px"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:scrollbars="none"
         android:scrollingCache="false" >
     </ListView>
