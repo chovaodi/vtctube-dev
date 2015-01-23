@@ -277,11 +277,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void display() {
-		displayVideo();
+	public void display(String videoId) {
+		displayVideo(videoId);
 	}
 
-	private void displayVideo() {
+	private void displayVideo(String videoId) {
 		Context context = getApplicationContext();
 		if (Utils.hasConnection(context) == false) {
 			Toast.makeText(
@@ -297,10 +297,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 				.beginTransaction();
 		if (mVideoPlayerFragment == null) {
 			mVideoPlayerFragment = VideoPlayerFragment.newInstance();
+			Bundle bundle = new Bundle();
+			bundle.putString("VIDEO_ID", videoId);
+			mVideoPlayerFragment.setArguments(bundle);
 			fragmentTransaction
 					.replace(R.id.play_frame_layout, mVideoPlayerFragment,
 							"TAG_VIDEO").addToBackStack(null).commit();
+			Log.d("VTCTube", "displayVideo: " + mVideoPlayerFragment);
 		} else {
+		    Bundle bundle = new Bundle();
+            bundle.putString("VIDEO_ID", videoId);
+            mVideoPlayerFragment.setArguments(bundle);
 			mVideoPlayerFragment.updateData();
 			mVideoPlayerFragment.maximize();
 		}

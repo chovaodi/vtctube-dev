@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		getFragmentManager().beginTransaction()
 				.replace(R.id.youtube_player_fragment, mYoutubeFragment)
 				.addToBackStack(null).commit();
-		updateData();
 		View view = getView();
 		ListView listvideo = (ListView) view.findViewById(R.id.listView1);
 		View header = getActivity().getLayoutInflater().inflate(
@@ -85,10 +85,15 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 			adapterVideo.addItem(item);
 		}
 		listvideo.setAdapter(adapterVideo);
+		updateData();
 	}
 
 	public void updateData() {
-
+	    Bundle bundle = this.getArguments();
+	    if(bundle != null) {
+	        videoId = bundle.getString("VIDEO_ID");
+	    }
+	    Log.d(Utils.TAG, "VIDEO_ID: " + videoId);
 		if (mPlayer != null) {
 			mPlayer.cueVideo(videoId);
 		} else {
