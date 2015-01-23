@@ -24,7 +24,7 @@ public class YoutubeController {
     private static final String QUANG_NINH_TV_CHANNEL = "UCgjeNGAHZI_X5vFeYYbKttA";
     private static final String BASE_URL = "https://www.googleapis.com/youtube/v3/";
     private static final String PLAYLISTS_URL = BASE_URL + "playlists?part=snippet,status";
-    private static final String PLAYLIST_ITEMS_URL = BASE_URL + "playlistItems?part=snippet,status&key=" + API_KEY;
+    private static final String PLAYLIST_ITEMS_URL = BASE_URL + "playlistItems?part=snippet,status,contentDetails&key=" + API_KEY;
 
     private Context mContext;
     private String mApiKey;
@@ -90,7 +90,9 @@ public class YoutubeController {
                                 continue;
                             }
                             Category cat = new Category();
-                            cat.setId(playlist.id);
+                            if(playlist.contentDetails != null) {
+                                cat.setId(playlist.contentDetails.videoId);
+                            }
                             cat.setTitle(playlist.snippet.title);
                             if (playlist.snippet.thumbnails != null && playlist.snippet.thumbnails.medium != null) {
                                 cat.setThumbnail(playlist.snippet.thumbnails.medium.url);

@@ -1,5 +1,5 @@
 package com.vtc.basetube.utils;
 
 public interface OnDisplayVideo {
-    public void display();
+    public void display(String videoId);
 }
