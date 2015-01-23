@@ -1,10 +1,5 @@
 package com.vtc.basetube.services.youtube;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -14,13 +9,12 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.vtc.basetube.BaseTubeApplication;
-import com.vtc.basetube.R;
 import com.vtc.basetube.model.Category;
-import com.vtc.basetube.services.model.Playlist;
 import com.vtc.basetube.services.model.Item;
+import com.vtc.basetube.services.model.Playlist;
 import com.vtc.basetube.services.model.Result;
+import com.vtc.basetube.services.model.Status;
 import com.vtc.basetube.services.request.RequestManager;
 import com.vtc.basetube.services.volley.toolbox.GsonRequest;
 import com.vtc.basetube.utils.Utils;
@@ -29,71 +23,40 @@ public class YoutubeController {
     private static final String API_KEY = "AIzaSyCD3P8Bd1Nfo9GtMLyN53Qg7V3mQWMtrvo";// "AIzaSyDsQDuxjOZLCiwx9MKIa_LTPhYPHV293L8";
     private static final String QUANG_NINH_TV_CHANNEL = "UCgjeNGAHZI_X5vFeYYbKttA";
     private static final String BASE_URL = "https://www.googleapis.com/youtube/v3/";
-    private static final String PLAYLISTS_URL = BASE_URL + "playlists?part=snippet&key=" + API_KEY;
-    private static final String PLAYLIST_ITEMS_URL = BASE_URL + "playlistItems?part=snippet&key=" + API_KEY;
+    private static final String PLAYLISTS_URL = BASE_URL + "playlists?part=snippet,status";
+    private static final String PLAYLIST_ITEMS_URL = BASE_URL + "playlistItems?part=snippet,status&key=" + API_KEY;
 
     private Context mContext;
     private String mApiKey;
     private String mChannelId;
-    private ArrayList<Category> mPlaylists;
-
-    public YoutubeController() {
-        mPlaylists = new ArrayList<Category>();
-    }
 
     public YoutubeController(BaseTubeApplication app) {
         mContext = app.getApplicationContext();
         mApiKey = app.getApiKey();
         mChannelId = app.getChannelId();
-        mPlaylists = new ArrayList<Category>();
-        loadPlaylists(app.getPlaylistResource());
     }
 
-    private void loadPlaylists(String file) {
-        try {
-            InputStream is = mContext.getAssets().open(file);
-            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF8"));
-            Gson gson = new Gson();
-            Result result = gson.fromJson(reader, Result.class);
-            if (result != null && result.items != null) {
-                for (Item item : result.items) {
-                    Category cat = new Category();
-                    cat.setId(item.id);
-                    if (item.snippet != null) {
-                        cat.setTitle(item.snippet.title);
-                        if (item.snippet.thumbnails != null && item.snippet.thumbnails.medium != null) {
-                            cat.setThumbnail(item.snippet.thumbnails.medium.url);
-                        }
-                    }
-                    mPlaylists.add(cat);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e(Utils.TAG, e.getMessage());
-        }
-    }
-
-    public ArrayList<Category> getPlaylists() {
-        return mPlaylists;
-    }
-
-    public void requestPlaylists(Context context, final OnRequest<ArrayList<Category>> req) {
-        String url = PLAYLISTS_URL + "&channelId=" + QUANG_NINH_TV_CHANNEL;
-        GsonRequest<Playlist> request = new GsonRequest<Playlist>(Method.GET, url, Playlist.class, null,
-                new Listener<Playlist>() {
+    public void requestPlaylists(final OnRequest<ArrayList<Category>> req) {
+        StringBuilder url = new StringBuilder(PLAYLISTS_URL)
+                            .append("&channelId=").append(mChannelId)
+                            .append("&maxResults=50")
+                            .append("&key=").append(mApiKey);
+        GsonRequest<Result> request = new GsonRequest<Result>(Method.GET, url.toString(), Result.class, null,
+                new Listener<Result>() {
 
                     @Override
-                    public void onResponse(Playlist playlists) {
-                        if (playlists.items == null) {
+                    public void onResponse(Result result) {
+                        if (result.items == null) {
                             req.onError();
                             return;
                         }
                         ArrayList<Category> categories = new ArrayList<Category>();
-                        for (Item playlist : playlists.items) {
+                        for (Item item : result.items) {
                             Category cat = new Category();
-                            cat.setId(playlist.id);
-                            cat.setTitle(playlist.snippet.title);
+                            cat.setId(item.id);
+                            if (item.snippet != null) {
+                                cat.setTitle(item.snippet.title);
+                            }
                             categories.add(cat);
                         }
                         req.onSuccess(categories);
@@ -106,7 +69,7 @@ public class YoutubeController {
                         Log.d(Utils.TAG, "onErrorResponse: " + err.getMessage());
                     }
                 });
-        RequestManager.newInstance(context).addToRequestQueue(request);
+        RequestManager.newInstance(mContext).addToRequestQueue(request);
     }
 
     public void requestPlaylistItems(Context context, final String playlistId, final OnRequest<ArrayList<Category>> req) {
@@ -123,6 +86,9 @@ public class YoutubeController {
                         }
                         ArrayList<Category> categories = new ArrayList<Category>();
                         for (Item playlist : playlists.items) {
+                            if(playlist.status != null && Status.PRIVATE.equals(playlist.status.privacyStatus)) {
+                                continue;
+                            }
                             Category cat = new Category();
                             cat.setId(playlist.id);
                             cat.setTitle(playlist.snippet.title);

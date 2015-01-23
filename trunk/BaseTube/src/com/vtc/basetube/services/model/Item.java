@@ -6,4 +6,5 @@ public class Item {
     public Snippet snippet;
     public ContentDetails contentDetails;
     public Statistics statistics;
+    public Status status;
 }

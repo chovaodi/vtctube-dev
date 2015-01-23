@@ -111,8 +111,19 @@ public class FragmentHome extends SherlockFragment {
 	}
 
 	public void addview() {
-		ArrayList<Category> playlists = mController.getPlaylists();
-		setUpAdapter(playlists);
+		mController.requestPlaylists(new OnRequest<ArrayList<Category>>() {
+            
+            @Override
+            public void onSuccess(ArrayList<Category> data) {
+                setUpAdapter(data);
+            }
+            
+            @Override
+            public void onError() {
+                // TODO Auto-generated method stub
+                
+            }
+        });
 	}
 
 	public void setUpAdapter(ArrayList<Category> data) {
