@@ -5,14 +5,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
 import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.ItemVideo;
 
-public class FragmentCategory extends Fragment {
+public class FragmentCategory extends Fragment implements OnScrollListener {
 	private static Fragment fragment = null;
+	private boolean isLoadding = false;
 
 	public static Fragment newInstance() {
 		if (fragment == null)
@@ -44,6 +47,23 @@ public class FragmentCategory extends Fragment {
 			adapterVideo.addItem(item);
 		}
 		listvideo.setAdapter(adapterVideo);
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		int lastInScreen = firstVisibleItem + visibleItemCount;
+		if (lastInScreen == totalItemCount && !isLoadding) {
+			isLoadding = true;
+
+			// /call more api
+		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView arg0, int arg1) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
