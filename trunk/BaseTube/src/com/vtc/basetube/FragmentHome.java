@@ -99,6 +99,12 @@ public class FragmentHome extends SherlockFragment {
 		listvideo.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
+<<<<<<< .mine
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
+					long id) {
+				if (mOnDisplayVideo != null && pos-1 >= 0) {
+					mOnDisplayVideo.display(adapterVideo.getItem(pos-1));
+=======
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				if(arg2==0){
@@ -106,6 +112,7 @@ public class FragmentHome extends SherlockFragment {
 				}
 				if (mOnDisplayVideo != null) {
 					mOnDisplayVideo.display(adapterVideo.getItem(arg2-1));
+>>>>>>> .r181
 				}
 			}
 
