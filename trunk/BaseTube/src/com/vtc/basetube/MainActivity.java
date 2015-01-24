@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
@@ -55,6 +56,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 			SearchManager.SUGGEST_COLUMN_TEXT_1, };
 	private VideoPlayerFragment mVideoPlayerFragment;
 	public static ProgressBar progressBar;
+	private FragmentManager fragmentManager;
+	private FragmentTransaction ft;
 
 	private String currentTag = "TAG_HOME";
 	private int idActive;
@@ -72,6 +75,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		lineLeftMenu = (LinearLayout) findViewById(R.id.lineMenu);
 		leftMenu = (ListView) findViewById(R.id.rbm_listview);
+		fragmentManager = getSupportFragmentManager();
+		ft = fragmentManager.beginTransaction();
 		mDrawerLayout.setDrawerListener(new DrawerListener() {
 
 			@Override
@@ -172,23 +177,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void setHome() {
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		FragmentHome fragment = (FragmentHome) fragmentManager
-				.findFragmentByTag("TAG_HOME");
-		if (fragment == null) {
-			// ft.addToBackStack(null);
-			fragmentManager
+		if (!currentTag.equals("TAG_HOME")) {
+			currentTag = "TAG_HOME";
+			getSupportFragmentManager()
 					.beginTransaction()
 					.replace(
 							R.id.frame_container,
 							FragmentHome.newInstance(QuangNinhTvApplication
-									.getInstance()), "TAG_HOME").commit();
-		} else {
-			fragmentManager.beginTransaction()
-					.replace(R.id.frame_container, fragment, "TAG_HOME")
-					.commit();
+									.getInstance()), currentTag).commit();
 		}
-
 	}
 
 	@Override
@@ -352,7 +349,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			mVideoPlayerFragment.minimize();
 			return;
 		}
-	
+
 	}
 
 	@Override
