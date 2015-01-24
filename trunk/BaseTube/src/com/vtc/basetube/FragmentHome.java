@@ -24,8 +24,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -102,7 +102,7 @@ public class FragmentHome extends SherlockFragment {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				if (mOnDisplayVideo != null) {
-					mOnDisplayVideo.display(adapterVideo.getItem(arg2).getId());
+					mOnDisplayVideo.display(adapterVideo.getItem(arg2));
 				}
 			}
 

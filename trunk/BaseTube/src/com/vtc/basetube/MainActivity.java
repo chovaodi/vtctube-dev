@@ -1,14 +1,15 @@
 package com.vtc.basetube;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.SearchManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
@@ -37,6 +38,8 @@ import com.vtc.basetube.fragment.FragmentLike;
 import com.vtc.basetube.fragment.FragmentViewed;
 import com.vtc.basetube.fragment.VideoPlayerFragment;
 import com.vtc.basetube.model.Item;
+import com.vtc.basetube.model.ItemVideo;
+import com.vtc.basetube.utils.DatabaseHelper;
 import com.vtc.basetube.utils.ICategoryMore;
 import com.vtc.basetube.utils.OnDisplayVideo;
 import com.vtc.basetube.utils.Utils;
@@ -62,10 +65,22 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private String currentTag = "TAG_HOME";
 	private int idActive;
 	public static TextView lblMessage;
+	public static DatabaseHelper myDbHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		myDbHelper = new DatabaseHelper(MainActivity.this);
+		try {
+			myDbHelper.createDataBase();
+			myDbHelper.openDataBase();
+		} catch (IOException ioe) {
+			throw new Error("Unable to create database");
+		} catch (SQLException sqle) {
+			throw sqle;
+		}
+
 		setContentView(R.layout.activity_main);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
 		lblMessage = (TextView) findViewById(R.id.lblThongbao);
@@ -280,8 +295,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void display(String videoId) {
-		displayVideo(videoId);
+	public void display(ItemVideo itemvd) {
+		if (myDbHelper.getCountRow("SELECT * FROM " + DatabaseHelper.TB_DATA
+				+ " WHERE videoId='" + itemvd.getId() + "' and type='"
+				+ Utils.VIEWED + "'") == 0) {
+			myDbHelper.insertVideoLike(itemvd, Utils.VIEWED);
+			
+		}
+
+		displayVideo(itemvd.getId());
 	}
 
 	private void displayVideo(String videoId) {
