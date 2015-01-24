@@ -29,182 +29,184 @@ import com.vtc.basetube.utils.OnDisplayVideo;
 import com.vtc.basetube.utils.Utils;
 
 public class VideoPlayerFragment extends YoutubePlayerFragment {
-	private String mVideoId = "";
+    private String mVideoId = "";
 
-	public static ViewGroup mainView;
+    public static ViewGroup mainView;
 
-	private YouTubePlayerSupportFragment mYoutubeFragment;
-	private YouTubePlayer mPlayer;
+    private YouTubePlayerSupportFragment mYoutubeFragment;
+    private YouTubePlayer mPlayer;
 
-	private DraggableView mView;
-	private BaseTubeApplication mApp;
-	
-	private TextView mTvTitle;
-	private TextView mTvViewCount;
-	private TextView mTvPublishAt;
-	private TextView mTvDescription;
+    private DraggableView mView;
+    private BaseTubeApplication mApp;
+    private ListView mListvideo;
 
-	private static VideoPlayerFragment sInstance = null;
+    private TextView mTvTitle;
+    private TextView mTvViewCount;
+    private TextView mTvPublishAt;
+    private TextView mTvDescription;
 
-	public static VideoPlayerFragment newInstance() {
-		if (sInstance == null)
-			sInstance = new VideoPlayerFragment();
+    private YoutubeController mController;
+    private VideoAdapter mAdapterVideo;
+    
+    private static VideoPlayerFragment sInstance = null;
 
-		return sInstance;
-	}
+    public static VideoPlayerFragment newInstance() {
+        if (sInstance == null)
+            sInstance = new VideoPlayerFragment();
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if(activity instanceof OnDisplayVideo) {
-		    mApp = ((OnDisplayVideo) activity).getTubeApplication();
-		}
-	}
+        return sInstance;
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		mView = (DraggableView) inflater.inflate(R.layout.playerview_demo,
-				container, false);
-		hookDraggablePanelListeners();
-		return mView;
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		mYoutubeFragment = new YouTubePlayerSupportFragment();
-		getFragmentManager().beginTransaction()
-				.replace(R.id.youtube_player_fragment, mYoutubeFragment)
-				.addToBackStack(null).commit();
-		View view = getView();
-		ListView listvideo = (ListView) view.findViewById(R.id.listView1);
-		View header = getActivity().getLayoutInflater().inflate(
-				R.layout.header_itemvideo, null);
-		listvideo.addHeaderView(header);
-		mTvTitle = (TextView) header.findViewById(R.id.lblName);
-		mTvDescription = (TextView) header.findViewById(R.id.lblDescription);
-		mTvPublishAt = (TextView) header.findViewById(R.id.lbPublishAt);
-		mTvViewCount = (TextView) header.findViewById(R.id.lblCountview);
-
-		VideoAdapter adapterVideo = new VideoAdapter(getActivity());
-
-		MainActivity.lblMessage.setVisibility(View.GONE);
-
-		for (int i = 0; i < 10; i++) {
-			ItemVideo item = new ItemVideo();
-			item.setTitle("Demo" + i);
-			item.setId(i + "");
-			item.setUploader("QuangNinhTV");
-			item.setTime("");
-			item.setCountView("");
-			item.setThumbnail("https://lh5.googleusercontent.com/-t_AUpjgQDnU/VMCRQop2SAI/AAAAAAAACPk/V5uOHoCqqfQ/w426-h323/522054_381988935294614_2598873010533268703_n.jpg");
-			adapterVideo.addItem(item);
-		}
-		listvideo.setAdapter(adapterVideo);
-		Bundle bundle = this.getArguments();
-        if(bundle != null) {
-            mVideoId = bundle.getString("VIDEO_ID");
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof OnDisplayVideo) {
+            mApp = ((OnDisplayVideo) activity).getTubeApplication();
+            mController = new YoutubeController(mApp);
         }
-		updateData(mVideoId);
-	}
-	public void updateData(String videoId) {
-	    Log.d(Utils.TAG, "VIDEO_ID: " + videoId);
-	    if(TextUtils.isEmpty(videoId)) {
-	        return;
-	    }
-	    mVideoId = videoId;
-		if (mPlayer != null) {
-			mPlayer.cueVideo(videoId);
-		} else {
-			mYoutubeFragment.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
-		}
-		updateDataDetail(videoId);
-	}
+    }
 
-	@Override
-	public void onInitializationSuccess(Provider provider,
-			YouTubePlayer player, boolean wasRestored) {
-		this.mPlayer = player;
-		Log.d(Utils.TAG, "videoId: " + mVideoId);
-		if (!wasRestored && mVideoId.length() > 0) {
-			player.cueVideo(mVideoId);
-		}
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mView = (DraggableView) inflater.inflate(R.layout.playerview_demo, container, false);
+        hookDraggablePanelListeners();
+        return mView;
+    }
 
-	@Override
-	protected Provider getYouTubePlayerProvider() {
-		return (YouTubePlayerSupportFragment) getFragmentManager()
-				.findFragmentById(R.id.youtube_player_fragment);
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-	public void maximize() {
-		mView.maximize();
-	}
+        mYoutubeFragment = new YouTubePlayerSupportFragment();
+        getFragmentManager().beginTransaction().replace(R.id.youtube_player_fragment, mYoutubeFragment).addToBackStack(null)
+                .commit();
+        View view = getView();
+        mListvideo = (ListView) view.findViewById(R.id.listView1);
+        View header = getActivity().getLayoutInflater().inflate(R.layout.header_itemvideo, null);
+        mListvideo.addHeaderView(header);
+        mTvTitle = (TextView) header.findViewById(R.id.lblName);
+        mTvDescription = (TextView) header.findViewById(R.id.lblDescription);
+        mTvPublishAt = (TextView) header.findViewById(R.id.lbPublishAt);
+        mTvViewCount = (TextView) header.findViewById(R.id.lblCountview);
 
-	public void minimize() {
-		mView.minimize();
-	}
+        mAdapterVideo = new VideoAdapter(getActivity());
 
-	public boolean isMaximize() {
-		return mView.isMaximized();
-	}
+        MainActivity.lblMessage.setVisibility(View.GONE);
 
-	public boolean isMinimize() {
-		return mView.isMinimized();
-	}
+//        for (int i = 0; i < 10; i++) {
+//            ItemVideo item = new ItemVideo();
+//            item.setTitle("Demo" + i);
+//            item.setId(i + "");
+//            item.setUploader("QuangNinhTV");
+//            item.setTime("");
+//            item.setCountView("");
+//            item.setThumbnail("https://lh5.googleusercontent.com/-t_AUpjgQDnU/VMCRQop2SAI/AAAAAAAACPk/V5uOHoCqqfQ/w426-h323/522054_381988935294614_2598873010533268703_n.jpg");
+//            adapterVideo.addItem(item);
+//        }
+//        listvideo.setAdapter(adapterVideo);
+        Bundle bundle = this.getArguments();
+        if (bundle == null) {
+            return;
+        }
+        mVideoId = bundle.getString("VIDEO_ID");
+        updateData(mVideoId);
+        String playlistId = bundle.getString("PLAYLIST_ID");
+        updateList(playlistId);
+    }
 
-	/**
-	 * Hook the DraggableListener to DraggablePanel to pause or resume the video
-	 * when the DragglabePanel is maximized or closed.
-	 */
-	private void hookDraggablePanelListeners() {
-		mView.setDraggableListener(new DraggableListener() {
-			@Override
-			public void onMaximized() {
-				playVideo();
-			}
+    public void updateData(String videoId) {
+        Log.d(Utils.TAG, "VIDEO_ID: " + videoId);
+        if (TextUtils.isEmpty(videoId)) {
+            return;
+        }
+        mVideoId = videoId;
+        if (mPlayer != null) {
+            mPlayer.cueVideo(videoId);
+        } else {
+            mYoutubeFragment.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
+        }
+        updateDataDetail();
+    }
 
-			@Override
-			public void onMinimized() {
-				playVideo();
-			}
+    @Override
+    public void onInitializationSuccess(Provider provider, YouTubePlayer player, boolean wasRestored) {
+        this.mPlayer = player;
+        Log.d(Utils.TAG, "videoId: " + mVideoId);
+        if (!wasRestored && mVideoId.length() > 0) {
+            player.cueVideo(mVideoId);
+        }
+    }
 
-			@Override
-			public void onClosedToLeft() {
-				pauseVideo();
-			}
+    @Override
+    protected Provider getYouTubePlayerProvider() {
+        return (YouTubePlayerSupportFragment) getFragmentManager().findFragmentById(R.id.youtube_player_fragment);
+    }
 
-			@Override
-			public void onClosedToRight() {
-				pauseVideo();
-			}
-		});
-	}
+    public void maximize() {
+        mView.maximize();
+    }
 
-	/**
-	 * Pause the video reproduced in the YouTubePlayer.
-	 */
-	private void pauseVideo() {
-		if (mPlayer != null && mPlayer.isPlaying()) {
-			mPlayer.pause();
-		}
-	}
+    public void minimize() {
+        mView.minimize();
+    }
 
-	/**
-	 * Resume the video reproduced in the YouTubePlayer.
-	 */
-	private void playVideo() {
-		if (mPlayer != null && !mPlayer.isPlaying()) {
-			mPlayer.play();
-		}
-	}
-	
-	private void updateDataDetail(String videoId) {
-	    YoutubeController controller = new YoutubeController(mApp);
-	    controller.requestVideoList(mApp, mVideoId, new OnRequest<ArrayList<Category>>() {
-            
+    public boolean isMaximize() {
+        return mView.isMaximized();
+    }
+
+    public boolean isMinimize() {
+        return mView.isMinimized();
+    }
+
+    /**
+     * Hook the DraggableListener to DraggablePanel to pause or resume the video
+     * when the DragglabePanel is maximized or closed.
+     */
+    private void hookDraggablePanelListeners() {
+        mView.setDraggableListener(new DraggableListener() {
+            @Override
+            public void onMaximized() {
+                playVideo();
+            }
+
+            @Override
+            public void onMinimized() {
+                playVideo();
+            }
+
+            @Override
+            public void onClosedToLeft() {
+                pauseVideo();
+            }
+
+            @Override
+            public void onClosedToRight() {
+                pauseVideo();
+            }
+        });
+    }
+
+    /**
+     * Pause the video reproduced in the YouTubePlayer.
+     */
+    private void pauseVideo() {
+        if (mPlayer != null && mPlayer.isPlaying()) {
+            mPlayer.pause();
+        }
+    }
+
+    /**
+     * Resume the video reproduced in the YouTubePlayer.
+     */
+    private void playVideo() {
+        if (mPlayer != null && !mPlayer.isPlaying()) {
+            mPlayer.play();
+        }
+    }
+
+    private void updateDataDetail() {
+        mController.requestVideoList(mApp, mVideoId, new OnRequest<ArrayList<Category>>() {
+
             @Override
             public void onSuccess(ArrayList<Category> data) {
                 Category item = data.get(0);
@@ -213,12 +215,47 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
                 mTvPublishAt.setText(item.getPublishAt());
                 mTvViewCount.setText(item.getViewCount() + " lượt xem");
             }
-            
+
             @Override
             public void onError() {
                 // TODO Auto-generated method stub
-                
+
             }
         });
-	}
+    }
+    
+    public void updateList(String playlistId) {
+        mController.requestPlaylistItems(getActivity(), playlistId, new OnRequest<ArrayList<Category>>() {
+
+            @Override
+            public void onSuccess(ArrayList<Category> data) {
+                Log.d(Utils.TAG, "Data: " + data.size());
+                mAdapterVideo.RemoveData();
+                for (Category dt : data) {
+                    if(dt.getId().equals(mVideoId)) {
+                        continue;
+                    }
+                    Log.d(Utils.TAG, "Data: Title: " + dt.getTitle());
+                    ItemVideo item = new ItemVideo();
+                    item.setTitle(dt.getTitle());
+                    item.setId(dt.getId());
+                    item.setTime("3h trước");
+                    item.setUploader("QuangNinhTV");
+                    item.setCountView("30 lượt xem");
+                    item.setThumbnail(dt.getThumbnail());
+                    item.setPlaylistId(dt.getPlaylistId());
+                    // Log.d("dt.getThumbnail()",dt.getThumbnail());
+                    mAdapterVideo.addItem(item);
+                }
+                Log.d(Utils.TAG, "Data: mAdapterVideo: " + mAdapterVideo.getCount());
+                mListvideo.setAdapter(mAdapterVideo);
+            }
+
+            @Override
+            public void onError() {
+                // TODO Auto-generated method stub
+            }
+
+        });
+    }
 }

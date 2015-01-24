@@ -8,6 +8,7 @@ public class ItemVideo {
 	private String time;
 	private String mThumbnail;
 	private int type;
+	private String playlistId;
 
 	public void setType(int type) {
 		this.type = type;
@@ -63,5 +64,13 @@ public class ItemVideo {
 
 	public void setThumbnail(String thumbnail) {
 		mThumbnail = thumbnail;
+	}
+	
+	public void setPlaylistId(String playlistId) {
+	    this.playlistId = playlistId;
+	}
+	
+	public String getPlaylistId() {
+	    return this.playlistId;
 	}
 }

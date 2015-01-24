@@ -5,4 +5,5 @@ public class Snippet {
     public String title;
     public String description;
     public Thumbnails thumbnails;
+    public String playlistId;
 }
