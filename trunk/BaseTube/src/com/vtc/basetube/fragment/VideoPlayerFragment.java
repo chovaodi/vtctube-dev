@@ -2,6 +2,7 @@ package com.vtc.basetube.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ import com.vtc.basetube.model.ItemVideo;
 import com.vtc.basetube.utils.Utils;
 
 public class VideoPlayerFragment extends YoutubePlayerFragment {
-	String videoId = "";
+	private String mVideoId = "";
 
 	public static ViewGroup mainView;
 
@@ -83,13 +84,16 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		listvideo.setAdapter(adapterVideo);
 		Bundle bundle = this.getArguments();
         if(bundle != null) {
-            videoId = bundle.getString("VIDEO_ID");
+            mVideoId = bundle.getString("VIDEO_ID");
         }
-		updateData(videoId);
+		updateData(mVideoId);
 	}
 	public void updateData(String videoId) {
-	    
 	    Log.d(Utils.TAG, "VIDEO_ID: " + videoId);
+	    if(TextUtils.isEmpty(videoId)) {
+	        return;
+	    }
+	    mVideoId = videoId;
 		if (mPlayer != null) {
 			mPlayer.cueVideo(videoId);
 		} else {
@@ -101,8 +105,9 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	public void onInitializationSuccess(Provider provider,
 			YouTubePlayer player, boolean wasRestored) {
 		this.mPlayer = player;
-		if (!wasRestored && videoId.length() > 0) {
-			player.cueVideo(videoId);
+		Log.d(Utils.TAG, "videoId: " + mVideoId);
+		if (!wasRestored && mVideoId.length() > 0) {
+			player.cueVideo(mVideoId);
 		}
 	}
 
