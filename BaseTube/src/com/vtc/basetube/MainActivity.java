@@ -350,10 +350,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void zoomoutPlayer() {
 		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
 			mVideoPlayerFragment.minimize();
-			Log.d("minsize", "min");
-
+			return;
 		}
-		return;
+	
 	}
 
 	@Override
