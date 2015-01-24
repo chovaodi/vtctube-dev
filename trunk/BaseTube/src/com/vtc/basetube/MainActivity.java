@@ -79,6 +79,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 				if (adapterMenu == null) {
 					addMenuLeft(R.menu.ribbon_menu);
 				}
+
+				zoomoutPlayer();
 			}
 
 			@Override
@@ -100,8 +102,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.frame_container, FragmentHome.newInstance(QuangNinhTvApplication.getInstance()),
-						currentTag).commit();
+				.replace(
+						R.id.frame_container,
+						FragmentHome.newInstance(QuangNinhTvApplication
+								.getInstance()), currentTag).commit();
 	}
 
 	public void addMenuLeft(int menu) {
@@ -175,8 +179,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 			// ft.addToBackStack(null);
 			fragmentManager
 					.beginTransaction()
-					.replace(R.id.frame_container, FragmentHome.newInstance(QuangNinhTvApplication.getInstance()),
-							"TAG_HOME").commit();
+					.replace(
+							R.id.frame_container,
+							FragmentHome.newInstance(QuangNinhTvApplication
+									.getInstance()), "TAG_HOME").commit();
 		} else {
 			fragmentManager.beginTransaction()
 					.replace(R.id.frame_container, fragment, "TAG_HOME")
@@ -312,20 +318,26 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		// super.onBackPressed();
-		zoomoutPlayer();
-		if (!currentTag.equals("TAG_HOME")) {
-			lblMessage.setVisibility(View.GONE);
-			currentTag = "TAG_HOME";
-			getSupportFragmentManager()
-					.beginTransaction()
-					.replace(R.id.frame_container, FragmentHome.newInstance(QuangNinhTvApplication.getInstance()),
-							currentTag).commit();
-		} else {
-			finish();
-			System.exit(0);
-		}
 
+		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
+			mVideoPlayerFragment.minimize();
+			Log.d("minsize", "min");
+
+		} else {
+			if (!currentTag.equals("TAG_HOME")) {
+				lblMessage.setVisibility(View.GONE);
+				currentTag = "TAG_HOME";
+				getSupportFragmentManager()
+						.beginTransaction()
+						.replace(
+								R.id.frame_container,
+								FragmentHome.newInstance(QuangNinhTvApplication
+										.getInstance()), currentTag).commit();
+			} else {
+				finish();
+				System.exit(0);
+			}
+		}
 	}
 
 	public void zoominPlayer() {
@@ -338,8 +350,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void zoomoutPlayer() {
 		if (mVideoPlayerFragment != null && mVideoPlayerFragment.isMaximize()) {
 			mVideoPlayerFragment.minimize();
-			return;
+			Log.d("minsize", "min");
+
 		}
+		return;
 	}
 
 	@Override
