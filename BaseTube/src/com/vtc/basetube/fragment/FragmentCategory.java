@@ -47,6 +47,7 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
 			adapterVideo.addItem(item);
 		}
 		listvideo.setAdapter(adapterVideo);
+		listvideo.setOnScrollListener(this);
 	}
 
 	@Override
