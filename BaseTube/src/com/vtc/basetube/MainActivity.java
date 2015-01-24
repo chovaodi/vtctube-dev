@@ -383,4 +383,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 						currentTag).commit();
 
 	}
+
+    @Override
+    public BaseTubeApplication getTubeApplication() {
+        return QuangNinhTvApplication.getInstance();
+    }
 }
