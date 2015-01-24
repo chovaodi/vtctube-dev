@@ -25,7 +25,8 @@ public class YoutubeController {
     private static final String BASE_URL = "https://www.googleapis.com/youtube/v3/";
     private static final String PLAYLISTS_URL = BASE_URL + "playlists?part=snippet,status";
     private static final String PLAYLIST_ITEMS_URL = BASE_URL + "playlistItems?part=snippet,status,contentDetails&key=" + API_KEY;
-
+    private static final String VIDEO_LIST_URL = BASE_URL + "videos?part=snippet,contentDetails,statistics";
+    
     private Context mContext;
     private String mApiKey;
     private String mChannelId;
@@ -96,6 +97,49 @@ public class YoutubeController {
                             cat.setTitle(playlist.snippet.title);
                             if (playlist.snippet.thumbnails != null && playlist.snippet.thumbnails.medium != null) {
                                 cat.setThumbnail(playlist.snippet.thumbnails.medium.url);
+                            }
+                            categories.add(cat);
+                        }
+                        req.onSuccess(categories);
+                    }
+
+                }, new ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError err) {
+                        Log.d(Utils.TAG, "onErrorResponse: " + err.getMessage());
+                    }
+                });
+        RequestManager.newInstance(context).addToRequestQueue(request);
+    }
+    
+    public void requestVideoList(Context context, final String videoId, final OnRequest<ArrayList<Category>> req) {
+        StringBuilder url = new StringBuilder(VIDEO_LIST_URL)
+        .append("&id=").append(videoId)
+        .append("&key=").append(mApiKey);
+        GsonRequest<Result> request = new GsonRequest<Result>(Method.GET, url.toString(), Result.class, null,
+                new Listener<Result>() {
+
+                    @Override
+                    public void onResponse(Result data) {
+                        Log.d(Utils.TAG, "requestPlaylistItems onResponse: ");
+                        if (data.items == null) {
+                            req.onError();
+                            return;
+                        }
+                        ArrayList<Category> categories = new ArrayList<Category>();
+                        for (Item item : data.items) {
+                            Category cat = new Category();
+                            if(item.contentDetails != null) {
+                                cat.setId(item.contentDetails.videoId);
+                            }
+                            if(item.snippet != null) {
+                                cat.setDescription(item.snippet.description);
+                                cat.setTitle(item.snippet.title);
+                                cat.setPublishAt(item.snippet.publishedAt);
+                            }
+                            if(item.statistics != null) {
+                                cat.setCountView(item.statistics.viewCount);
                             }
                             categories.add(cat);
                         }

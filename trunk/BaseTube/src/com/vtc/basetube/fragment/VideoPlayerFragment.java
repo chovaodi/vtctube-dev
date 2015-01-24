@@ -1,5 +1,7 @@
 package com.vtc.basetube.fragment;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,16 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.pedrovgs.draggablepanel.DraggableListener;
 import com.pedrovgs.draggablepanel.DraggableView;
+import com.vtc.basetube.BaseTubeApplication;
 import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
+import com.vtc.basetube.model.Category;
 import com.vtc.basetube.model.ItemVideo;
+import com.vtc.basetube.services.youtube.OnRequest;
+import com.vtc.basetube.services.youtube.YoutubeController;
+import com.vtc.basetube.utils.OnDisplayVideo;
 import com.vtc.basetube.utils.Utils;
 
 public class VideoPlayerFragment extends YoutubePlayerFragment {
@@ -29,6 +37,12 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	private YouTubePlayer mPlayer;
 
 	private DraggableView mView;
+	private BaseTubeApplication mApp;
+	
+	private TextView mTvTitle;
+	private TextView mTvViewCount;
+	private TextView mTvPublishAt;
+	private TextView mTvDescription;
 
 	private static VideoPlayerFragment sInstance = null;
 
@@ -42,6 +56,9 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		if(activity instanceof OnDisplayVideo) {
+		    mApp = ((OnDisplayVideo) activity).getTubeApplication();
+		}
 	}
 
 	@Override
@@ -66,6 +83,10 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		View header = getActivity().getLayoutInflater().inflate(
 				R.layout.header_itemvideo, null);
 		listvideo.addHeaderView(header);
+		mTvTitle = (TextView) header.findViewById(R.id.lblName);
+		mTvDescription = (TextView) header.findViewById(R.id.lblDescription);
+		mTvPublishAt = (TextView) header.findViewById(R.id.lbPublishAt);
+		mTvViewCount = (TextView) header.findViewById(R.id.lblCountview);
 
 		VideoAdapter adapterVideo = new VideoAdapter(getActivity());
 
@@ -99,6 +120,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		} else {
 			mYoutubeFragment.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
 		}
+		updateDataDetail(videoId);
 	}
 
 	@Override
@@ -177,5 +199,26 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		if (mPlayer != null && !mPlayer.isPlaying()) {
 			mPlayer.play();
 		}
+	}
+	
+	private void updateDataDetail(String videoId) {
+	    YoutubeController controller = new YoutubeController(mApp);
+	    controller.requestVideoList(mApp, mVideoId, new OnRequest<ArrayList<Category>>() {
+            
+            @Override
+            public void onSuccess(ArrayList<Category> data) {
+                Category item = data.get(0);
+                mTvTitle.setText(item.getTitle());
+                mTvDescription.setText(item.getDescription());
+                mTvPublishAt.setText(item.getPublishAt());
+                mTvViewCount.setText(item.getViewCount() + " lượt xem");
+            }
+            
+            @Override
+            public void onError() {
+                // TODO Auto-generated method stub
+                
+            }
+        });
 	}
 }
