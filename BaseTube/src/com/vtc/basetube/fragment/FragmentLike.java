@@ -3,12 +3,15 @@ package com.vtc.basetube.fragment;
 import java.io.IOException;
 import java.util.List;
 
+import android.app.Activity;
 import android.database.SQLException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.vtc.basetube.MainActivity;
@@ -16,17 +19,27 @@ import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.ItemVideo;
 import com.vtc.basetube.utils.DatabaseHelper;
+import com.vtc.basetube.utils.OnDisplayVideo;
 import com.vtc.basetube.utils.Utils;
 
 public class FragmentLike extends Fragment {
 	private static Fragment fragment = null;
 	private DatabaseHelper myDbHelper;
+	private OnDisplayVideo mOnDisplayVideo;
 
 	public static Fragment newInstance() {
 		if (fragment == null)
 			fragment = new FragmentLike();
 
 		return fragment;
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		if (activity instanceof OnDisplayVideo) {
+			mOnDisplayVideo = (OnDisplayVideo) activity;
+		}
+		super.onAttach(activity);
 	}
 
 	@Override
@@ -52,7 +65,7 @@ public class FragmentLike extends Fragment {
 		VideoAdapter adapterVideo = new VideoAdapter(getActivity());
 		View view = getView();
 		ListView listvideo = (ListView) view.findViewById(R.id.listivideo);
-		List<ItemVideo> list = Utils.getVideoData("SELECT * FROM "
+		final List<ItemVideo> list = Utils.getVideoData("SELECT * FROM "
 				+ DatabaseHelper.TB_DATA + " WHERE type='" + Utils.LIKE + "'",
 				myDbHelper);
 		MainActivity.lblMessage.setVisibility(View.GONE);
@@ -70,5 +83,16 @@ public class FragmentLike extends Fragment {
 			adapterVideo.addItem(item);
 		}
 		listvideo.setAdapter(adapterVideo);
+		listvideo.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				if (mOnDisplayVideo != null) {
+					mOnDisplayVideo.display(list.get(arg2));
+				}
+			}
+
+		});
 	}
 }

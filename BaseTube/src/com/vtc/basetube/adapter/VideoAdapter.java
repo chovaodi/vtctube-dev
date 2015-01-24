@@ -49,7 +49,6 @@ public class VideoAdapter extends BaseAdapter {
 	private List<ItemVideo> mData = new ArrayList<ItemVideo>();
 	private ImageLoader mImageLoader;
 	private ICategoryMore iCategoryMore = null;
-	private DatabaseHelper myDbHelper;
 
 	public VideoAdapter(Context mContext) {
 		int max_cache_size = 1000000;
@@ -59,15 +58,7 @@ public class VideoAdapter extends BaseAdapter {
 		context = mContext;
 		if (context instanceof ICategoryMore)
 			iCategoryMore = (ICategoryMore) context;
-		myDbHelper = new DatabaseHelper(context);
-		try {
-			myDbHelper.createDataBase();
-			myDbHelper.openDataBase();
-		} catch (IOException ioe) {
-			throw new Error("Unable to create database");
-		} catch (SQLException sqle) {
-			throw sqle;
-		}
+
 	}
 
 	public void addItem(final ItemVideo item) {
@@ -209,13 +200,17 @@ public class VideoAdapter extends BaseAdapter {
 				int id = item.getItemId();
 				switch (id) {
 				case R.id.popup_like:
-					
-					if (myDbHelper.getCountRow("SELECT * FROM "
-							+ DatabaseHelper.TB_DATA+" WHERE videoId='"+itemvd.getId()+"'") == 0) {
-						myDbHelper.insertVideoLike(itemvd, Utils.LIKE);
-						Toast.makeText(context, "Thêm vào danh sách yêu thích", Toast.LENGTH_LONG).show();
+
+					if (MainActivity.myDbHelper.getCountRow("SELECT * FROM "
+							+ DatabaseHelper.TB_DATA + " WHERE videoId='"
+							+ itemvd.getId() + "' and type='" + Utils.LIKE
+							+ "'") == 0) {
+						MainActivity.myDbHelper.insertVideoLike(itemvd,
+								Utils.LIKE);
+						Toast.makeText(context, "Thêm vào danh sách yêu thích",
+								Toast.LENGTH_LONG).show();
 					}
-					
+
 					break;
 				case R.id.popup_share:
 					Utils.shareButton(itemvd, context);
