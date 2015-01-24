@@ -12,7 +12,6 @@ import com.android.volley.VolleyError;
 import com.vtc.basetube.BaseTubeApplication;
 import com.vtc.basetube.model.Category;
 import com.vtc.basetube.services.model.Item;
-import com.vtc.basetube.services.model.Playlist;
 import com.vtc.basetube.services.model.Result;
 import com.vtc.basetube.services.model.Status;
 import com.vtc.basetube.services.request.RequestManager;
@@ -75,28 +74,31 @@ public class YoutubeController {
 
     public void requestPlaylistItems(Context context, final String playlistId, final OnRequest<ArrayList<Category>> req) {
         String url = PLAYLIST_ITEMS_URL + "&playlistId=" + playlistId;
-        GsonRequest<Playlist> request = new GsonRequest<Playlist>(Method.GET, url, Playlist.class, null,
-                new Listener<Playlist>() {
+        GsonRequest<Result> request = new GsonRequest<Result>(Method.GET, url, Result.class, null,
+                new Listener<Result>() {
 
                     @Override
-                    public void onResponse(Playlist playlists) {
-                        Log.d(Utils.TAG, "requestPlaylistItems onResponse: ");
-                        if (playlists.items == null) {
+                    public void onResponse(Result data) {
+                        if (data.items == null) {
                             req.onError();
                             return;
                         }
                         ArrayList<Category> categories = new ArrayList<Category>();
-                        for (Item playlist : playlists.items) {
-                            if(playlist.status != null && Status.PRIVATE.equals(playlist.status.privacyStatus)) {
+                        Log.d(Utils.TAG, "requestPlaylistItems onResponse: " + data.items.size());
+                        for (Item item : data.items) {
+                            if(item.status != null && Status.PRIVATE.equals(item.status.privacyStatus)) {
                                 continue;
                             }
                             Category cat = new Category();
-                            if(playlist.contentDetails != null) {
-                                cat.setId(playlist.contentDetails.videoId);
+                            if(item.contentDetails != null) {
+                                cat.setId(item.contentDetails.videoId);
                             }
-                            cat.setTitle(playlist.snippet.title);
-                            if (playlist.snippet.thumbnails != null && playlist.snippet.thumbnails.medium != null) {
-                                cat.setThumbnail(playlist.snippet.thumbnails.medium.url);
+                            if(item.snippet != null) {
+                                cat.setTitle(item.snippet.title);
+                                if (item.snippet.thumbnails != null && item.snippet.thumbnails.medium != null) {
+                                    cat.setThumbnail(item.snippet.thumbnails.medium.url);
+                                }
+                                cat.setPlaylistId(item.snippet.playlistId);
                             }
                             categories.add(cat);
                         }

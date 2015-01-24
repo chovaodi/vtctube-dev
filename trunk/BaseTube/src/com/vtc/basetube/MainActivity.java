@@ -303,10 +303,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 			
 		}
 
-		displayVideo(itemvd.getId());
+		displayVideo(itemvd.getId(), itemvd.getPlaylistId());
 	}
 
-	private void displayVideo(String videoId) {
+	private void displayVideo(String videoId, String playlistId) {
 		Context context = getApplicationContext();
 		if (Utils.hasConnection(context) == false) {
 			Toast.makeText(
@@ -324,6 +324,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			mVideoPlayerFragment = VideoPlayerFragment.newInstance();
 			Bundle bundle = new Bundle();
 			bundle.putString("VIDEO_ID", videoId);
+			bundle.putString("PLAYLIST_ID", playlistId);
 			mVideoPlayerFragment.setArguments(bundle);
 			fragmentTransaction
 					.replace(R.id.play_frame_layout, mVideoPlayerFragment,
@@ -331,6 +332,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			Log.d("VTCTube", "displayVideo: " + mVideoPlayerFragment);
 		} else {
 			mVideoPlayerFragment.updateData(videoId);
+			mVideoPlayerFragment.updateList(playlistId);
 			mVideoPlayerFragment.maximize();
 		}
 	}

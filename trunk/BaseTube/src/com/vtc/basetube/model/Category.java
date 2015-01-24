@@ -7,6 +7,7 @@ public class Category {
     private String mDescription;
     private int mViewCount;
     private String mPublishAt;
+    private String mPlaylistId;
 
     public Category() {
         // TODO Auto-generated constructor stub
@@ -51,12 +52,20 @@ public class Category {
     public void setCountView(int viewCount) {
         mViewCount = viewCount;
     }
-    
+
     public String getPublishAt() {
         return mPublishAt;
     }
-    
+
     public void setPublishAt(String publishAt) {
         mPublishAt = publishAt;
+    }
+
+    public String getPlaylistId() {
+        return mPlaylistId;
+    }
+
+    public void setPlaylistId(String playlistId) {
+        mPlaylistId = playlistId;
     }
 }

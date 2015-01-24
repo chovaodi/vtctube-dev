@@ -100,8 +100,9 @@ public class FragmentHome extends SherlockFragment {
 			@Override
 			public void onItemClick(AdapterView<?> adp, View view, int pos,
 					long id) {
-				if (mOnDisplayVideo != null && pos-1 >= 0) {
-					mOnDisplayVideo.display(adapterVideo.getItem(pos-1));
+			    int index = pos-1;
+				if (mOnDisplayVideo != null && index >= 0) {
+					mOnDisplayVideo.display(adapterVideo.getItem(index));
 				}
 			}
 
@@ -148,6 +149,7 @@ public class FragmentHome extends SherlockFragment {
                         item.setUploader("QuangNinhTV");
                         item.setCountView("30 lượt xem");
                         item.setThumbnail(dt.getThumbnail());
+                        item.setPlaylistId(dt.getPlaylistId());
                         // Log.d("dt.getThumbnail()",dt.getThumbnail());
                         adapterVideo.addItem(item);
                     }
