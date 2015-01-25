@@ -106,8 +106,8 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		if (bundle == null) {
 			return;
 		}
-		mVideoId = bundle.getString("VIDEO_ID");
-		String playlistId = bundle.getString("PLAYLIST_ID");
+		mVideoId = bundle.getString(Utils.EXTRA_VIDEO_ID);
+		String playlistId = bundle.getString(Utils.EXTRA_PLAYLIST_ID);
 		playVideo(mVideoId);
 		updateList(playlistId);
 		mListvideo.setOnItemClickListener(new OnItemClickListener() {

@@ -382,8 +382,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (mVideoPlayerFragment == null) {
 			mVideoPlayerFragment = VideoPlayerFragment.newInstance();
 			Bundle bundle = new Bundle();
-			bundle.putString("VIDEO_ID", videoId);
-			bundle.putString("PLAYLIST_ID", playlistId);
+			bundle.putString(Utils.EXTRA_VIDEO_ID, videoId);
+			bundle.putString(Utils.EXTRA_PLAYLIST_ID, playlistId);
 			mVideoPlayerFragment.setArguments(bundle);
 			fragmentTransaction
 					.replace(R.id.play_frame_layout, mVideoPlayerFragment,
@@ -438,9 +438,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public void viewAll(String playlistId) {
 		currentTag = "TAG_CATE";
+		Bundle bundle = new Bundle();
+		bundle.putCharSequence(Utils.EXTRA_PLAYLIST_ID, playlistId);
+		FragmentCategory fragment = FragmentCategory.newInstance();
+		fragment.setArguments(bundle);
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.frame_container, FragmentCategory.newInstance(),
+				.replace(R.id.frame_container, fragment,
 						currentTag).commit();
 
 	}
