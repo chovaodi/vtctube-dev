@@ -71,7 +71,7 @@ public class FragmentSearch extends Fragment {
 			item.setId("wwXj_a3Vjhc");
 			item.setUploader("QuangNinhTV");
 			item.setTime("");
-			item.setCountView("");
+			item.setViewCount("");
 			item.setThumbnail("");
 			adapterVideo.addItem(item);
 		}

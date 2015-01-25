@@ -66,7 +66,7 @@ public class FragmentLike extends Fragment {
 			item.setId(list.get(i).getId());
 			item.setUploader("QuangNinhTV");
 			item.setTime("");
-			item.setCountView("");
+			item.setViewCount("");
 			item.setThumbnail(list.get(i).getThumbnail());
 			adapterVideo.addItem(item);
 		}

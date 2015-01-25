@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -106,11 +108,24 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		}
 		mVideoId = bundle.getString("VIDEO_ID");
 		String playlistId = bundle.getString("PLAYLIST_ID");
-		updateData(playlistId, mVideoId);
+		playVideo(mVideoId);
 		updateList(playlistId);
+		mListvideo.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adt, View view, int pos, long id) {
+                int index = pos - 1;
+                if(index < 0) {
+                    return;
+                }
+                ItemVideo video = mAdapterVideo.getItem(index);
+                playVideo(video.getId());
+                updateDataDetail(video);
+            }
+        });
 	}
 
-	public void updateData(String playlistId, String videoId) {
+	public void playVideo(String videoId) {
 		Log.d(Utils.TAG, "VIDEO_ID: " + videoId);
 		if (TextUtils.isEmpty(videoId)) {
 			return;
@@ -121,7 +136,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		} else {
 			mYoutubeFragment.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
 		}
-		updateDataDetail(playlistId, mVideoId);
 	}
 
 	@Override
@@ -202,25 +216,11 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		}
 	}
 
-	private void updateDataDetail(String playlistId, String videoId) {
-		mController.requestVideoList(mApp, playlistId, mVideoId,
-				new OnRequest<ArrayList<Category>>() {
-
-					@Override
-					public void onSuccess(ArrayList<Category> data) {
-						Category item = data.get(0);
-						mTvTitle.setText(item.getTitle());
-						mTvDescription.setText(item.getDescription());
-						mTvPublishAt.setText(Utils.getTime(item.getPublishAt()));
-						mTvViewCount.setText(item.getViewCount() + " lượt xem");
-					}
-
-					@Override
-					public void onError() {
-						// TODO Auto-generated method stub
-
-					}
-				});
+	private void updateDataDetail(ItemVideo item) {
+        mTvTitle.setText(item.getTitle());
+        mTvDescription.setText(item.getDescription());
+        mTvPublishAt.setText(Utils.getTime(item.getTime()));
+        mTvViewCount.setText(item.getViewCount() + " lượt xem");
 	}
 
 	public void updateList(String playlistId) {
@@ -237,10 +237,14 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 							item.setTitle(dt.getTitle());
 							item.setId(dt.getId());
 							item.setTime(dt.getPublishAt());
-							item.setCountView(dt.getViewCount() + " lượt xem");
+							item.setViewCount(dt.getViewCount() + " lượt xem");
 							item.setThumbnail(dt.getThumbnail());
 							item.setPlaylistId(dt.getPlaylistId());
+							item.setDescription(dt.getDescription());
 							mAdapterVideo.addItem(item);
+							if(item.getId().equals(mVideoId)) {
+							    updateDataDetail(item);
+							}
 						}
 						Log.d(Utils.TAG, "Data: mAdapterVideo: "
 								+ mAdapterVideo.getCount());

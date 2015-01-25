@@ -146,7 +146,7 @@ public class FragmentHome extends SherlockFragment {
                         item.setTitle(dt.getTitle());
                         item.setId(dt.getId());
                         item.setTime(dt.getPublishAt());
-                        item.setCountView(dt.getViewCount()+" lượt xem");
+                        item.setViewCount(dt.getViewCount()+" lượt xem");
                         item.setThumbnail(dt.getThumbnail());
                         item.setPlaylistId(dt.getPlaylistId());
                         // Log.d("dt.getThumbnail()",dt.getThumbnail());
