@@ -2,6 +2,7 @@ package com.vtc.basetube;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -24,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -65,14 +65,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private VideoPlayerFragment mVideoPlayerFragment;
 	public static ProgressBar progressBar;
 	private FragmentManager fragmentManager;
-	private FragmentTransaction ft;
 
 	private String currentTag = "TAG_HOME";
 	private int idActive;
 	public static TextView lblMessage;
 	public static DatabaseHelper myDbHelper;
 	private String mSearchValue = "";
-	private EditText edSearch;
+	private List<String> listQuerySearch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +86,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		} catch (SQLException sqle) {
 			throw sqle;
 		}
-
+		listQuerySearch = Utils.getQuerySearch("SELECT * FROM "
+				+ DatabaseHelper.TB_SEARCH);
 		setContentView(R.layout.activity_main);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
 		lblMessage = (TextView) findViewById(R.id.lblThongbao);
@@ -97,8 +97,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		lineLeftMenu = (LinearLayout) findViewById(R.id.lineMenu);
 		leftMenu = (ListView) findViewById(R.id.rbm_listview);
-		fragmentManager = getSupportFragmentManager();
-		ft = fragmentManager.beginTransaction();
 		mDrawerLayout.setDrawerListener(new DrawerListener() {
 
 			@Override
@@ -280,19 +278,39 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		addFragmentSearch();
+		addFragmentSearch(query);
 		return false;
 	}
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
-		// TODO Auto-generated method stub
+		listQuerySearch = Utils.getQuerySearch("SELECT * FROM "
+				+ DatabaseHelper.TB_SEARCH);
+		Log.d("listQuerySearch",listQuerySearch.get(0)+" hshsh");
+		for (int i = 0; i < listQuerySearch.size(); i++) {
+		
+			if (listQuerySearch.get(i).contains(newText)) {
+				String valueTmp = listQuerySearch.get(i);
+				listQuerySearch.set(i, listQuerySearch.get(0));
+				listQuerySearch.set(0, valueTmp);
+
+				break;
+			}
+		}
+
+		MatrixCursor cursor = new MatrixCursor(COLUMNS);
+		for (int i = 0; i < listQuerySearch.size(); i++) {
+			cursor.addRow(new String[] { String.valueOf(i),
+					listQuerySearch.get(i) });
+		}
+		mSuggestionsAdapter.changeCursor(cursor);
+		mSuggestionsAdapter.notifyDataSetChanged();
 		return false;
 	}
 
 	@Override
 	public boolean onSuggestionSelect(int position) {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 
@@ -311,12 +329,18 @@ public class MainActivity extends SherlockFragmentActivity implements
 			searchTextView.setTypeface(Typeface.DEFAULT);
 			searchTextView.setText(mSearchValue);
 		}
-		mSearchValue = mSearchValue.replace(" ", "%20");
-		addFragmentSearch();
+		addFragmentSearch(mSearchValue);
 		return false;
 	}
 
-	public void addFragmentSearch() {
+	public void addFragmentSearch(String txtSearch) {
+		if (MainActivity.myDbHelper.getCountRow("SELECT * FROM "
+				+ DatabaseHelper.TB_SEARCH + " WHERE txtQuery='" + txtSearch
+				+ "'") == 0) {
+			MainActivity.myDbHelper.insertQuerySearch(mSearchValue);
+		}
+
+		mSearchValue = txtSearch.replace(" ", "%20");
 		if (!currentTag.equals("TAG_SEARCH")) {
 			currentTag = "TAG_SEARCH";
 			getSupportFragmentManager()

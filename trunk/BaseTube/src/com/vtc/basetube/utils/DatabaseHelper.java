@@ -22,11 +22,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public static String DB_NAME = "qtvdb.sqlite";
 	public static String TB_DATA = "tblData";
+	public static String TB_SEARCH = "tblQuerySearch";
 
 	public static String COLLUM_VIDEOID = "videoid";
 	public static String COLLUM_TYPE = "type";
 	public static String COLLUM_TITLE = "title";
 	public static String COLLUM_THUMANIL = "thumnail";
+	public static String COLLUM_DURATION = "Duration";
+	public static String COLLUM_TXTQUERY = "txtQuery";
 
 	private SQLiteDatabase myDataBase;
 
@@ -204,12 +207,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return cnt;
 	}
 
+	public long insertQuerySearch(String value) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(COLLUM_TXTQUERY, value);
+
+		return myDataBase.insert(TB_SEARCH, null, initialValues);
+	}
+
 	public long insertVideoLike(ItemVideo item, int type) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(COLLUM_VIDEOID, item.getId());
 		initialValues.put(COLLUM_TYPE, type);
 		initialValues.put(COLLUM_TITLE, item.getTitle());
 		initialValues.put(COLLUM_THUMANIL, item.getThumbnail());
+		initialValues.put(COLLUM_DURATION, item.getDuration());
 
 		return myDataBase.insert(TB_DATA, null, initialValues);
 	}
