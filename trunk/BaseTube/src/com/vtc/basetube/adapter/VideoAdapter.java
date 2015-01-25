@@ -139,8 +139,6 @@ public class VideoAdapter extends BaseAdapter {
 						.findViewById(R.id.lblTitle);
 				holder.lblThoigian = (TextView) convertView
 						.findViewById(R.id.lblThoigian);
-				holder.lblUploader = (TextView) convertView
-						.findViewById(R.id.lblUploader);
 				holder.lblMetadata = (TextView) convertView
 						.findViewById(R.id.lblMetadata);
 
