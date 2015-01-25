@@ -25,7 +25,7 @@
     xmlns:draggable_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/draggable_view"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
     android:background="@android:color/white"
     draggable_view:bottom_view_id="@+id/detail_content"
     draggable_view:top_view_id="@+id/youtube_player_fragment"
@@ -45,12 +45,9 @@
             android:id="@+id/listView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:cacheColorHint="@android:color/transparent"
-            android:divider="#809c9c9c"
-            android:dividerHeight="1px"
-            android:scrollbars="none"
             android:scrollingCache="false" >
+
         </ListView>
     </LinearLayout>
 
