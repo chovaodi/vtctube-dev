@@ -64,7 +64,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			SearchManager.SUGGEST_COLUMN_TEXT_1, };
 	private VideoPlayerFragment mVideoPlayerFragment;
 	public static ProgressBar progressBar;
-	private FragmentManager fragmentManager;
 
 	private String currentTag = "TAG_HOME";
 	private int idActive;
@@ -337,7 +336,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (MainActivity.myDbHelper.getCountRow("SELECT * FROM "
 				+ DatabaseHelper.TB_SEARCH + " WHERE txtQuery='" + txtSearch
 				+ "'") == 0) {
-			MainActivity.myDbHelper.insertQuerySearch(mSearchValue);
+			MainActivity.myDbHelper.insertQuerySearch(txtSearch);
 		}
 
 		mSearchValue = txtSearch.replace(" ", "%20");
