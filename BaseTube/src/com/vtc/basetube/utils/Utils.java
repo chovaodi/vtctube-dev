@@ -17,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
+import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.model.Item;
 import com.vtc.basetube.model.ItemVideo;
 
@@ -25,8 +26,10 @@ public class Utils {
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyDsQDuxjOZLCiwx9MKIa_LTPhYPHV293L8";// "AIzaSyA49SV21QaIN0oj9iUqW-u4zWi-41NDFNo";
 	public static int LIKE = 0;
 	public static int VIEWED = 1;
-	private static SimpleDateFormat sUSTimeFormatter = new SimpleDateFormat("yyyy-MM-dd");
-	private static SimpleDateFormat sVITimeFormatter = new SimpleDateFormat("dd-MM-yyyy");
+	private static SimpleDateFormat sUSTimeFormatter = new SimpleDateFormat(
+			"yyyy-MM-dd");
+	private static SimpleDateFormat sVITimeFormatter = new SimpleDateFormat(
+			"dd-MM-yyyy");
 
 	public static ArrayList<Item> getMenu(Activity activity, int menu) {
 
@@ -117,12 +120,27 @@ public class Utils {
 
 		return false;
 	}
-	
-	public static ArrayList<ItemVideo> getVideoData(String sql, DatabaseHelper myDbHelper) {
+
+	public static ArrayList<String> getQuerySearch(String sql) {
+		Cursor c = MainActivity.myDbHelper.query(DatabaseHelper.TB_SEARCH,
+				null, null, null, null, null, null);
+		c = MainActivity.myDbHelper.rawQuery(sql);
+		ArrayList<String> listAccount = new ArrayList<String>();
+
+		if (c.moveToFirst()) {
+			do {
+				listAccount.add(c.getString(0).replace("%20", " "));
+			} while (c.moveToNext());
+		}
+		return listAccount;
+	}
+
+	public static ArrayList<ItemVideo> getVideoData(String sql,
+			DatabaseHelper myDbHelper) {
 		ArrayList<ItemVideo> listAccount = null;
 		try {
-			Cursor c =myDbHelper.query(DatabaseHelper.TB_DATA,
-					null, null, null, null, null, null);
+			Cursor c = myDbHelper.query(DatabaseHelper.TB_DATA, null, null,
+					null, null, null, null);
 			c = myDbHelper.rawQuery(sql);
 			listAccount = new ArrayList<ItemVideo>();
 
@@ -134,7 +152,8 @@ public class Utils {
 					item.setType(c.getInt(1));
 					item.setTitle(c.getString(2));
 					item.setThumbnail(c.getString(3));
-					
+					item.setDuration(c.getString(4));
+
 					listAccount.add(item);
 				} while (c.moveToNext());
 			}
@@ -145,12 +164,12 @@ public class Utils {
 	}
 
 	public static String getTime(String timeString) {
-	    try {
-	        Date date = sUSTimeFormatter.parse(timeString);
-	        return sVITimeFormatter.format(date);
-	    } catch (ParseException e) {
-	        e.printStackTrace();
-	        return timeString;
-	    }
+		try {
+			Date date = sUSTimeFormatter.parse(timeString);
+			return sVITimeFormatter.format(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return timeString;
+		}
 	}
 }
