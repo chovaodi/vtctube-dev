@@ -10,6 +10,8 @@ import android.content.Context;
 import android.database.SQLException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -114,6 +116,7 @@ public class VideoAdapter extends BaseAdapter {
 		ViewHolder holder = null;
 
 		int type = getItemViewType(position);
+		Log.d(Utils.TAG, "TYPE: " + type);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			switch (type) {
@@ -161,11 +164,13 @@ public class VideoAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View arg0) {
-					iCategoryMore.viewAll(121);// category Id
+					iCategoryMore.viewAll(item.getId());// category Id
 				}
 			});
 		} else {
-			holder.lblThoigian.setText(item.getDuration().replace("PT", "").replace("H", ":").replace("M", ":").replace("S", ""));
+		    if(TextUtils.isEmpty(item.getDuration()) == false) {
+		        holder.lblThoigian.setText(item.getDuration().replace("PT", "").replace("H", ":").replace("M", ":").replace("S", ""));
+		    }
 			holder.txtTitle.setText(item.getTitle());
 			holder.lblPublishAt.setText(Utils.getTime(item.getTime()));
 			holder.lblMetadata.setText(item.getViewCount());
