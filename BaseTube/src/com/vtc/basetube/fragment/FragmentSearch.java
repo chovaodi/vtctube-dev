@@ -1,7 +1,5 @@
 package com.vtc.basetube.fragment;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,23 +10,36 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.ItemVideo;
-import com.vtc.basetube.utils.DatabaseHelper;
 import com.vtc.basetube.utils.OnDisplayVideo;
-import com.vtc.basetube.utils.Utils;
 
-public class FragmentLike extends Fragment {
+public class FragmentSearch extends Fragment {
 	private static Fragment fragment = null;
+	private String txtSearch;
 	private OnDisplayVideo mOnDisplayVideo;
 
-	public static Fragment newInstance() {
+	public static Fragment newInstance(String txtSearch) {
 		if (fragment == null)
-			fragment = new FragmentLike();
-
+			fragment = new FragmentSearch();
+		Bundle args = new Bundle();
+		args.putString("txtSearch", txtSearch);
+		fragment.setArguments(args);
 		return fragment;
+	}
+
+	public void updateValue(String txtSearch) {
+		this.txtSearch = txtSearch;
+		// call Api search
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		txtSearch = (String) (getArguments() != null ? getArguments()
+				.getString("txtSearch") : 1);
+
 	}
 
 	@Override
@@ -38,7 +49,7 @@ public class FragmentLike extends Fragment {
 		}
 		super.onAttach(activity);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -49,25 +60,19 @@ public class FragmentLike extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		VideoAdapter adapterVideo = new VideoAdapter(getActivity());
 		View view = getView();
 		ListView listvideo = (ListView) view.findViewById(R.id.listivideo);
-		final List<ItemVideo> list = Utils.getVideoData("SELECT * FROM "
-				+ DatabaseHelper.TB_DATA + " WHERE type='" + Utils.LIKE + "'",
-				MainActivity.myDbHelper);
-		MainActivity.lblMessage.setVisibility(View.GONE);
-		if (list == null || list.size() == 0)
-			MainActivity.lblMessage.setVisibility(View.VISIBLE);
 
-		for (int i = 0; i < list.size(); i++) {
+		for (int i = 0; i < 10; i++) {
 			ItemVideo item = new ItemVideo();
-			item.setTitle(list.get(i).getTitle());
-			item.setId(list.get(i).getId());
+			item.setTitle("Search title" + i);
+			item.setId("wwXj_a3Vjhc");
 			item.setUploader("QuangNinhTV");
 			item.setTime("");
 			item.setCountView("");
-			item.setThumbnail(list.get(i).getThumbnail());
+			item.setThumbnail("");
 			adapterVideo.addItem(item);
 		}
 		listvideo.setAdapter(adapterVideo);
@@ -77,10 +82,13 @@ public class FragmentLike extends Fragment {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				if (mOnDisplayVideo != null) {
-					mOnDisplayVideo.display(list.get(arg2));
+					// mOnDisplayVideo.display(list.get(arg2));
 				}
 			}
 
 		});
+
+		updateValue(txtSearch);
 	}
+
 }

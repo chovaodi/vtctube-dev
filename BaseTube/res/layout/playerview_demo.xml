@@ -41,14 +41,26 @@
         android:background="@android:color/white"
         android:orientation="vertical" >
 
-        <ListView
-            android:id="@+id/listView1"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:cacheColorHint="@android:color/transparent"
-            android:scrollingCache="false" >
+            android:layout_height="match_parent" >
 
-        </ListView>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <ListView
+                    android:id="@+id/listView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:divider="@null"
+                    android:footerDividersEnabled="false"
+                    android:headerDividersEnabled="false" >
+                </ListView>
+
+            </FrameLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <FrameLayout

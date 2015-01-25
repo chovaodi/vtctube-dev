@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.SQLException;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.FragmentManager;
@@ -15,12 +16,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -35,6 +39,7 @@ import com.vtc.basetube.adapter.MenuLeftAdapter;
 import com.vtc.basetube.fragment.FragmentAbout;
 import com.vtc.basetube.fragment.FragmentCategory;
 import com.vtc.basetube.fragment.FragmentLike;
+import com.vtc.basetube.fragment.FragmentSearch;
 import com.vtc.basetube.fragment.FragmentViewed;
 import com.vtc.basetube.fragment.VideoPlayerFragment;
 import com.vtc.basetube.model.Item;
@@ -66,6 +71,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private int idActive;
 	public static TextView lblMessage;
 	public static DatabaseHelper myDbHelper;
+	private String mSearchValue = "";
+	private EditText edSearch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +133,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						R.id.frame_container,
 						FragmentHome.newInstance(QuangNinhTvApplication
 								.getInstance()), currentTag).commit();
+
 	}
 
 	public void addMenuLeft(int menu) {
@@ -272,7 +280,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		// TODO Auto-generated method stub
+		addFragmentSearch();
 		return false;
 	}
 
@@ -290,8 +298,36 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onSuggestionClick(int position) {
-		// TODO Auto-generated method stub
+		Cursor c = (Cursor) mSuggestionsAdapter.getItem(position);
+		mSearchValue = c.getString(c
+				.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+
+		AutoCompleteTextView searchTextView = (AutoCompleteTextView) searchView
+				.findViewById(R.id.abs__search_src_text);
+
+		if (searchTextView != null) {
+			searchTextView.setInputType(InputType.TYPE_CLASS_TEXT
+					| InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+			searchTextView.setTypeface(Typeface.DEFAULT);
+			searchTextView.setText(mSearchValue);
+		}
+		mSearchValue = mSearchValue.replace(" ", "%20");
+		addFragmentSearch();
 		return false;
+	}
+
+	public void addFragmentSearch() {
+		if (!currentTag.equals("TAG_SEARCH")) {
+			currentTag = "TAG_SEARCH";
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.frame_container,
+							FragmentSearch.newInstance(mSearchValue),
+							currentTag).commit();
+		} else {
+			FragmentSearch fraSearch = new FragmentSearch();
+			fraSearch.updateValue(mSearchValue);
+		}
 	}
 
 	@Override
@@ -300,7 +336,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				+ " WHERE videoId='" + itemvd.getId() + "' and type='"
 				+ Utils.VIEWED + "'") == 0) {
 			myDbHelper.insertVideoLike(itemvd, Utils.VIEWED);
-			
+
 		}
 
 		displayVideo(itemvd.getId(), itemvd.getPlaylistId());
@@ -386,8 +422,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
-    @Override
-    public BaseTubeApplication getTubeApplication() {
-        return QuangNinhTvApplication.getInstance();
-    }
+	@Override
+	public BaseTubeApplication getTubeApplication() {
+		return QuangNinhTvApplication.getInstance();
+	}
 }
