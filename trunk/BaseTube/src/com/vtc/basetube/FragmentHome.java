@@ -149,6 +149,7 @@ public class FragmentHome extends SherlockFragment {
                         item.setViewCount(dt.getViewCount()+" lượt xem");
                         item.setThumbnail(dt.getThumbnail());
                         item.setPlaylistId(dt.getPlaylistId());
+                        item.setDuration(dt.getDuration());
                         // Log.d("dt.getThumbnail()",dt.getThumbnail());
                         adapterVideo.addItem(item);
                     }

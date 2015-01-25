@@ -165,7 +165,7 @@ public class VideoAdapter extends BaseAdapter {
 				}
 			});
 		} else {
-			holder.lblThoigian.setText("2:40:10");
+			holder.lblThoigian.setText(item.getDuration().replace("PT", "").replace("H", ":").replace("M", ":").replace("S", ""));
 			holder.txtTitle.setText(item.getTitle());
 			holder.lblPublishAt.setText(Utils.getTime(item.getTime()));
 			holder.lblMetadata.setText(item.getViewCount());

@@ -8,6 +8,7 @@ public class Category {
     private int mViewCount;
     private String mPublishAt;
     private String mPlaylistId;
+    private String mDuration;
 
     public Category() {
         // TODO Auto-generated constructor stub
@@ -67,5 +68,13 @@ public class Category {
 
     public void setPlaylistId(String playlistId) {
         mPlaylistId = playlistId;
+    }
+    
+    public String getDuration() {
+        return mDuration;
+    }
+    
+    public void setDuration(String duration) {
+        mDuration = duration;
     }
 }

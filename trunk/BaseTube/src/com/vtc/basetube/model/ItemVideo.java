@@ -11,6 +11,7 @@ public class ItemVideo {
 	private String playlistId;
 	private String description;
 	private String mPublishAt;
+	private String mDuration;
 
 	public void setType(int type) {
 		this.type = type;
@@ -92,4 +93,11 @@ public class ItemVideo {
         mPublishAt = publishAt;
     }
 
+    public String getDuration() {
+        return mDuration;
+    }
+    
+    public void setDuration(String duration) {
+        mDuration = duration;
+    }
 }
