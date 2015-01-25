@@ -413,7 +413,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void viewAll(int idcategory) {
+	public void viewAll(String playlistId) {
 		currentTag = "TAG_CATE";
 		getSupportFragmentManager()
 				.beginTransaction()
