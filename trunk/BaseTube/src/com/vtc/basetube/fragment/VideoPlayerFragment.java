@@ -90,7 +90,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         mTvViewCount = (TextView) header.findViewById(R.id.lblCountview);
 
         mAdapterVideo = new VideoAdapter(getActivity());
-
+        mListvideo.setAdapter(mAdapterVideo);
         MainActivity.lblMessage.setVisibility(View.GONE);
 
 //        for (int i = 0; i < 10; i++) {
@@ -248,7 +248,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
                     mAdapterVideo.addItem(item);
                 }
                 Log.d(Utils.TAG, "Data: mAdapterVideo: " + mAdapterVideo.getCount());
-                mListvideo.setAdapter(mAdapterVideo);
+                mAdapterVideo.notifyDataSetChanged();
             }
 
             @Override
