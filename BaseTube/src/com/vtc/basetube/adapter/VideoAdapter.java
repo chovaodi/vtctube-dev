@@ -141,7 +141,8 @@ public class VideoAdapter extends BaseAdapter {
 						.findViewById(R.id.lblThoigian);
 				holder.lblMetadata = (TextView) convertView
 						.findViewById(R.id.lblMetadata);
-
+				holder.lblPublishAt = (TextView) convertView
+						.findViewById(R.id.lblPublishAt);
 				holder.thumnail = (NetworkImageView) convertView
 						.findViewById(R.id.thumnail);
 				holder.option = (LinearLayout) convertView
