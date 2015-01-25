@@ -100,29 +100,17 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		mAdapterVideo = new VideoAdapter(getActivity());
 		mListvideo.setAdapter(mAdapterVideo);
 		MainActivity.lblMessage.setVisibility(View.GONE);
-
-		// for (int i = 0; i < 10; i++) {
-		// ItemVideo item = new ItemVideo();
-		// item.setTitle("Demo" + i);
-		// item.setId(i + "");
-		// item.setUploader("QuangNinhTV");
-		// item.setTime("");
-		// item.setCountView("");
-		// item.setThumbnail("https://lh5.googleusercontent.com/-t_AUpjgQDnU/VMCRQop2SAI/AAAAAAAACPk/V5uOHoCqqfQ/w426-h323/522054_381988935294614_2598873010533268703_n.jpg");
-		// adapterVideo.addItem(item);
-		// }
-		// listvideo.setAdapter(adapterVideo);
 		Bundle bundle = this.getArguments();
 		if (bundle == null) {
 			return;
 		}
 		mVideoId = bundle.getString("VIDEO_ID");
-		updateData(mVideoId);
 		String playlistId = bundle.getString("PLAYLIST_ID");
+		updateData(playlistId, mVideoId);
 		updateList(playlistId);
 	}
 
-	public void updateData(String videoId) {
+	public void updateData(String playlistId, String videoId) {
 		Log.d(Utils.TAG, "VIDEO_ID: " + videoId);
 		if (TextUtils.isEmpty(videoId)) {
 			return;
@@ -133,7 +121,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		} else {
 			mYoutubeFragment.initialize(Utils.DEVELOPER_KEY_YOUTUBE, this);
 		}
-		updateDataDetail();
+		updateDataDetail(playlistId, mVideoId);
 	}
 
 	@Override
@@ -214,8 +202,8 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		}
 	}
 
-	private void updateDataDetail() {
-		mController.requestVideoList(mApp, mVideoId,
+	private void updateDataDetail(String playlistId, String videoId) {
+		mController.requestVideoList(mApp, playlistId, mVideoId,
 				new OnRequest<ArrayList<Category>>() {
 
 					@Override
@@ -223,7 +211,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 						Category item = data.get(0);
 						mTvTitle.setText(item.getTitle());
 						mTvDescription.setText(item.getDescription());
-						mTvPublishAt.setText(item.getPublishAt());
+						mTvPublishAt.setText(Utils.getTime(item.getPublishAt()));
 						mTvViewCount.setText(item.getViewCount() + " lượt xem");
 					}
 
@@ -244,19 +232,14 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 						Log.d(Utils.TAG, "Data: " + data.size());
 						mAdapterVideo.RemoveData();
 						for (Category dt : data) {
-							if (dt.getId().equals(mVideoId)) {
-								continue;
-							}
 							Log.d(Utils.TAG, "Data: Title: " + dt.getTitle());
 							ItemVideo item = new ItemVideo();
 							item.setTitle(dt.getTitle());
 							item.setId(dt.getId());
-							item.setTime("3h trước");
-							item.setUploader("QuangNinhTV");
-							item.setCountView("30 lượt xem");
+							item.setTime(dt.getPublishAt());
+							item.setCountView(dt.getViewCount() + " lượt xem");
 							item.setThumbnail(dt.getThumbnail());
 							item.setPlaylistId(dt.getPlaylistId());
-							// Log.d("dt.getThumbnail()",dt.getThumbnail());
 							mAdapterVideo.addItem(item);
 						}
 						Log.d(Utils.TAG, "Data: mAdapterVideo: "
