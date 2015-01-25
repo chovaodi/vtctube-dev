@@ -23,7 +23,7 @@ public class YoutubeController {
     private static final String QUANG_NINH_TV_CHANNEL = "UCgjeNGAHZI_X5vFeYYbKttA";
     private static final String BASE_URL = "https://www.googleapis.com/youtube/v3/";
     private static final String PLAYLISTS_URL = BASE_URL + "playlists?part=snippet,status";
-    private static final String PLAYLIST_ITEMS_URL = BASE_URL + "playlistItems?part=snippet,status,contentDetails&key=" + API_KEY;
+    private static final String PLAYLIST_ITEMS_URL = BASE_URL + "playlistItems?part=snippet,status,contentDetails";
     private static final String VIDEO_LIST_URL = BASE_URL + "videos?part=snippet,contentDetails,statistics";
     
     private Context mContext;
@@ -73,8 +73,8 @@ public class YoutubeController {
     }
 
     public void requestPlaylistItems(Context context, final String playlistId, final OnRequest<ArrayList<Category>> req) {
-        String url = PLAYLIST_ITEMS_URL + "&playlistId=" + playlistId;
-        GsonRequest<Result> request = new GsonRequest<Result>(Method.GET, url, Result.class, null,
+        StringBuilder url = new StringBuilder(PLAYLIST_ITEMS_URL).append("&playlistId=").append(playlistId).append("&key=").append(mApiKey);;
+        GsonRequest<Result> request = new GsonRequest<Result>(Method.GET, url.toString(), Result.class, null,
                 new Listener<Result>() {
 
                     @Override
@@ -84,25 +84,18 @@ public class YoutubeController {
                             return;
                         }
                         ArrayList<Category> categories = new ArrayList<Category>();
-                        Log.d(Utils.TAG, "requestPlaylistItems onResponse: " + data.items.size());
+                        StringBuilder videoIds = new StringBuilder();
                         for (Item item : data.items) {
                             if(item.status != null && Status.PRIVATE.equals(item.status.privacyStatus)) {
                                 continue;
                             }
-                            Category cat = new Category();
                             if(item.contentDetails != null) {
-                                cat.setId(item.contentDetails.videoId);
+                                videoIds.append(item.contentDetails.videoId).append(",");
                             }
-                            if(item.snippet != null) {
-                                cat.setTitle(item.snippet.title);
-                                if (item.snippet.thumbnails != null && item.snippet.thumbnails.medium != null) {
-                                    cat.setThumbnail(item.snippet.thumbnails.medium.url);
-                                }
-                                cat.setPlaylistId(item.snippet.playlistId);
-                            }
-                            categories.add(cat);
                         }
-                        req.onSuccess(categories);
+                        String ids = videoIds.toString();//.substring(0, videoIds.length()-2);
+                        Log.d(Utils.TAG, "VIDEO_IDS: " + ids);
+                        requestVideoList(mContext, ids, req);
                     }
 
                 }, new ErrorListener() {
@@ -132,13 +125,14 @@ public class YoutubeController {
                         ArrayList<Category> categories = new ArrayList<Category>();
                         for (Item item : data.items) {
                             Category cat = new Category();
-                            if(item.contentDetails != null) {
-                                cat.setId(item.contentDetails.videoId);
-                            }
+                            cat.setId(item.id);
                             if(item.snippet != null) {
                                 cat.setDescription(item.snippet.description);
                                 cat.setTitle(item.snippet.title);
                                 cat.setPublishAt(item.snippet.publishedAt);
+                                if (item.snippet.thumbnails != null && item.snippet.thumbnails.medium != null) {
+                                  cat.setThumbnail(item.snippet.thumbnails.medium.url);
+                              }
                             }
                             if(item.statistics != null) {
                                 cat.setCountView(item.statistics.viewCount);
@@ -157,4 +151,5 @@ public class YoutubeController {
                 });
         RequestManager.newInstance(context).addToRequestQueue(request);
     }
+
 }
