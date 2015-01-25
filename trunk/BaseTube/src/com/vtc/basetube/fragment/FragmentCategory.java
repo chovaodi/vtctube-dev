@@ -42,7 +42,7 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
 			item.setId("79iWPoJJnCw");
 			item.setTime("3h trước");
 			item.setUploader("QuangNinhTV");
-			item.setCountView("30 lượt xem");
+			item.setViewCount("30 lượt xem");
 			// item.setThumbnail(dt.getThumbnail());
 			adapterVideo.addItem(item);
 		}

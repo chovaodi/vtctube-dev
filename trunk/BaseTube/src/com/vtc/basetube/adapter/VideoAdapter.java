@@ -168,7 +168,7 @@ public class VideoAdapter extends BaseAdapter {
 			holder.lblThoigian.setText("2:40:10");
 			holder.txtTitle.setText(item.getTitle());
 			holder.lblPublishAt.setText(Utils.getTime(item.getTime()));
-			holder.lblMetadata.setText(item.getCountView());
+			holder.lblMetadata.setText(item.getViewCount());
 			if (item.getThumbnail() != null) {
 				holder.thumnail.setImageUrl(item.getThumbnail(), mImageLoader);
 			}

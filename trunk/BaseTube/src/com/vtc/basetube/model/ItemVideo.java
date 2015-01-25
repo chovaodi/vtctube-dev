@@ -4,11 +4,13 @@ public class ItemVideo {
 	private String title;
 	private String id;
 	private String uploader;
-	private String countView;
+	private String viewCount;
 	private String time;
 	private String mThumbnail;
 	private int type;
 	private String playlistId;
+	private String description;
+	private String mPublishAt;
 
 	public void setType(int type) {
 		this.type = type;
@@ -42,12 +44,12 @@ public class ItemVideo {
 		this.uploader = uploader;
 	}
 
-	public String getCountView() {
-		return countView;
+	public String getViewCount() {
+		return viewCount;
 	}
 
-	public void setCountView(String countView) {
-		this.countView = countView;
+	public void setViewCount(String viewCount) {
+		this.viewCount = viewCount;
 	}
 
 	public String getTime() {
@@ -73,4 +75,21 @@ public class ItemVideo {
 	public String getPlaylistId() {
 	    return this.playlistId;
 	}
+	
+	public void setDescription(String description) {
+	    this.description = description;
+	}
+	
+	public String getDescription() {
+	    return this.description;
+	}
+	
+	public String getPublishAt() {
+        return mPublishAt;
+    }
+
+    public void setPublishAt(String publishAt) {
+        mPublishAt = publishAt;
+    }
+
 }
