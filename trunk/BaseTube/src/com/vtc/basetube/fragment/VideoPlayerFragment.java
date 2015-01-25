@@ -109,7 +109,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		mVideoId = bundle.getString(Utils.EXTRA_VIDEO_ID);
 		String playlistId = bundle.getString(Utils.EXTRA_PLAYLIST_ID);
 		playVideo(mVideoId);
-		updateList(playlistId);
+		displayRelatedVideo(mVideoId);
 		mListvideo.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
@@ -121,6 +121,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
                 ItemVideo video = mAdapterVideo.getItem(index);
                 playVideo(video.getId());
                 updateDataDetail(video);
+                displayRelatedVideo(video.getId());
             }
         });
 	}
@@ -223,8 +224,8 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
         mTvViewCount.setText(item.getViewCount() + " lượt xem");
 	}
 
-	public void updateList(String playlistId) {
-		mController.requestPlaylistItems(getActivity(), playlistId,
+	public void displayRelatedVideo(String videoId) {
+		mController.requestRelatedVideos(getActivity(), videoId,
 				new OnRequest<ArrayList<Category>>() {
 
 					@Override
