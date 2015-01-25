@@ -137,8 +137,10 @@ public class VideoAdapter extends BaseAdapter {
 				convertView = mInflater.inflate(R.layout.item_video, null);
 				holder.txtTitle = (TextView) convertView
 						.findViewById(R.id.lblTitle);
-				holder.lblPublishAt = (TextView) convertView
-						.findViewById(R.id.lblPublishAt);
+				holder.lblThoigian = (TextView) convertView
+						.findViewById(R.id.lblThoigian);
+				holder.lblUploader = (TextView) convertView
+						.findViewById(R.id.lblUploader);
 				holder.lblMetadata = (TextView) convertView
 						.findViewById(R.id.lblMetadata);
 
@@ -164,6 +166,7 @@ public class VideoAdapter extends BaseAdapter {
 				}
 			});
 		} else {
+			holder.lblThoigian.setText("2:40:10");
 			holder.txtTitle.setText(item.getTitle());
 			holder.lblPublishAt.setText(Utils.getTime(item.getTime()));
 			holder.lblMetadata.setText(item.getCountView());
@@ -228,6 +231,7 @@ public class VideoAdapter extends BaseAdapter {
 		public NetworkImageView thumnail;
 		public TextView lblPublishAt;
 		public TextView lblMetadata;
+		public TextView lblThoigian;
 		public LinearLayout option;
 		public LinearLayout lineMore;
 	}
