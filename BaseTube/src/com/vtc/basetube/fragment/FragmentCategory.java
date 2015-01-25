@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.vtc.basetube.BaseTubeApplication;
@@ -29,6 +31,7 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
 	private YoutubeController mController;
 	private BaseTubeApplication mApp;
 	private VideoAdapter mAdapterVideo;
+	private OnDisplayVideo mOnDisplayVideo;
 
 	public static FragmentCategory newInstance() {
 		if (fragment == null)
@@ -47,7 +50,8 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (activity instanceof OnDisplayVideo) {
-            mApp = ((OnDisplayVideo) activity).getTubeApplication();
+            mOnDisplayVideo = (OnDisplayVideo)activity;
+            mApp = mOnDisplayVideo.getTubeApplication();
             mController = new YoutubeController(mApp);
         }
     }
@@ -65,6 +69,17 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
 		}
 		listvideo.setAdapter(mAdapterVideo);
 		listvideo.setOnScrollListener(this);
+		listvideo.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adp, View view, int pos,
+                    long id) {
+                if (mOnDisplayVideo != null) {
+                    mOnDisplayVideo.display(mAdapterVideo.getItem(pos));
+                }
+            }
+
+        });
 	}
 
 	@Override
