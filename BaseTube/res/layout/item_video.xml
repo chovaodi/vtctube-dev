@@ -40,7 +40,7 @@
                 android:textSize="15dp" />
 
             <com.vtc.basetube.font.TextViewRobotoLight
-                android:id="@+id/lblUploader"
+                android:id="@+id/lblPublishAt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
