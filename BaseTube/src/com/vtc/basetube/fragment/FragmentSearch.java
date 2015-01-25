@@ -1,8 +1,11 @@
 package com.vtc.basetube.fragment;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,43 +13,85 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.vtc.basetube.BaseTubeApplication;
 import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
+import com.vtc.basetube.model.Category;
 import com.vtc.basetube.model.ItemVideo;
+import com.vtc.basetube.services.youtube.OnRequest;
+import com.vtc.basetube.services.youtube.YoutubeController;
 import com.vtc.basetube.utils.OnDisplayVideo;
+import com.vtc.basetube.utils.Utils;
 
 public class FragmentSearch extends Fragment {
-	private static Fragment fragment = null;
-	private String txtSearch;
+	private static FragmentSearch fragment = null;
+	private String mQuerry;
 	private OnDisplayVideo mOnDisplayVideo;
+	private YoutubeController mController;
+    private BaseTubeApplication mApp;
+    private VideoAdapter mAdapterVideo;
 
-	public static Fragment newInstance(String txtSearch) {
-		if (fragment == null)
+	public static FragmentSearch newInstance(String querry) {
+		if (fragment == null) {
 			fragment = new FragmentSearch();
-		Bundle args = new Bundle();
-		args.putString("txtSearch", txtSearch);
-		fragment.setArguments(args);
+    		Bundle args = new Bundle();
+    		args.putString(Utils.EXTRA_QUERRY, querry);
+    		fragment.setArguments(args);
+		}
 		return fragment;
 	}
 
 	public void updateValue(String txtSearch) {
-		this.txtSearch = txtSearch;
-		// call Api search
+		this.mQuerry = txtSearch;
+		 mController.requestSearchVideos(mApp.getApplicationContext(), mQuerry,
+	                new OnRequest<ArrayList<Category>>() {
+
+	                    @Override
+	                    public void onSuccess(ArrayList<Category> data) {
+	                        Log.d(Utils.TAG, "Data: " + data.size());
+	                        mAdapterVideo.RemoveData();
+	                        for (Category dt : data) {
+	                            Log.d(Utils.TAG, "Data: Title: " + dt.getTitle());
+	                            ItemVideo item = new ItemVideo();
+	                            item.setTitle(dt.getTitle());
+	                            item.setId(dt.getId());
+	                            item.setTime(dt.getPublishAt());
+	                            item.setViewCount(dt.getViewCount() + " lượt xem");
+	                            item.setThumbnail(dt.getThumbnail());
+	                            item.setPlaylistId(dt.getPlaylistId());
+	                            item.setDescription(dt.getDescription());
+	                            item.setDuration(dt.getDuration());
+	                            item.setPlaylistId(dt.getPlaylistId());
+	                            mAdapterVideo.addItem(item);
+	                        }
+	                        Log.d(Utils.TAG, "Data: mAdapterVideo: "
+	                                + mAdapterVideo.getCount());
+	                        mAdapterVideo.notifyDataSetChanged();
+	                    }
+
+	                    @Override
+	                    public void onError() {
+	                        // TODO Auto-generated method stub
+	                    }
+
+	                });
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		txtSearch = (String) (getArguments() != null ? getArguments()
-				.getString("txtSearch") : 1);
+		mQuerry = (String) (getArguments() != null ? getArguments()
+				.getString(Utils.EXTRA_QUERRY) : 1);
 
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
-		if (activity instanceof OnDisplayVideo) {
-			mOnDisplayVideo = (OnDisplayVideo) activity;
-		}
+	    if (activity instanceof OnDisplayVideo) {
+            mOnDisplayVideo = (OnDisplayVideo)activity;
+            mApp = mOnDisplayVideo.getTubeApplication();
+            mController = new YoutubeController(mApp);
+        }
 		super.onAttach(activity);
 	}
 
@@ -61,34 +106,24 @@ public class FragmentSearch extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		VideoAdapter adapterVideo = new VideoAdapter(getActivity());
+		mAdapterVideo = new VideoAdapter(getActivity());
 		View view = getView();
 		ListView listvideo = (ListView) view.findViewById(R.id.listivideo);
 
-		for (int i = 0; i < 10; i++) {
-			ItemVideo item = new ItemVideo();
-			item.setTitle("Search title" + i);
-			item.setId("wwXj_a3Vjhc");
-			item.setUploader("QuangNinhTV");
-			item.setTime("");
-			item.setViewCount("");
-			item.setThumbnail("");
-			adapterVideo.addItem(item);
-		}
-		listvideo.setAdapter(adapterVideo);
+		listvideo.setAdapter(mAdapterVideo);
 		listvideo.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
 					long arg3) {
 				if (mOnDisplayVideo != null) {
-					// mOnDisplayVideo.display(list.get(arg2));
+					mOnDisplayVideo.display(mAdapterVideo.getItem(pos));
 				}
 			}
 
 		});
 
-		updateValue(txtSearch);
+		updateValue(mQuerry);
 	}
 
 }

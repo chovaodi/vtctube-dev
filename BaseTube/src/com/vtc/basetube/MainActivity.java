@@ -348,7 +348,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 							FragmentSearch.newInstance(mSearchValue),
 							currentTag).commit();
 		} else {
-			FragmentSearch fraSearch = new FragmentSearch();
+			FragmentSearch fraSearch = FragmentSearch.newInstance(mSearchValue);
 			fraSearch.updateValue(mSearchValue);
 		}
 	}
@@ -391,7 +391,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			Log.d("VTCTube", "displayVideo: " + mVideoPlayerFragment);
 		} else {
 			mVideoPlayerFragment.playVideo(videoId);
-			mVideoPlayerFragment.updateList(playlistId);
+			mVideoPlayerFragment.displayRelatedVideo(videoId);
 			mVideoPlayerFragment.maximize();
 		}
 	}
