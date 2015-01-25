@@ -241,6 +241,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 							item.setThumbnail(dt.getThumbnail());
 							item.setPlaylistId(dt.getPlaylistId());
 							item.setDescription(dt.getDescription());
+							item.setDuration(dt.getDuration());
 							mAdapterVideo.addItem(item);
 							if(item.getId().equals(mVideoId)) {
 							    updateDataDetail(item);

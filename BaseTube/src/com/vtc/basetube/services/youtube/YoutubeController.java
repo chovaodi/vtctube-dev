@@ -137,6 +137,9 @@ public class YoutubeController {
                             if(item.statistics != null) {
                                 cat.setCountView(item.statistics.viewCount);
                             }
+                            if(item.contentDetails != null) {
+                                cat.setDuration(item.contentDetails.duration);
+                            }
                             cat.setPlaylistId(playlistId);
                             categories.add(cat);
                         }
