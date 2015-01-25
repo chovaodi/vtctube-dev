@@ -1,6 +1,9 @@
 package com.vtc.basetube.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -22,6 +25,8 @@ public class Utils {
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyDsQDuxjOZLCiwx9MKIa_LTPhYPHV293L8";// "AIzaSyA49SV21QaIN0oj9iUqW-u4zWi-41NDFNo";
 	public static int LIKE = 0;
 	public static int VIEWED = 1;
+	private static SimpleDateFormat sUSTimeFormatter = new SimpleDateFormat("yyyy-MM-dd");
+	private static SimpleDateFormat sVITimeFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	public static ArrayList<Item> getMenu(Activity activity, int menu) {
 
@@ -139,4 +144,13 @@ public class Utils {
 		return listAccount;
 	}
 
+	public static String getTime(String timeString) {
+	    try {
+	        Date date = sUSTimeFormatter.parse(timeString);
+	        return sVITimeFormatter.format(date);
+	    } catch (ParseException e) {
+	        e.printStackTrace();
+	        return timeString;
+	    }
+	}
 }

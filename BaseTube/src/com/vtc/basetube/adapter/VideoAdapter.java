@@ -165,7 +165,7 @@ public class VideoAdapter extends BaseAdapter {
 			});
 		} else {
 			holder.txtTitle.setText(item.getTitle());
-			holder.lblPublishAt.setText(item.getTime());
+			holder.lblPublishAt.setText(Utils.getTime(item.getTime()));
 			holder.lblMetadata.setText(item.getCountView());
 			if (item.getThumbnail() != null) {
 				holder.thumnail.setImageUrl(item.getThumbnail(), mImageLoader);

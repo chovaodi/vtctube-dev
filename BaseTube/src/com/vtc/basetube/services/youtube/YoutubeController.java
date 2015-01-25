@@ -93,9 +93,9 @@ public class YoutubeController {
                                 videoIds.append(item.contentDetails.videoId).append(",");
                             }
                         }
-                        String ids = videoIds.toString();//.substring(0, videoIds.length()-2);
+                        String ids = videoIds.toString();
                         Log.d(Utils.TAG, "VIDEO_IDS: " + ids);
-                        requestVideoList(mContext, ids, req);
+                        requestVideoList(mContext, playlistId, ids, req);
                     }
 
                 }, new ErrorListener() {
@@ -108,7 +108,7 @@ public class YoutubeController {
         RequestManager.newInstance(context).addToRequestQueue(request);
     }
     
-    public void requestVideoList(Context context, final String videoId, final OnRequest<ArrayList<Category>> req) {
+    public void requestVideoList(Context context, final String playlistId, final String videoId, final OnRequest<ArrayList<Category>> req) {
         StringBuilder url = new StringBuilder(VIDEO_LIST_URL)
         .append("&id=").append(videoId)
         .append("&key=").append(mApiKey);
@@ -131,12 +131,13 @@ public class YoutubeController {
                                 cat.setTitle(item.snippet.title);
                                 cat.setPublishAt(item.snippet.publishedAt);
                                 if (item.snippet.thumbnails != null && item.snippet.thumbnails.medium != null) {
-                                  cat.setThumbnail(item.snippet.thumbnails.medium.url);
-                              }
+                                    cat.setThumbnail(item.snippet.thumbnails.medium.url);
+                                }
                             }
                             if(item.statistics != null) {
                                 cat.setCountView(item.statistics.viewCount);
                             }
+                            cat.setPlaylistId(playlistId);
                             categories.add(cat);
                         }
                         req.onSuccess(categories);

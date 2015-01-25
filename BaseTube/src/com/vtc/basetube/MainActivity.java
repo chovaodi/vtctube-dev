@@ -39,7 +39,7 @@ import com.vtc.basetube.adapter.MenuLeftAdapter;
 import com.vtc.basetube.fragment.FragmentAbout;
 import com.vtc.basetube.fragment.FragmentCategory;
 import com.vtc.basetube.fragment.FragmentLike;
-import com.vtc.basetube.fragment.FragmentSearch;
+//import com.vtc.basetube.fragment.FragmentSearch;
 import com.vtc.basetube.fragment.FragmentViewed;
 import com.vtc.basetube.fragment.VideoPlayerFragment;
 import com.vtc.basetube.model.Item;
@@ -317,17 +317,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void addFragmentSearch() {
-		if (!currentTag.equals("TAG_SEARCH")) {
-			currentTag = "TAG_SEARCH";
-			getSupportFragmentManager()
-					.beginTransaction()
-					.replace(R.id.frame_container,
-							FragmentSearch.newInstance(mSearchValue),
-							currentTag).commit();
-		} else {
-			FragmentSearch fraSearch = new FragmentSearch();
-			fraSearch.updateValue(mSearchValue);
-		}
+//		if (!currentTag.equals("TAG_SEARCH")) {
+//			currentTag = "TAG_SEARCH";
+//			getSupportFragmentManager()
+//					.beginTransaction()
+//					.replace(R.id.frame_container,
+//							FragmentSearch.newInstance(mSearchValue),
+//							currentTag).commit();
+//		} else {
+//			FragmentSearch fraSearch = new FragmentSearch();
+//			fraSearch.updateValue(mSearchValue);
+//		}
 	}
 
 	@Override
@@ -367,7 +367,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 							"TAG_VIDEO").addToBackStack(null).commit();
 			Log.d("VTCTube", "displayVideo: " + mVideoPlayerFragment);
 		} else {
-			mVideoPlayerFragment.updateData(videoId);
+			mVideoPlayerFragment.updateData(playlistId, videoId);
 			mVideoPlayerFragment.updateList(playlistId);
 			mVideoPlayerFragment.maximize();
 		}
