@@ -140,6 +140,8 @@ public class FragmentHome extends SherlockFragment {
                     MainActivity.progressBar.setVisibility(View.GONE);
                     ItemVideo itemCate = new ItemVideo();
                     itemCate.setTitle(cat.getTitle());
+                    itemCate.setPlaylistId(cat.getPlaylistId());
+                    itemCate.setId(cat.getId());
                     adapterVideo.addSeparatorItem(itemCate);
                     for (Category dt : data) {
                         ItemVideo item = new ItemVideo();

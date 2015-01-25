@@ -54,6 +54,7 @@ public class YoutubeController {
                         for (Item item : result.items) {
                             Category cat = new Category();
                             cat.setId(item.id);
+                            cat.setPlaylistId(item.id);
                             if (item.snippet != null) {
                                 cat.setTitle(item.snippet.title);
                             }

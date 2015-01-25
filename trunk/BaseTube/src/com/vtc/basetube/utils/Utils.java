@@ -30,6 +30,8 @@ public class Utils {
 			"yyyy-MM-dd");
 	private static SimpleDateFormat sVITimeFormatter = new SimpleDateFormat(
 			"dd-MM-yyyy");
+	public static final String EXTRA_VIDEO_ID = "video_id";
+	public static final String EXTRA_PLAYLIST_ID = "playlist_id"; 
 
 	public static ArrayList<Item> getMenu(Activity activity, int menu) {
 
