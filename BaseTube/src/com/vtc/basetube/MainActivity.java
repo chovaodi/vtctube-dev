@@ -116,7 +116,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerOpened(View arg0) {
-				getSupportActionBar().setTitle("Danh Mục");
+				getSupportActionBar().setTitle(getResources().getString(R.string.lblDanhmuc));
 			}
 
 			@Override
@@ -406,7 +406,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		} else {
 			if (!currentTag.equals("TAG_HOME")) {
-				mTitle="Trang chủ";
+				mTitle=getResources().getString(R.string.lblTrangchu);
 				lblMessage.setVisibility(View.GONE);
 				currentTag = "TAG_HOME";
 				getSupportFragmentManager()
