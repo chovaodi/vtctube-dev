@@ -8,5 +8,7 @@
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
     <string name="playerview_text">This is a YouTubePlayerView!</string>
     <string name="not_available_while_offline">Không thể thực hiện khi ngoại tuyến</string>
-
+    <string name="lblDanhmuc">Danh Mục</string>
+    <string name="lblTrangchu">Trang chủ</string>
+    
 </resources>
