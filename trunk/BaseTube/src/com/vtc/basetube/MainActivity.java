@@ -71,6 +71,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public static DatabaseHelper myDbHelper;
 	private String mSearchValue = "";
 	private List<String> listQuerySearch;
+	private String mTitle = "Trang chủ";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,11 +116,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerOpened(View arg0) {
-
+				getSupportActionBar().setTitle("Danh Mục");
 			}
 
 			@Override
 			public void onDrawerClosed(View arg0) {
+				getSupportActionBar().setTitle(mTitle);
 				clickMenu();
 			}
 		});
@@ -148,6 +150,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
 					long arg3) {
+				mTitle = adapterMenu.getItem(pos).getTitle();
 				idActive = adapterMenu.getItem(pos).getRegId();
 				mDrawerLayout.closeDrawer(lineLeftMenu);
 				lblMessage.setVisibility(View.GONE);
@@ -158,14 +161,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public void clickMenu() {
+		getSupportActionBar().setTitle(mTitle);
 		switch (idActive) {
-
 		case R.id.right_menu_home:
-
 			setHome();
 			break;
 		case R.id.right_menu_daxem:
-
 			currentTag = "TAG_VIEWED";
 			getSupportFragmentManager()
 					.beginTransaction()
@@ -285,9 +286,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onQueryTextChange(String newText) {
 		listQuerySearch = Utils.getQuerySearch("SELECT * FROM "
 				+ DatabaseHelper.TB_SEARCH);
-		Log.d("listQuerySearch",listQuerySearch.get(0)+" hshsh");
+		Log.d("listQuerySearch", listQuerySearch.get(0) + " hshsh");
 		for (int i = 0; i < listQuerySearch.size(); i++) {
-		
+
 			if (listQuerySearch.get(i).contains(newText)) {
 				String valueTmp = listQuerySearch.get(i);
 				listQuerySearch.set(i, listQuerySearch.get(0));
@@ -405,6 +406,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		} else {
 			if (!currentTag.equals("TAG_HOME")) {
+				mTitle="Trang chủ";
 				lblMessage.setVisibility(View.GONE);
 				currentTag = "TAG_HOME";
 				getSupportFragmentManager()
@@ -442,10 +444,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		bundle.putCharSequence(Utils.EXTRA_PLAYLIST_ID, playlistId);
 		FragmentCategory fragment = FragmentCategory.newInstance();
 		fragment.setArguments(bundle);
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.frame_container, fragment,
-						currentTag).commit();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.frame_container, fragment, currentTag).commit();
 
 	}
 
