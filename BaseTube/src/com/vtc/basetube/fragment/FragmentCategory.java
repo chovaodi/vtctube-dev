@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.vtc.basetube.BaseTubeApplication;
+import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.Category;
@@ -100,12 +101,14 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
 	}
 
 	public void updateList(String playlistId) {
+		MainActivity.progressBar.setVisibility(View.VISIBLE);
         mController.requestPlaylistItems(getActivity(), playlistId,
                 new OnRequest<ArrayList<Category>>() {
 
                     @Override
                     public void onSuccess(ArrayList<Category> data) {
-                        Log.d(Utils.TAG, "Data: " + data.size());
+                    	MainActivity.progressBar.setVisibility(View.GONE);
+                    	Log.d(Utils.TAG, "Data: " + data.size());
                         mAdapterVideo.RemoveData();
                         for (Category dt : data) {
                             Log.d(Utils.TAG, "Data: Title: " + dt.getTitle());
