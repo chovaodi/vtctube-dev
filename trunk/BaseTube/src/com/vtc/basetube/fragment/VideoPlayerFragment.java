@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubePlayer;
@@ -50,8 +51,9 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	private TextView mTvDescription;
 
 	private YoutubeController mController;
-	private VideoAdapter mAdapterVideo;
+	private VideoAdapter mAdapterVideo = null;
 	private ItemVideo itemVideo;
+	private ProgressBar mLoading;
 
 	private static VideoPlayerFragment sInstance = null;
 
@@ -106,9 +108,8 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		mTvDescription = (TextView) header.findViewById(R.id.lblDescription);
 		mTvPublishAt = (TextView) header.findViewById(R.id.lbPublishAt);
 		mTvViewCount = (TextView) header.findViewById(R.id.lblCountview);
+		mLoading=(ProgressBar)mView.findViewById(R.id.loading);
 
-		mAdapterVideo = new VideoAdapter(getActivity());
-		mListvideo.setAdapter(mAdapterVideo);
 		MainActivity.lblMessage.setVisibility(View.GONE);
 		Bundle bundle = this.getArguments();
 		if (bundle == null) {
@@ -235,12 +236,18 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	}
 
 	public void displayRelatedVideo(String videoId) {
+		mLoading.setVisibility(View.VISIBLE);
 		mController.requestRelatedVideos(getActivity(), videoId,
 				new OnRequest<ArrayList<Category>>() {
 
 					@Override
 					public void onSuccess(ArrayList<Category> data) {
-						Log.d(Utils.TAG, "Data: " + data.size());
+						mLoading.setVisibility(View.GONE);
+						
+						if (mAdapterVideo == null) {
+							mAdapterVideo = new VideoAdapter(getActivity());
+							mListvideo.setAdapter(mAdapterVideo);
+						}
 						mAdapterVideo.RemoveData();
 						for (Category dt : data) {
 							Log.d(Utils.TAG, "Data: Title: " + dt.getTitle());
@@ -260,7 +267,9 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 						}
 						Log.d(Utils.TAG, "Data: mAdapterVideo: "
 								+ mAdapterVideo.getCount());
+
 						mAdapterVideo.notifyDataSetChanged();
+
 					}
 
 					@Override
