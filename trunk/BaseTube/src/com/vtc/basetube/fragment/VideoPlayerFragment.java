@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -49,6 +51,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
 	private YoutubeController mController;
 	private VideoAdapter mAdapterVideo;
+	private ItemVideo itemVideo;
 
 	private static VideoPlayerFragment sInstance = null;
 
@@ -89,11 +92,16 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		mListvideo = (ListView) view.findViewById(R.id.listView1);
 		View header = getActivity().getLayoutInflater().inflate(
 				R.layout.header_itemvideo, null);
-		View fotter = getActivity().getLayoutInflater().inflate(
-				R.layout.fotter_detailt, null);
 
 		mListvideo.addHeaderView(header);
-	//	mListvideo.addFooterView(fotter);
+		LinearLayout option = (LinearLayout) header.findViewById(R.id.option);
+		option.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Utils.CreatePopupMenu(getActivity(), arg0, itemVideo);
+			}
+		});
 		mTvTitle = (TextView) header.findViewById(R.id.lblName);
 		mTvDescription = (TextView) header.findViewById(R.id.lblDescription);
 		mTvPublishAt = (TextView) header.findViewById(R.id.lbPublishAt);
@@ -112,18 +120,19 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		displayRelatedVideo(mVideoId);
 		mListvideo.setOnItemClickListener(new OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> adt, View view, int pos, long id) {
-                int index = pos - 1;
-                if(index < 0) {
-                    return;
-                }
-                ItemVideo video = mAdapterVideo.getItem(index);
-                playVideo(video.getId());
-                updateDataDetail(video);
-                displayRelatedVideo(video.getId());
-            }
-        });
+			@Override
+			public void onItemClick(AdapterView<?> adt, View view, int pos,
+					long id) {
+				int index = pos - 1;
+				if (index < 0) {
+					return;
+				}
+				ItemVideo video = mAdapterVideo.getItem(index);
+				playVideo(video.getId());
+				updateDataDetail(video);
+				displayRelatedVideo(video.getId());
+			}
+		});
 	}
 
 	public void playVideo(String videoId) {
@@ -218,10 +227,11 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	}
 
 	private void updateDataDetail(ItemVideo item) {
-        mTvTitle.setText(item.getTitle());
-        mTvDescription.setText(item.getDescription());
-        mTvPublishAt.setText(Utils.getTime(item.getTime()));
-        mTvViewCount.setText(item.getViewCount() + " lượt xem");
+		itemVideo = item;
+		mTvTitle.setText(item.getTitle());
+		mTvDescription.setText(item.getDescription());
+		mTvPublishAt.setText(Utils.getTime(item.getTime()));
+		mTvViewCount.setText(item.getViewCount() + " lượt xem");
 	}
 
 	public void displayRelatedVideo(String videoId) {
@@ -244,8 +254,8 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 							item.setDescription(dt.getDescription());
 							item.setDuration(dt.getDuration());
 							mAdapterVideo.addItem(item);
-							if(item.getId().equals(mVideoId)) {
-							    updateDataDetail(item);
+							if (item.getId().equals(mVideoId)) {
+								updateDataDetail(item);
 							}
 						}
 						Log.d(Utils.TAG, "Data: mAdapterVideo: "

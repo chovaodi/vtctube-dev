@@ -16,8 +16,15 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
+import android.widget.Toast;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import com.vtc.basetube.MainActivity;
+import com.vtc.basetube.R;
 import com.vtc.basetube.model.Item;
 import com.vtc.basetube.model.ItemVideo;
 
@@ -73,6 +80,43 @@ public class Utils {
 			e.printStackTrace();
 		}
 		return menuItems;
+
+	}
+	public static void CreatePopupMenu(final Context context,View v, final ItemVideo itemvd) {
+
+		PopupMenu mypopupmenu = new PopupMenu(context, v);
+
+		MenuInflater inflater = mypopupmenu.getMenuInflater();
+
+		inflater.inflate(R.menu.popup_menu, mypopupmenu.getMenu());
+
+		mypopupmenu.show();
+		mypopupmenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				int id = item.getItemId();
+				switch (id) {
+				case R.id.popup_like:
+
+					if (MainActivity.myDbHelper.getCountRow("SELECT * FROM "
+							+ DatabaseHelper.TB_DATA + " WHERE videoId='"
+							+ itemvd.getId() + "' and type='" + Utils.LIKE
+							+ "'") == 0) {
+						MainActivity.myDbHelper.insertVideoLike(itemvd,
+								Utils.LIKE);
+						Toast.makeText(context, "Thêm vào danh sách yêu thích",
+								Toast.LENGTH_LONG).show();
+					}
+
+					break;
+				case R.id.popup_share:
+					Utils.shareButton(itemvd, context);
+					break;
+				}
+				return false;
+			}
+		});
 
 	}
 

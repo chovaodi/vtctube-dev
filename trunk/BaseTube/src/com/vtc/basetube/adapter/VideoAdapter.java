@@ -1,41 +1,32 @@
 package com.vtc.basetube.adapter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
 import android.content.Context;
-import android.database.SQLException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.NetworkImageView;
-import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.model.ItemVideo;
 import com.vtc.basetube.services.request.RequestManager;
 import com.vtc.basetube.services.volley.toolbox.BitmapLruCache;
 import com.vtc.basetube.services.volley.util.BitmapUtil;
-import com.vtc.basetube.utils.DatabaseHelper;
 import com.vtc.basetube.utils.ICategoryMore;
 import com.vtc.basetube.utils.Utils;
 
@@ -182,50 +173,13 @@ public class VideoAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View arg0) {
-					CreatePopupMenu(arg0, item);
+					Utils.CreatePopupMenu(context,arg0, item);
 				}
 			});
 		}
 		return convertView;
 	}
 
-	public void CreatePopupMenu(View v, final ItemVideo itemvd) {
-
-		PopupMenu mypopupmenu = new PopupMenu(context, v);
-
-		MenuInflater inflater = mypopupmenu.getMenuInflater();
-
-		inflater.inflate(R.menu.popup_menu, mypopupmenu.getMenu());
-
-		mypopupmenu.show();
-		mypopupmenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				int id = item.getItemId();
-				switch (id) {
-				case R.id.popup_like:
-
-					if (MainActivity.myDbHelper.getCountRow("SELECT * FROM "
-							+ DatabaseHelper.TB_DATA + " WHERE videoId='"
-							+ itemvd.getId() + "' and type='" + Utils.LIKE
-							+ "'") == 0) {
-						MainActivity.myDbHelper.insertVideoLike(itemvd,
-								Utils.LIKE);
-						Toast.makeText(context, "Thêm vào danh sách yêu thích",
-								Toast.LENGTH_LONG).show();
-					}
-
-					break;
-				case R.id.popup_share:
-					Utils.shareButton(itemvd, context);
-					break;
-				}
-				return false;
-			}
-		});
-
-	}
 
 	public static class ViewHolder {
 		public TextView txtTitle;
