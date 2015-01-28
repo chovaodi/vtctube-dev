@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Styled" parent="Theme.Sherlock.Light">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="searchAutoCompleteTextView">@style/SearchViewStyle</item>
     </style>
 
- 
+    <style name="SearchViewStyle" parent="Widget.Sherlock.Light.SearchAutoCompleteTextView">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textCursorDrawable">@drawable/drawable</item>
+        <item name="android:background">@drawable/input</item>
+    </style>
 
     <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="background">@drawable/bgr_tasktop</item>

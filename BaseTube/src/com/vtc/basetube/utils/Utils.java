@@ -137,7 +137,7 @@ public class Utils {
 		shareLink = "https://www.youtube.com/watch?v=" + item.getId();
 
 		String userEntry = item.getTitle() + "\n"
-				+ "Quảng Ninh TV nơi mong đến, chốn tìm về" + shareLink;
+				+ "Quảng Ninh TV Kết nối và lan tỏa" + shareLink;
 
 		Intent textShareIntent = new Intent(Intent.ACTION_SEND);
 		textShareIntent.putExtra(Intent.EXTRA_TEXT, userEntry);

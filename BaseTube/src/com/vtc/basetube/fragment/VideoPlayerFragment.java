@@ -94,8 +94,11 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		mListvideo = (ListView) view.findViewById(R.id.listView1);
 		View header = getActivity().getLayoutInflater().inflate(
 				R.layout.header_itemvideo, null);
+		//View footer = getActivity().getLayoutInflater().inflate(
+			//	R.layout.fotter_detailt, null);
 
 		mListvideo.addHeaderView(header);
+		//mListvideo.addFooterView(footer); 
 		LinearLayout option = (LinearLayout) header.findViewById(R.id.option);
 		option.setOnClickListener(new OnClickListener() {
 

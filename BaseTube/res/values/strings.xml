@@ -10,5 +10,16 @@
     <string name="not_available_while_offline">Không thể thực hiện khi ngoại tuyến</string>
     <string name="lblDanhmuc">Danh Mục</string>
     <string name="lblTrangchu">Trang chủ</string>
-    
+    <string name="aboutus">
+<![CDATA[
+ <p>QTV | QTVtube là kênh chia sẻ video các chương trình của Đài PTTH Quảng Ninh trên Youtube, chính thức đăng tải từ ngày 1/1/2015. QTVtube sẽ mang đến cho bạn những thông tin phong phú, hấp dẫn nhất về Quảng Ninh.</p>
+<p>* Cơ quan chủ quản: Đài PTTH Quảng Ninh</p>
+<p>* Địa chỉ: 66 Nguyễn Văn Cừ, TP Hạ Long, Quảng Ninh</p>
+<p>* Giám đốc - Tổng biên tập: Đỗ Bích</p>
+<p>* Website: http://qtv.vn</p>
+<p>* Điện thoại: 033.3518752</p>
+<p>* Email: baodientu.qtv@gmail.com</p> 
+        ]]>
+    </string>
+
 </resources>
