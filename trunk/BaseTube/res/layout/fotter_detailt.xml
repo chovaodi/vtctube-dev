@@ -7,7 +7,7 @@
     <com.vtc.basetube.font.TextViewRobotoLight
         android:id="@+id/textViewRobotoLight1"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="90dp"
         android:gravity="center"
         android:text="Tải thêm"
         android:textColor="@color/text_black"

@@ -161,6 +161,8 @@ public class VideoAdapter extends BaseAdapter {
 		} else {
 		    if(!TextUtils.isEmpty(item.getDuration())) {
 		        holder.lblThoigian.setText(item.getDuration().replace("PT", "").replace("H", ":").replace("M", ":").replace("S", ""));
+		    }else{
+		    	 holder.lblThoigian.setText("QuangNinhTV");
 		    }
 			holder.txtTitle.setText(item.getTitle());
 			holder.lblPublishAt.setText(Utils.getTime(item.getTime()));
