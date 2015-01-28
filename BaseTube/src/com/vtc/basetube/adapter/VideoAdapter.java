@@ -107,7 +107,6 @@ public class VideoAdapter extends BaseAdapter {
 		ViewHolder holder = null;
 
 		int type = getItemViewType(position);
-		Log.d(Utils.TAG, "TYPE: " + type);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			switch (type) {

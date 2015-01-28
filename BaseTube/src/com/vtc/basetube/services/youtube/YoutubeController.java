@@ -3,6 +3,7 @@ package com.vtc.basetube.services.youtube;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.Request.Method;
@@ -11,6 +12,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.vtc.basetube.BaseTubeApplication;
 import com.vtc.basetube.model.Category;
+import com.vtc.basetube.model.ListData;
 import com.vtc.basetube.services.model.Id;
 import com.vtc.basetube.services.model.Item;
 import com.vtc.basetube.services.model.Result;
@@ -75,10 +77,15 @@ public class YoutubeController {
         RequestManager.newInstance(mContext).addToRequestQueue(request);
     }
 
-    public void requestPlaylistItems(Context context, final String playlistId, final OnRequest<ArrayList<Category>> req) {
-        StringBuilder url = new StringBuilder(PLAYLIST_ITEMS_URL).append("&playlistId=").append(playlistId).append("&key=")
-                .append(mApiKey);
-        ;
+    public void requestPlaylistItems(Context context, final String playlistId,
+            final String pageToken,
+            final OnRequest<ListData<Category>> req) {
+        StringBuilder url = new StringBuilder(PLAYLIST_ITEMS_URL).append("&playlistId=").append(playlistId)
+                .append("&key=").append(mApiKey)
+                .append("&maxResults=").append(7);
+        if(TextUtils.isEmpty(pageToken) == false) {
+            url.append("&pageToken=").append(pageToken);
+        }
         GsonRequest<Result> request = new GsonRequest<Result>(Method.GET, url.toString(), Result.class, null,
                 new Listener<Result>() {
 
@@ -88,7 +95,6 @@ public class YoutubeController {
                             req.onError();
                             return;
                         }
-                        ArrayList<Category> categories = new ArrayList<Category>();
                         StringBuilder videoIds = new StringBuilder();
                         for (Item<String> item : data.items) {
                             if (item.status != null && Status.PRIVATE.equals(item.status.privacyStatus)) {
@@ -100,7 +106,22 @@ public class YoutubeController {
                         }
                         String ids = videoIds.toString();
                         Log.d(Utils.TAG, "VIDEO_IDS: " + ids);
-                        requestVideoList(mContext, playlistId, ids, req);
+                        final ListData<Category> listData = new ListData<Category>();
+                        listData.setNextPageToken(data.nextPageToken);
+                        Log.d(Utils.TAG, "requestPlaylistItems -> nextPageToken: " + data.nextPageToken);
+                        requestVideoList(mContext, playlistId, ids, new OnRequest<ArrayList<Category>>() {
+
+                            @Override
+                            public void onSuccess(ArrayList<Category> data) {
+                                listData.addAll(data);
+                                req.onSuccess(listData);
+                            }
+
+                            @Override
+                            public void onError() {
+                                req.onError();
+                            }
+                        });
                     }
 
                 }, new ErrorListener() {
@@ -121,7 +142,6 @@ public class YoutubeController {
 
                     @Override
                     public void onResponse(Result data) {
-                        Log.d(Utils.TAG, "requestPlaylistItems onResponse: ");
                         if (data.items == null) {
                             req.onError();
                             return;

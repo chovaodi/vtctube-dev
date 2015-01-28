@@ -32,6 +32,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.Category;
 import com.vtc.basetube.model.ItemVideo;
+import com.vtc.basetube.model.ListData;
 import com.vtc.basetube.services.youtube.OnRequest;
 import com.vtc.basetube.services.youtube.YoutubeController;
 import com.vtc.basetube.utils.OnDisplayVideo;
@@ -133,10 +134,10 @@ public class FragmentHome extends SherlockFragment {
         for (int i = 0; i < data.size(); i++) {
             final Category cat = data.get(i);
 
-            mController.requestPlaylistItems(getActivity(), cat.getId(), new OnRequest<ArrayList<Category>>() {
+            mController.requestPlaylistItems(getActivity(), cat.getId(), null, new OnRequest<ListData<Category>>() {
 
                 @Override
-                public void onSuccess(ArrayList<Category> data) {
+                public void onSuccess(ListData<Category> data) {
                     MainActivity.progressBar.setVisibility(View.GONE);
                     ItemVideo itemCate = new ItemVideo();
                     itemCate.setTitle(cat.getTitle());
