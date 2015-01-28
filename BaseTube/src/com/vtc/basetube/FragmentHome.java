@@ -134,7 +134,7 @@ public class FragmentHome extends SherlockFragment {
         for (int i = 0; i < data.size(); i++) {
             final Category cat = data.get(i);
 
-            mController.requestPlaylistItems(getActivity(), cat.getId(), null, new OnRequest<ListData<Category>>() {
+            mController.requestPlaylistItems(getActivity(), cat.getId(), null, 5, new OnRequest<ListData<Category>>() {
 
                 @Override
                 public void onSuccess(ListData<Category> data) {
