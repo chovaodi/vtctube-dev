@@ -97,6 +97,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		lineLeftMenu = (LinearLayout) findViewById(R.id.lineMenu);
 		leftMenu = (ListView) findViewById(R.id.rbm_listview);
+		View footer=getLayoutInflater().inflate(R.layout.fotter_detailt, null);
+		leftMenu.addFooterView(footer);
+		
 		mDrawerLayout.setDrawerListener(new DrawerListener() {
 
 			@Override

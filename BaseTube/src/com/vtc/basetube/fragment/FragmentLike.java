@@ -53,7 +53,7 @@ public class FragmentLike extends Fragment {
 		VideoAdapter adapterVideo = new VideoAdapter(getActivity());
 		View view = getView();
 		ListView listvideo = (ListView) view.findViewById(R.id.listivideo);
-		final List<ItemVideo> list = Utils.getVideoData("SELECT * FROM "
+		final List<ItemVideo> list = DatabaseHelper.getVideoData("SELECT * FROM "
 				+ DatabaseHelper.TB_DATA + " WHERE type='" + Utils.LIKE + "'",
 				MainActivity.myDbHelper);
 		MainActivity.lblMessage.setVisibility(View.GONE);
@@ -65,8 +65,8 @@ public class FragmentLike extends Fragment {
 			item.setTitle(list.get(i).getTitle());
 			item.setId(list.get(i).getId());
 			item.setUploader("QuangNinhTV");
-			item.setTime("");
-			item.setViewCount("");
+			item.setTime(list.get(i).getTime());
+			item.setViewCount(list.get(i).getViewCount());
 			item.setThumbnail(list.get(i).getThumbnail());
 			adapterVideo.addItem(item);
 		}

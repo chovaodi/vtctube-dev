@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:gravity="center"
-        android:text="Tải thêm"
+        android:text="Bản quyền @2015 bởi Đài Phát thanh và Truyền hình Quảng Ninh"
         android:textColor="@color/text_black"
         android:textSize="15dp" />
 
