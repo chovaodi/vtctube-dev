@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import com.vtc.basetube.model.ItemVideo;
 
@@ -30,6 +31,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static String COLLUM_THUMANIL = "thumnail";
 	public static String COLLUM_DURATION = "Duration";
 	public static String COLLUM_TXTQUERY = "txtQuery";
+	public static String COLLUM_TIME = "time";
+	public static String COLLUM_COUNTVIEW = "countview";
 
 	private SQLiteDatabase myDataBase;
 
@@ -221,8 +224,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		initialValues.put(COLLUM_TITLE, item.getTitle());
 		initialValues.put(COLLUM_THUMANIL, item.getThumbnail());
 		initialValues.put(COLLUM_DURATION, item.getDuration());
+		initialValues.put(COLLUM_COUNTVIEW, item.getViewCount());
 
 		return myDataBase.insert(TB_DATA, null, initialValues);
+	}
+
+	public static ArrayList<ItemVideo> getVideoData(String sql,
+			DatabaseHelper myDbHelper) {
+		ArrayList<ItemVideo> listAccount = null;
+		try {
+			Cursor c = myDbHelper.query(DatabaseHelper.TB_DATA, null, null,
+					null, null, null, null);
+			c = myDbHelper.rawQuery(sql);
+			listAccount = new ArrayList<ItemVideo>();
+
+			if (c.moveToFirst()) {
+
+				do {
+					ItemVideo item = new ItemVideo();
+					item.setId(c.getString(0));
+					item.setType(c.getInt(1));
+					item.setTitle(c.getString(2));
+					item.setThumbnail(c.getString(3));
+					item.setDuration(c.getString(4));
+					item.setTime(c.getString(5));
+					item.setViewCount(c.getString(6));
+
+					listAccount.add(item);
+				} while (c.moveToNext());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return listAccount;
 	}
 
 	public Cursor query(String table, String[] columns, String selection,

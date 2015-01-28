@@ -64,7 +64,7 @@ public class FragmentViewed extends Fragment {
 			throw sqle;
 		}
 
-		final List<ItemVideo> list = Utils.getVideoData(
+		final List<ItemVideo> list = DatabaseHelper.getVideoData(
 				"SELECT * FROM " + DatabaseHelper.TB_DATA + " WHERE type='"
 						+ Utils.VIEWED + "'", myDbHelper);
 		MainActivity.lblMessage.setVisibility(View.GONE);
@@ -76,8 +76,8 @@ public class FragmentViewed extends Fragment {
 			item.setTitle(list.get(i).getTitle());
 			item.setId(list.get(i).getId());
 			item.setUploader("QuangNinhTV");
-			item.setTime("");
-			item.setViewCount("");
+			item.setTime(list.get(i).getTime());
+			item.setViewCount(list.get(i).getViewCount());
 			item.setThumbnail(list.get(i).getThumbnail());
 			adapterVideo.addItem(item);
 		}

@@ -183,39 +183,13 @@ public class Utils {
 		return listAccount;
 	}
 
-	public static ArrayList<ItemVideo> getVideoData(String sql,
-			DatabaseHelper myDbHelper) {
-		ArrayList<ItemVideo> listAccount = null;
-		try {
-			Cursor c = myDbHelper.query(DatabaseHelper.TB_DATA, null, null,
-					null, null, null, null);
-			c = myDbHelper.rawQuery(sql);
-			listAccount = new ArrayList<ItemVideo>();
-
-			if (c.moveToFirst()) {
-
-				do {
-					ItemVideo item = new ItemVideo();
-					item.setId(c.getString(0));
-					item.setType(c.getInt(1));
-					item.setTitle(c.getString(2));
-					item.setThumbnail(c.getString(3));
-					item.setDuration(c.getString(4));
-
-					listAccount.add(item);
-				} while (c.moveToNext());
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return listAccount;
-	}
+	
 
 	public static String getTime(String timeString) {
 		try {
 			Date date = sUSTimeFormatter.parse(timeString);
 			return sVITimeFormatter.format(date);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return timeString;
 		}

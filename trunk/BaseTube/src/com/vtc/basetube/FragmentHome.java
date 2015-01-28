@@ -38,62 +38,63 @@ import com.vtc.basetube.services.youtube.YoutubeController;
 import com.vtc.basetube.utils.OnDisplayVideo;
 
 public class FragmentHome extends SherlockFragment {
-    private ListView listvideo;
-    private View view;
-    private VideoAdapter adapterVideo = null;
-    private OnDisplayVideo mOnDisplayVideo;
-    private final YoutubeController mController;
+	private ListView listvideo;
+	private View view;
+	private VideoAdapter adapterVideo = null;
+	private OnDisplayVideo mOnDisplayVideo;
+	private final YoutubeController mController;
 
-    private static FragmentHome framgnent = null;
+	private static FragmentHome framgnent = null;
 
-    /**
-     * Create a new instance of CountingFragment, providing "num" as an
-     * argument.
-     */
-    static FragmentHome newInstance(BaseTubeApplication app) {
-        if (framgnent == null)
-            framgnent = new FragmentHome(app);
-        return framgnent;
-    }
+	/**
+	 * Create a new instance of CountingFragment, providing "num" as an
+	 * argument.
+	 */
+	public static FragmentHome newInstance(BaseTubeApplication app) {
+		if (framgnent == null)
+			framgnent = new FragmentHome(app);
+		return framgnent;
+	}
 
-    public FragmentHome(BaseTubeApplication app) {
-        mController = new YoutubeController(app);
-    }
+	public FragmentHome(BaseTubeApplication app) {
+		mController = new YoutubeController(app);
+	}
 
-    /**
-     * When creating, retrieve this instance's number from its arguments.
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+	/**
+	 * When creating, retrieve this instance's number from its arguments.
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
-    @Override
-    public void onAttach(Activity activity) {
-        if (activity instanceof OnDisplayVideo) {
-            mOnDisplayVideo = (OnDisplayVideo) activity;
-        }
-        super.onAttach(activity);
-    }
+	@Override
+	public void onAttach(Activity activity) {
+		if (activity instanceof OnDisplayVideo) {
+			mOnDisplayVideo = (OnDisplayVideo) activity;
+		}
+		super.onAttach(activity);
+	}
 
-    /**
-     * The Fragment's UI is just a simple text view showing its instance number.
-     */
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home, container, false);
-        MainActivity.progressBar.setVisibility(View.VISIBLE);
-        return view;
-    }
+	/**
+	 * The Fragment's UI is just a simple text view showing its instance number.
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		view = inflater.inflate(R.layout.fragment_home, container, false);
+		MainActivity.progressBar.setVisibility(View.VISIBLE);
+		return view;
+	}
 
-    @Override
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		listvideo = (ListView) view.findViewById(R.id.listivideo);
 		View header = getActivity().getLayoutInflater().inflate(
 				R.layout.header_home, null);
-		ImageView imgBanner=(ImageView)header.findViewById(R.id.imgBanner);
-		
+		ImageView imgBanner = (ImageView) header.findViewById(R.id.imgBanner);
+
 		listvideo.addHeaderView(header);
 		addview();
 		listvideo.setOnItemClickListener(new OnItemClickListener() {
@@ -101,7 +102,7 @@ public class FragmentHome extends SherlockFragment {
 			@Override
 			public void onItemClick(AdapterView<?> adp, View view, int pos,
 					long id) {
-			    int index = pos-1;
+				int index = pos - 1;
 				if (mOnDisplayVideo != null && index >= 0) {
 					mOnDisplayVideo.display(adapterVideo.getItem(index));
 				}
@@ -111,61 +112,63 @@ public class FragmentHome extends SherlockFragment {
 
 	}
 
-    public void addview() {
-        mController.requestPlaylists(new OnRequest<ArrayList<Category>>() {
+	public void addview() {
+		mController.requestPlaylists(new OnRequest<ArrayList<Category>>() {
 
-            @Override
-            public void onSuccess(ArrayList<Category> data) {
-                setUpAdapter(data);
-            }
+			@Override
+			public void onSuccess(ArrayList<Category> data) {
+				setUpAdapter(data);
+			}
 
-            @Override
-            public void onError() {
-                // TODO Auto-generated method stub
+			@Override
+			public void onError() {
+				// TODO Auto-generated method stub
 
-            }
-        });
-    }
+			}
+		});
+	}
 
-    public void setUpAdapter(ArrayList<Category> data) {
-        if (adapterVideo == null)
-            adapterVideo = new VideoAdapter(getActivity());
-        adapterVideo.RemoveData();
-        for (int i = 0; i < data.size(); i++) {
-            final Category cat = data.get(i);
+	public void setUpAdapter(ArrayList<Category> data) {
+		if (adapterVideo == null)
+			adapterVideo = new VideoAdapter(getActivity());
+		adapterVideo.RemoveData();
+		for (int i = 0; i < data.size(); i++) {
+			final Category cat = data.get(i);
 
-            mController.requestPlaylistItems(getActivity(), cat.getId(), null, 5, new OnRequest<ListData<Category>>() {
+			mController.requestPlaylistItems(getActivity(), cat.getId(), null,
+					5, new OnRequest<ListData<Category>>() {
 
-                @Override
-                public void onSuccess(ListData<Category> data) {
-                    MainActivity.progressBar.setVisibility(View.GONE);
-                    ItemVideo itemCate = new ItemVideo();
-                    itemCate.setTitle(cat.getTitle());
-                    itemCate.setPlaylistId(cat.getPlaylistId());
-                    itemCate.setId(cat.getId());
-                    adapterVideo.addSeparatorItem(itemCate);
-                    for (Category dt : data) {
-                        ItemVideo item = new ItemVideo();
-                        item.setTitle(dt.getTitle());
-                        item.setId(dt.getId());
-                        item.setTime(dt.getPublishAt());
-                        item.setViewCount(dt.getViewCount()+" lượt xem");
-                        item.setThumbnail(dt.getThumbnail());
-                        item.setPlaylistId(dt.getPlaylistId());
-                        item.setDuration(dt.getDuration());
-                        // Log.d("dt.getThumbnail()",dt.getThumbnail());
-                        adapterVideo.addItem(item);
-                    }
-                    listvideo.setAdapter(adapterVideo);
-                }
+						@Override
+						public void onSuccess(ListData<Category> data) {
+							MainActivity.progressBar.setVisibility(View.GONE);
+							ItemVideo itemCate = new ItemVideo();
+							itemCate.setTitle(cat.getTitle());
+							itemCate.setPlaylistId(cat.getPlaylistId());
+							itemCate.setId(cat.getId());
+							adapterVideo.addSeparatorItem(itemCate);
+							for (Category dt : data) {
+								ItemVideo item = new ItemVideo();
+								item.setTitle(dt.getTitle());
+								item.setId(dt.getId());
+								item.setTime(dt.getPublishAt());
+								item.setViewCount(dt.getViewCount()
+										+ " lượt xem");
+								item.setThumbnail(dt.getThumbnail());
+								item.setPlaylistId(dt.getPlaylistId());
+								item.setDuration(dt.getDuration());
+								// Log.d("dt.getThumbnail()",dt.getThumbnail());
+								adapterVideo.addItem(item);
+							}
+							listvideo.setAdapter(adapterVideo);
+						}
 
-                @Override
-                public void onError() {
-                    // TODO Auto-generated method stub
-                }
+						@Override
+						public void onError() {
+							// TODO Auto-generated method stub
+						}
 
-            });
-        }
+					});
+		}
 
-    }
+	}
 }
