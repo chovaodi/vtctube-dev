@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,12 +88,11 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         int lastInScreen = firstVisibleItem + visibleItemCount;
-        if (lastInScreen == totalItemCount && !isLoadding) {
+        if (lastInScreen == totalItemCount && !isLoadding && TextUtils.isEmpty(mNextPageToken) == false) {
             Log.d(Utils.TAG, "LOAD MORE: xxx");
             isLoadding = true;
             loadPlayList(mPlaylistId, true);
         }
-        Log.d(Utils.TAG, "LOAD MORE: ");
     }
 
     @Override
@@ -106,18 +106,20 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
         loadPlayList(playlistId, false);
     }
 
-    private void loadPlayList(String playlistId, boolean isLoadMore) {
+    private void loadPlayList(String playlistId, final boolean isLoadMore) {
         MainActivity.progressBar.setVisibility(View.VISIBLE);
         if (isLoadMore == false) {
             mNextPageToken = null;
         }
-        mController.requestPlaylistItems(getActivity(), playlistId, mNextPageToken, new OnRequest<ListData<Category>>() {
+        mController.requestPlaylistItems(getActivity(), playlistId, mNextPageToken, 10, new OnRequest<ListData<Category>>() {
 
             @Override
             public void onSuccess(ListData<Category> data) {
                 MainActivity.progressBar.setVisibility(View.GONE);
                 Log.d(Utils.TAG, "Data: " + data.size());
-                mAdapterVideo.RemoveData();
+                if(isLoadMore == false) {
+                    mAdapterVideo.RemoveData();
+                }
                 mNextPageToken = data.getNextPageToken();
                 Log.d(Utils.TAG, "NextPageToken: " + mNextPageToken);
                 for (Category dt : data) {
@@ -133,7 +135,6 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
                     item.setDuration(dt.getDuration());
                     mAdapterVideo.addItem(item);
                 }
-                Log.d(Utils.TAG, "Data: mAdapterVideo: " + mAdapterVideo.getCount());
                 mAdapterVideo.notifyDataSetChanged();
                 isLoadding = false;
             }

@@ -79,10 +79,11 @@ public class YoutubeController {
 
     public void requestPlaylistItems(Context context, final String playlistId,
             final String pageToken,
+            final int numOfPage,
             final OnRequest<ListData<Category>> req) {
         StringBuilder url = new StringBuilder(PLAYLIST_ITEMS_URL).append("&playlistId=").append(playlistId)
                 .append("&key=").append(mApiKey)
-                .append("&maxResults=").append(7);
+                .append("&maxResults=").append(numOfPage);
         if(TextUtils.isEmpty(pageToken) == false) {
             url.append("&pageToken=").append(pageToken);
         }
@@ -105,7 +106,6 @@ public class YoutubeController {
                             }
                         }
                         String ids = videoIds.toString();
-                        Log.d(Utils.TAG, "VIDEO_IDS: " + ids);
                         final ListData<Category> listData = new ListData<Category>();
                         listData.setNextPageToken(data.nextPageToken);
                         Log.d(Utils.TAG, "requestPlaylistItems -> nextPageToken: " + data.nextPageToken);
