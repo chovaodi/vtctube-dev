@@ -97,9 +97,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		lineLeftMenu = (LinearLayout) findViewById(R.id.lineMenu);
 		leftMenu = (ListView) findViewById(R.id.rbm_listview);
-		View footer=getLayoutInflater().inflate(R.layout.fotter_detailt, null);
+		View footer = getLayoutInflater()
+				.inflate(R.layout.fotter_detailt, null);
 		leftMenu.addFooterView(footer);
-		
+
 		mDrawerLayout.setDrawerListener(new DrawerListener() {
 
 			@Override
@@ -119,7 +120,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void onDrawerOpened(View arg0) {
-				getSupportActionBar().setTitle(getResources().getString(R.string.lblDanhmuc));
+				getSupportActionBar().setTitle(
+						getResources().getString(R.string.lblDanhmuc));
 			}
 
 			@Override
@@ -409,7 +411,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		} else {
 			if (!currentTag.equals("TAG_HOME")) {
-				mTitle=getResources().getString(R.string.lblTrangchu);
+				mTitle = getResources().getString(R.string.lblTrangchu);
+				getSupportActionBar().setTitle(mTitle);
 				lblMessage.setVisibility(View.GONE);
 				currentTag = "TAG_HOME";
 				getSupportFragmentManager()
@@ -423,6 +426,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 				System.exit(0);
 			}
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d("chovaoid","test");
 	}
 
 	public void zoominPlayer() {

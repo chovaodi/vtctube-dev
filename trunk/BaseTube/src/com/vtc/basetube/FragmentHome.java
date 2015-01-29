@@ -20,15 +20,14 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.Category;
 import com.vtc.basetube.model.ItemVideo;
@@ -37,26 +36,28 @@ import com.vtc.basetube.services.youtube.OnRequest;
 import com.vtc.basetube.services.youtube.YoutubeController;
 import com.vtc.basetube.utils.OnDisplayVideo;
 
-public class FragmentHome extends SherlockFragment {
+public class FragmentHome extends Fragment {
 	private ListView listvideo;
 	private View view;
 	private VideoAdapter adapterVideo = null;
 	private OnDisplayVideo mOnDisplayVideo;
-	private final YoutubeController mController;
+	private  YoutubeController mController;
+	public static Activity activity;
 
-	private static FragmentHome framgnent = null;
+	public static FragmentHome framgnent = null;
 
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
 	 * argument.
 	 */
-	public static FragmentHome newInstance(BaseTubeApplication app) {
+	public static  FragmentHome newInstance(BaseTubeApplication app) {
+		
 		if (framgnent == null)
 			framgnent = new FragmentHome(app);
 		return framgnent;
 	}
 
-	public FragmentHome(BaseTubeApplication app) {
+	private FragmentHome(BaseTubeApplication app) {
 		mController = new YoutubeController(app);
 	}
 
@@ -66,6 +67,7 @@ public class FragmentHome extends SherlockFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 	}
 
 	@Override
@@ -82,6 +84,7 @@ public class FragmentHome extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		activity=getActivity();
 		view = inflater.inflate(R.layout.fragment_home, container, false);
 		MainActivity.progressBar.setVisibility(View.VISIBLE);
 		return view;
@@ -93,7 +96,6 @@ public class FragmentHome extends SherlockFragment {
 		listvideo = (ListView) view.findViewById(R.id.listivideo);
 		View header = getActivity().getLayoutInflater().inflate(
 				R.layout.header_home, null);
-		ImageView imgBanner = (ImageView) header.findViewById(R.id.imgBanner);
 
 		listvideo.addHeaderView(header);
 		addview();
@@ -130,7 +132,7 @@ public class FragmentHome extends SherlockFragment {
 
 	public void setUpAdapter(ArrayList<Category> data) {
 		if (adapterVideo == null)
-			adapterVideo = new VideoAdapter(getActivity());
+			adapterVideo = new VideoAdapter(activity);
 		adapterVideo.RemoveData();
 		for (int i = 0; i < data.size(); i++) {
 			final Category cat = data.get(i);
