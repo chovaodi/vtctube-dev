@@ -235,7 +235,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		mTvTitle.setText(item.getTitle());
 		mTvDescription.setText(item.getDescription());
 		mTvPublishAt.setText(Utils.getTime(item.getTime()));
-		mTvViewCount.setText(item.getViewCount() + " lượt xem");
+		mTvViewCount.setText(item.getViewCount() + "");
 	}
 
 	public void displayRelatedVideo(String videoId) {

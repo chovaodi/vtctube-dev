@@ -9,7 +9,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,8 +47,8 @@ public class VideoAdapter extends BaseAdapter {
 		mImageLoader = new ImageLoader(RequestManager.newInstance(mContext)
 				.getRequestQueue(), new BitmapLruCache(max_cache_size));
 		mInflater = LayoutInflater.from(mContext);
-		context = mContext;
-		if (context instanceof ICategoryMore)
+		context=mContext;
+		if (mContext instanceof ICategoryMore)
 			iCategoryMore = (ICategoryMore) context;
 
 	}
@@ -154,6 +153,9 @@ public class VideoAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View arg0) {
+					if(iCategoryMore==null){
+						return;
+					}
 					iCategoryMore.viewAll(item.getId());// category Id
 				}
 			});
