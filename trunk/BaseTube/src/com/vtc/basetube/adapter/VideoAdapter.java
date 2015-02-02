@@ -156,7 +156,7 @@ public class VideoAdapter extends BaseAdapter {
 					if(iCategoryMore==null){
 						return;
 					}
-					iCategoryMore.viewAll(item.getId());// category Id
+					iCategoryMore.viewAll(item);// category Id
 				}
 			});
 		} else {
