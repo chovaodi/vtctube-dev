@@ -346,6 +346,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		mSearchValue = txtSearch.replace(" ", "%20");
+		mSearchValue = mSearchValue.trim().replaceAll("[-+.^:,@#$%&*()<>{}]",
+				"");
 		if (!currentTag.equals("TAG_SEARCH")) {
 			currentTag = "TAG_SEARCH";
 			getSupportFragmentManager()
@@ -431,7 +433,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.d("chovaoid","test");
+		Log.d("chovaoid", "test");
 	}
 
 	public void zoominPlayer() {
@@ -450,10 +452,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void viewAll(String playlistId) {
+	public void viewAll(ItemVideo item) {
 		currentTag = "TAG_CATE";
 		Bundle bundle = new Bundle();
-		bundle.putCharSequence(Utils.EXTRA_PLAYLIST_ID, playlistId);
+		getSupportActionBar().setTitle(item.getTitle());
+		bundle.putCharSequence(Utils.EXTRA_PLAYLIST_ID, item.getId());
 		FragmentCategory fragment = FragmentCategory.newInstance();
 		fragment.setArguments(bundle);
 		getSupportFragmentManager().beginTransaction()
