@@ -153,6 +153,7 @@ public class FragmentHome extends Fragment {
 							for (Category dt : data) {
 								ItemVideo item = new ItemVideo();
 								item.setTitle(dt.getTitle());
+								item.setmCategoryName(cat.getTitle());
 								item.setId(dt.getId());
 								item.setTime(dt.getPublishAt());
 								item.setViewCount(dt.getViewCount()
