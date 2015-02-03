@@ -283,12 +283,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
+		zoomoutPlayer();
 		addFragmentSearch(query);
 		return false;
 	}
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
+		if (newText.length() >= 2)
+			zoomoutPlayer();
 		listQuerySearch = Utils.getQuerySearch("SELECT * FROM "
 				+ DatabaseHelper.TB_SEARCH);
 		Log.d("listQuerySearch", listQuerySearch.get(0) + " hshsh");
@@ -321,19 +324,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onSuggestionClick(int position) {
-		Cursor c = (Cursor) mSuggestionsAdapter.getItem(position);
-		mSearchValue = c.getString(c
-				.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+		// Cursor c = (Cursor) mSuggestionsAdapter.getItem(position);
+		// mSearchValue = c.getString(c
+		// .getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
 
-		AutoCompleteTextView searchTextView = (AutoCompleteTextView) searchView
-				.findViewById(R.id.abs__search_src_text);
-
-		if (searchTextView != null) {
-			searchTextView.setInputType(InputType.TYPE_CLASS_TEXT
-					| InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-			searchTextView.setTypeface(Typeface.DEFAULT);
-			searchTextView.setText(mSearchValue);
-		}
+		// AutoCompleteTextView searchTextView = (AutoCompleteTextView)
+		// searchView
+		// .findViewById(R.id.abs__search_src_text);
+		//
+		// if (searchTextView != null) {
+		// searchTextView.setInputType(InputType.TYPE_CLASS_TEXT
+		// | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+		// searchTextView.setTypeface(Typeface.DEFAULT);
+		// searchTextView.setText(mSearchValue);
+		// }
+		mSearchValue = listQuerySearch.get(position);
 		addFragmentSearch(mSearchValue);
 		return false;
 	}
@@ -369,7 +374,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			myDbHelper.insertVideoLike(itemvd, Utils.VIEWED);
 
 		}
-
 		displayVideo(itemvd.getId(), itemvd.getPlaylistId());
 	}
 
@@ -413,7 +417,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		} else {
 			if (!currentTag.equals("TAG_HOME")) {
-				mTitle = getResources().getString(R.string.lblTrangchu);
+				mTitle = getResources().getString(R.string.app_name);
 				getSupportActionBar().setTitle(mTitle);
 				lblMessage.setVisibility(View.GONE);
 				currentTag = "TAG_HOME";

@@ -14,6 +14,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.vtc.basetube.BaseTubeApplication;
+import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.Category;
@@ -43,12 +44,19 @@ public class FragmentSearch extends Fragment {
 
 	public void updateValue(String txtSearch) {
 		this.mQuerry = txtSearch;
+		MainActivity.lblMessage.setVisibility(View.GONE);
+		MainActivity.progressBar.setVisibility(View.VISIBLE);
 		 mController.requestSearchVideos(mApp.getApplicationContext(), mQuerry,
 	                new OnRequest<ArrayList<Category>>() {
 
 	                    @Override
 	                    public void onSuccess(ArrayList<Category> data) {
-	                        Log.d(Utils.TAG, "Data: " + data.size());
+	                    	MainActivity.progressBar.setVisibility(View.GONE);
+	                    	if(data.size()==0){
+	                    		MainActivity.lblMessage.setVisibility(View.VISIBLE);
+	                    		MainActivity.lblMessage.setText("Không tìm nội dung này!");
+	                    	}
+	                    	Log.d(Utils.TAG, "Data: " + data.size());
 	                        mAdapterVideo.RemoveData();
 	                        for (Category dt : data) {
 	                            Log.d(Utils.TAG, "Data: Title: " + dt.getTitle());
