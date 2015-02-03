@@ -374,6 +374,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			myDbHelper.insertVideoLike(itemvd, Utils.VIEWED);
 
 		}
+		getSupportActionBar().setTitle(itemvd.getmCategoryName());
 		displayVideo(itemvd.getId(), itemvd.getPlaylistId());
 	}
 
