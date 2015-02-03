@@ -41,7 +41,7 @@ public class FragmentHome extends Fragment {
 	private View view;
 	private VideoAdapter adapterVideo = null;
 	private OnDisplayVideo mOnDisplayVideo;
-	private  YoutubeController mController;
+	private YoutubeController mController;
 	public static Activity activity;
 
 	public static FragmentHome framgnent = null;
@@ -50,8 +50,8 @@ public class FragmentHome extends Fragment {
 	 * Create a new instance of CountingFragment, providing "num" as an
 	 * argument.
 	 */
-	public static  FragmentHome newInstance(BaseTubeApplication app) {
-		
+	public static FragmentHome newInstance(BaseTubeApplication app) {
+
 		if (framgnent == null)
 			framgnent = new FragmentHome(app);
 		return framgnent;
@@ -67,7 +67,7 @@ public class FragmentHome extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class FragmentHome extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		activity=getActivity();
+		activity = getActivity();
 		view = inflater.inflate(R.layout.fragment_home, container, false);
 		MainActivity.progressBar.setVisibility(View.VISIBLE);
 		return view;
@@ -105,8 +105,10 @@ public class FragmentHome extends Fragment {
 			public void onItemClick(AdapterView<?> adp, View view, int pos,
 					long id) {
 				int index = pos - 1;
+				ItemVideo itemVideo = null;
 				if (mOnDisplayVideo != null && index >= 0) {
-					mOnDisplayVideo.display(adapterVideo.getItem(index));
+					itemVideo = adapterVideo.getItem(index);
+					mOnDisplayVideo.display(itemVideo);
 				}
 			}
 

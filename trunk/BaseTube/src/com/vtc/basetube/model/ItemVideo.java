@@ -12,6 +12,25 @@ public class ItemVideo {
 	private String description;
 	private String mPublishAt;
 	private String mDuration;
+	private String mCategoryName = "";
+
+	public void setmCategoryName(String mCategoryName) {
+		this.mCategoryName = mCategoryName;
+	}
+
+	public String getmCategoryName() {
+		return mCategoryName;
+	}
+
+	private boolean isCate = false;
+
+	public void setCate(boolean isCate) {
+		this.isCate = isCate;
+	}
+
+	public boolean isCate() {
+		return isCate;
+	}
 
 	public void setType(int type) {
 		this.type = type;
@@ -68,36 +87,36 @@ public class ItemVideo {
 	public void setThumbnail(String thumbnail) {
 		mThumbnail = thumbnail;
 	}
-	
+
 	public void setPlaylistId(String playlistId) {
-	    this.playlistId = playlistId;
+		this.playlistId = playlistId;
 	}
-	
+
 	public String getPlaylistId() {
-	    return this.playlistId;
+		return this.playlistId;
 	}
-	
+
 	public void setDescription(String description) {
-	    this.description = description;
+		this.description = description;
 	}
-	
+
 	public String getDescription() {
-	    return this.description;
+		return this.description;
 	}
-	
+
 	public String getPublishAt() {
-        return mPublishAt;
-    }
+		return mPublishAt;
+	}
 
-    public void setPublishAt(String publishAt) {
-        mPublishAt = publishAt;
-    }
+	public void setPublishAt(String publishAt) {
+		mPublishAt = publishAt;
+	}
 
-    public String getDuration() {
-        return mDuration;
-    }
-    
-    public void setDuration(String duration) {
-        mDuration = duration;
-    }
+	public String getDuration() {
+		return mDuration;
+	}
+
+	public void setDuration(String duration) {
+		mDuration = duration;
+	}
 }

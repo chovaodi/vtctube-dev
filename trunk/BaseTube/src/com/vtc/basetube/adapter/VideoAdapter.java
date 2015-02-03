@@ -32,7 +32,7 @@ import com.vtc.basetube.utils.Utils;
 public class VideoAdapter extends BaseAdapter {
 
 	private static final int TYPE_ITEM = 0;
-	private static final int TYPE_SEPARATOR = 1;
+	public static final int TYPE_SEPARATOR = 1;
 	private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
 
 	private LayoutInflater mInflater;
