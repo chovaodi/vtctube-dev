@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <com.vtc.vtctube.font.RobotoTextviewBold
+            android:id="@+id/lblTitle_Serial"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/height_component"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:text="@string/lblThongbao"
+            android:textColor="@android:color/black"
+            android:textSize="17dp" />
+
+        <com.vtc.vtctube.font.RobotoLight
+            android:id="@+id/otp_ed"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_weight="0"
+            android:background="#cecece" />
+
+        <com.vtc.vtctube.font.RobotoLight
+            android:id="@+id/lblMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="15dp" />
+
+        <com.vtc.vtctube.font.RobotoLight
+            android:id="@+id/lblHisAmount"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_weight="0"
+            android:background="#cecece" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <com.vtc.vtctube.font.RobotoBoldButton
+                android:id="@+id/btnAccept"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/height_component"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="@string/lblXacnha"
+                android:textAllCaps="true"
+                android:textColor="@android:color/black"
+                android:textSize="16dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

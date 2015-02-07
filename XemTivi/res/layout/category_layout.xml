@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/screen_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/lineTab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" >
+
+            <com.vtc.vtctube.font.RobotoBoldButton
+                android:id="@+id/btnChitiet"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_post"
+                android:text="@string/lblMoinhat"
+                android:textColor="@color/text_color"
+                android:textSize="16dp" />
+
+            <TextView
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:background="@drawable/bgrg_line" />
+
+            <com.vtc.vtctube.font.RobotoBoldButton
+                android:id="@+id/button2"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_post"
+                android:text="@string/lblXemnhieu"
+                android:textColor="@color/text_color"
+                android:textSize="16dp" />
+
+            <TextView
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:background="@drawable/bgrg_line" />
+
+            <com.vtc.vtctube.font.RobotoBoldButton
+                android:id="@+id/button3"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_post"
+                android:text="@string/lblYeuthich"
+                android:textColor="@color/text_color"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listvideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="#503f3f3f"
+            android:dividerHeight="0dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false" >
+        </ListView>
+    </LinearLayout>
+
+   
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:id="@+id/google_now"
+        style="@style/GNowProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+</FrameLayout>

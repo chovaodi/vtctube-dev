@@ -1,0 +1,60 @@
+<resources>
+
+    <style name="GNowProgressBar" parent="SmoothProgressBar">
+        <item name="spb_stroke_separator_length">3dp</item>
+        <item name="spb_sections_count">4</item>
+        <item name="spb_speed">1.2</item>
+        <item name="spb_interpolator">spb_interpolator_linear</item>
+        <item name="spb_colors">@array/pocket_background_colors</item>
+    </style>
+
+    <style name="MyThme" parent="@style/Sherlock.__Theme.Light"></style>
+
+    <style name="MenuDrawer">
+        <item name="mdMenuBackground">@android:color/white</item>
+        <item name="mdContentBackground">?android:attr/windowBackground</item>
+    </style>
+
+    <declare-styleable name="SlidingLayer">
+        <attr name="shadowDrawable" format="boolean" />
+        <attr name="shadowWidth" format="dimension" />
+        <attr name="closeOnTapEnabled" format="boolean" />
+        <attr name="openOnTapEnabled" format="boolean" />
+        <attr name="offsetWidth" format="dimension" />
+        <attr name="stickTo" format="enum">
+            <enum name="auto" value="0" />
+            <enum name="right" value="-1" />
+            <enum name="left" value="-2" />
+            <enum name="middle" value="-3" />
+            <enum name="top" value="-4" />
+            <enum name="bottom" value="-5" />
+        </attr>
+    </declare-styleable>
+
+    <style name="Theme.Styled" parent="Theme.Sherlock.Light">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="background">@drawable/bgr_tasktop</item>
+        <item name="android:background">@drawable/bgr_tasktop</item>
+        <item name="backgroundSplit">@null</item>
+        <item name="android:backgroundSplit">@null</item>
+        <item name="icon">@drawable/icon_menuleft</item>
+        <item name="android:icon">@drawable/icon_menuleft</item>
+        <item name="android:titleTextStyle">@style/Widget.Styled.ActionBar.TitleTextStyle</item>
+        <item name="titleTextStyle">@style/Widget.Styled.ActionBar.TitleTextStyle</item>
+        <item name="displayOptions">showHome|showTitle</item>
+        <item name="android:displayOptions">showHome|showTitle</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.TitleTextStyle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:text">@null</item>
+    </style>
+
+
+
+</resources>
