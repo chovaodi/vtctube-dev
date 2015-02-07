@@ -129,7 +129,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 								item.getPageCount(), item.getIdPost(),
 								item.getSlug(), item.getCountview());
 					}
-					callBack.onCLickView(item);
+					//callBack.onCLickView(item);
 				}
 			}
 		});
@@ -161,8 +161,8 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 				if (item.isLike()) {
 					MainActivity.myDbHelper.deleteLikeVideo(
 							DatabaseHelper.TB_LIKE, item.getIdPost());
-					callBack.pushResutClickItem(item.getOption(),
-							getPosition(item), false);
+//					callBack.pushResutClickItem(item.getOption(),
+//							getPosition(item), false);
 				} else {
 					String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 							+ " WHERE id='" + item.getIdPost() + "'";
@@ -173,8 +173,8 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 								item.getVideoId(), item.getUrl(),
 								item.getStatus(), item.getTitle(),
 								item.getSlug(), item.getCountview());
-						callBack.pushResutClickItem(item.getOption(),
-								getPosition(item), true);
+//						callBack.pushResutClickItem(item.getOption(),
+//								getPosition(item), true);
 					}
 
 				}

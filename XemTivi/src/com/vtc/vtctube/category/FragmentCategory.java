@@ -274,39 +274,39 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int position, boolean isLike) {
-			queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
-					+ " WHERE cateId='" + MainActivity.currentCate + "'";
-			listVideoLike = Utils.getVideoLike(queryLikeVideo, type);
-			switch (type) {
-			case PinnedAdapter.MOINHAT:
-				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
-				setViewTab(listViewNew);
-
-				break;
-			case PinnedAdapter.XEMNHIEU:
-				listVideoXemnhieu = Utils.checkLikeVideo(listVideoXemnhieu,
-						listVideoLike);
-				setViewTab(Utils.checkLikeVideo(listVideoXemnhieu,
-						listVideoLike));
-				break;
-			case PinnedAdapter.YEUTHICH:
-				adapter.clear();
-				setViewTab(listVideoLike);
-
-				break;
-			}
-
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			Utils.getVideoView(item, getActivity(), listViewNew);
-			if (mOnDisplayVideo != null) {
-				mOnDisplayVideo.display();
-			}
-		}
+//		@Override
+//		public void pushResutClickItem(int type, int position, boolean isLike) {
+//			queryLikeVideo = "SELECT * FROM " + DatabaseHelper.TB_LIKE
+//					+ " WHERE cateId='" + MainActivity.currentCate + "'";
+//			listVideoLike = Utils.getVideoLike(queryLikeVideo, type);
+//			switch (type) {
+//			case PinnedAdapter.MOINHAT:
+//				listViewNew = Utils.checkLikeVideo(listViewNew, listVideoLike);
+//				setViewTab(listViewNew);
+//
+//				break;
+//			case PinnedAdapter.XEMNHIEU:
+//				listVideoXemnhieu = Utils.checkLikeVideo(listVideoXemnhieu,
+//						listVideoLike);
+//				setViewTab(Utils.checkLikeVideo(listVideoXemnhieu,
+//						listVideoLike));
+//				break;
+//			case PinnedAdapter.YEUTHICH:
+//				adapter.clear();
+//				setViewTab(listVideoLike);
+//
+//				break;
+//			}
+//
+//		}
+//
+//		@Override
+//		public void onCLickView(ItemPost item) {
+//			Utils.getVideoView(item, getActivity(), listViewNew);
+//			if (mOnDisplayVideo != null) {
+//				mOnDisplayVideo.display();
+//			}
+//		}
 	}
 
 	public void loadDataXemnhieu() {
@@ -409,17 +409,7 @@ public class FragmentCategory extends Fragment implements OnRefreshListener,
 
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			// TODO Auto-generated method stub
-
-		}
+		
 	}
 
 	public void saveData(ItemPost item, String tblName) {

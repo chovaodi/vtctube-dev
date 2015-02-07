@@ -40,7 +40,8 @@ import com.squareup.picasso.Picasso;
 import com.vtc.vtctube.adpter.GridViewWithHeaderAndFooter;
 import com.vtc.vtctube.adpter.Item;
 import com.vtc.vtctube.adpter.MenuHomeAdapter;
-import com.vtc.vtctube.adpter.SearchAdapter;
+import com.vtc.vtctube.adpter.HomeAdapter;
+import com.vtc.vtctube.category.PinnedAdapter;
 import com.vtc.vtctube.model.ItemCategory;
 import com.vtc.vtctube.model.ItemPost;
 import com.vtc.vtctube.services.AysnRequestHttp;
@@ -56,9 +57,11 @@ public class FragmentHome extends SherlockFragment {
 	ResultCallBack callBack = null;
 	public static List<ItemCategory> listData = null;
 	public static String[] cateName;
-
+	private static int page = 1;
+	private static int pageCount = 0;
 	private static FragmentHome f = null;
 	private OnDisplayVideo mOnDisplayVideo;
+	private HomeAdapter adapter;
 
 	/**
 	 * Create a new instance of CountingFragment, providing "num" as an
@@ -96,45 +99,69 @@ public class FragmentHome extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_home, container, false);
+		String url = Utils.host + "get_posts?count=20&page=1";
+		Log.d("actionNewvideo", url);
+		ResultCallBack callBack = new ResultCallBack();
+		new AysnRequestHttp(null, Utils.LOAD_NEWVIDEO, null, callBack)
+				.execute(url);
 		return view;
+	}
+
+	public class ResultCallBack implements IResult {
+
+		@Override
+		public void getResult(int type, String result) {
+			Log.d("result",result);
+			try {
+				
+
+				JSONObject jsonObj = new JSONObject(result);
+				String status = jsonObj.getString("status");
+				pageCount = jsonObj.getInt("pages");
+				int count_total = jsonObj.getInt("count_total");
+				JSONObject jsoncate = jsonObj.getJSONObject("query");
+			//	String cate = jsoncate.getString("cat");
+				if (status.equals("ok") && count_total > 0) {
+					List<ItemPost> listTmp = new ArrayList<ItemPost>();
+					JSONArray jsonArray = jsonObj.getJSONArray("posts");
+					for (int i = 0; i < jsonArray.length(); i++) {
+						ItemPost item = new ItemPost();
+						JSONObject json = (JSONObject) jsonArray.get(i);
+						item = Utils.getItemPost(json, pageCount, 0);
+
+						listTmp.add(item);
+
+					}
+
+
+
+					if(adapter==null){
+						adapter=new HomeAdapter(getActivity(), R.layout.item_img_search, listTmp);
+						gridView.setAdapter(adapter);
+					}
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-//		MainActivity.progressBar.setVisibility(View.VISIBLE);
-//		new CountDownTimer(100, 100) {
-//
-//			@Override
-//			public void onTick(long millisUntilFinished) {
-//				// TODO Auto-generated method stub
-//
-//			}
-//
-//			@Override
-//			public void onFinish() {
-//				MainActivity.progressBar.setVisibility(View.GONE);
-//				frameLayout.setVisibility(View.VISIBLE);
-//				addview();
-//			}
-//		}.start();
-		
 		View headerView = getActivity().getLayoutInflater().inflate(
 				R.layout.header_home, null);
 		gridView = (GridViewWithHeaderAndFooter) view.findViewById(R.id.list);
 		gridView.addHeaderView(headerView);
 		gridView.setNumColumns(2);
-		//gridView.setPadding(Utils.convertDpToPixel(10, getActivity()), 0,Utils.convertDpToPixel(10, getActivity()), 0);
-		List<Item> list = new ArrayList<Item>();
-		for (int i = 0; i < 10; i++) {
-			Item item = new Item();
-			list.add(item);
-		}
-		SearchAdapter search = new SearchAdapter(getActivity(),
-				R.layout.item_img_search, list);
-		gridView.setAdapter(search);
+
 		
+		
+
 	}
 
 	public void addview() {
@@ -188,80 +215,7 @@ public class FragmentHome extends SherlockFragment {
 	}
 
 	public void showView(String result) {
-
-		try {
-			JSONObject jsonObj = new JSONObject(result);
-			String status = jsonObj.getString("status");
-			if (status.equals("ok")) {
-				JSONArray jsonArray = jsonObj.getJSONArray("categories");
-				listData = new ArrayList<ItemCategory>();
-				cateName = new String[jsonArray.length()];
-				for (int i = 0; i < jsonArray.length(); i++) {
-					ItemCategory item = new ItemCategory();
-					JSONObject json = (JSONObject) jsonArray.get(i);
-					item.setIdCategory(json.getString("id"));
-					item.setTitle(json.getString("title"));
-					item.setSlug(json.getString("slug"));
-					item.setPostcount(json.getInt("post_count"));
-					cateName[i] = json.getString("title");
-					listData.add(item);
-				}
-			}
-
-			gridView = (GridViewWithHeaderAndFooter) view.findViewById(R.id.list);
-			// View header = getActivity().getLayoutInflater().inflate(
-			// R.layout.header, null);
-
-			// list.addHeaderView(header);
-			gridView.setNumColumns(2);
-			gridView.setPadding(Utils.convertDpToPixel(20, getActivity()), 0,
-					Utils.convertDpToPixel(20, getActivity()), 0);
-
-			MenuHomeAdapter adapter = new MenuHomeAdapter(getActivity(),
-					listData);
-			gridView.setAdapter(adapter);
-			gridView.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					Utils.hideSoftKeyboard(getActivity());
-					MainActivity.callBackCLickCate.getCate(listData.get(arg2)
-							.getTitle(), listData.get(arg2).getIdCategory());
-
-				}
-
-			});
-
-		} catch (Exception exception) {
-			exception.printStackTrace();
-		}
-
-	}
-
-	public class ResultCallBack implements IResult {
-
-		@Override
-		public void getResult(int type, String result) {
-			GlobalApplication.dataCate = result;
-			if (result.length() > 0)
-				Utils.writeJsonFile(result, false, Utils.GET_CATE_INDEX);
-			if (type == Utils.LOAD_FIRST_DATA) {
-				showView(result);
-			}
-		}
-
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			// TODO Auto-generated method stub
-
-		}
+		
 	}
 
 }

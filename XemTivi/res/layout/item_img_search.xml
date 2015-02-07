@@ -1,26 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="@android:color/black"
     android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/imageView1"
+    <LinearLayout
+        android:background="@drawable/bgr_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/error_home" />
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#60000000"
-        android:padding="5dp"
-        android:text="Vịnh hạ long"
-        android:textColor="@android:color/white"
-        android:textSize="14dp" />
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/thumnail_home" />
+
+        <com.vtc.vtctube.font.RobotoLight
+            android:id="@+id/lblTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_vertical|left"
+            android:lines="2"
+            android:text="Góc nhìn cuộc sống dân chài ngày nay"
+            android:textColor="@android:color/black"
+            android:textSize="15dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp" >
+
+            <com.vtc.vtctube.font.RobotoLight
+                android:id="@+id/lblChuyenmuc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="14dp"
+                android:singleLine="true"
+                android:gravity="center_vertical|left"
+                android:text="Sao" 
+                />
+
+            <com.vtc.vtctube.font.RobotoLight
+                android:id="@+id/robotoLight3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/text_color"
+                android:textSize="14dp"
+                android:singleLine="true"
+                android:gravity="center_vertical|right"
+                android:text="Lượt xem: 300" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>
