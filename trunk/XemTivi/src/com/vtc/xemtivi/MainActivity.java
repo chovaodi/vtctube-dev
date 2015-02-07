@@ -467,21 +467,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			if (type == Utils.HOANTAC) {
-				listYeuthich.closeAnimate(postion);
-			} else {
-				listYeuthich.closeOpenedItems();
-				setViewTab();
-			}
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			itemActive = item;
-			rightMenu.toggleMenu();
-		}
+//		@Override
+//		public void pushResutClickItem(int type, int postion, boolean isLike) {
+//			if (type == Utils.HOANTAC) {
+//				listYeuthich.closeAnimate(postion);
+//			} else {
+//				listYeuthich.closeOpenedItems();
+//				setViewTab();
+//			}
+//		}
+//
+//		@Override
+//		public void onCLickView(ItemPost item) {
+//			itemActive = item;
+//			rightMenu.toggleMenu();
+//		}
 	}
 
 	public void setDisplayView() {
@@ -536,16 +536,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			// TODO Auto-generated method stub
-		}
+		
 	}
 
 	public void addViewData(List<ItemPost> list) {
@@ -1137,17 +1128,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			// TODO Auto-generated method stub
-
-		}
+	
 
 	}
 

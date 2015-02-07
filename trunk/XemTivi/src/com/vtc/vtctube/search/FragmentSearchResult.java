@@ -196,19 +196,19 @@ public class FragmentSearchResult extends Fragment implements OnScrollListener {
             }
         }
 
-        @Override
-        public void pushResutClickItem(int type, int position, boolean isLike) {
-            adapter.getItem(position).setLike(isLike);
-            adapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void onCLickView(ItemPost item) {
-            Utils.getVideoView(item, getActivity(), listData);
-            if (mOnDisplayVideo != null) {
-                mOnDisplayVideo.display();
-            }
-        }
+//        @Override
+//        public void pushResutClickItem(int type, int position, boolean isLike) {
+//            adapter.getItem(position).setLike(isLike);
+//            adapter.notifyDataSetChanged();
+//        }
+//
+//        @Override
+//        public void onCLickView(ItemPost item) {
+//            Utils.getVideoView(item, getActivity(), listData);
+//            if (mOnDisplayVideo != null) {
+//                mOnDisplayVideo.display();
+//            }
+//        }
     }
 
     public String getIdVideo(String content) {

@@ -234,16 +234,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 			}
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			// TODO Auto-generated method stub
-		}
+		
 	}
 
 	public void addViewItemLienquan(List<ItemPost> list) {
@@ -262,14 +253,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		public void getResult(int type, String result) {
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			itemActive = item;
-		}
+	
 
 	}
 
@@ -310,23 +294,19 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
+		
 
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			try {
-				if (!item.getVideoId().equals(title)) {
-					mPlayer.cueVideo(item.getVideoId());
-					setDataview(item);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+//		@Override
+//		public void onCLickView(ItemPost item) {
+//			try {
+//				if (!item.getVideoId().equals(title)) {
+//					mPlayer.cueVideo(item.getVideoId());
+//					setDataview(item);
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 
 	}
 

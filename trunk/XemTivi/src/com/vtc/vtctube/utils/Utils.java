@@ -43,7 +43,7 @@ import com.vtc.xemtivi.R;
 public class Utils {
 	private static String urlFolder = "/VtcTube/";
 	public static String GET_CATE_INDEX = "get_category_index";
-	public static String host = "http://vtctube.vn/api/";
+	public static String host = "http://xemtivi.biz/api/";
 	public final static int LOAD_FIRST_DATA = 7;
 	public final static int LOAD_MORE = 3;
 	public final static int AYSN_LOAD = 2;
@@ -315,35 +315,35 @@ public class Utils {
 			int tabIndex) {
 		ItemPost item = new ItemPost();
 		try {
-			item.setIdPost(json.getInt("id"));
-			item.setSlug(json.getString("slug"));
-
-			JSONArray jsonArray = json.getJSONArray("categories");
-			if (jsonArray.length() > 0) {
-				JSONObject jsonObject = jsonArray.getJSONObject(0);
-				item.setCateId(jsonObject.getInt("id") + "");
-			} else {
-				item.setCateId("");
-			}
-
-			item.setPageCount(pageCount);
+//			item.setIdPost(json.getInt("id"));
+//			item.setSlug(json.getString("slug"));
+//
+//			JSONArray jsonArray = json.getJSONArray("categories");
+//			if (jsonArray.length() > 0) {
+//				JSONObject jsonObject = jsonArray.getJSONObject(0);
+//				item.setCateId(jsonObject.getInt("id") + "");
+//			} else {
+//				item.setCateId("");
+//			}
+//
+//			item.setPageCount(pageCount);
 			item.setTitle(json.getString("title"));
-			item.setStatus(json.getString("status"));
-
-			if (json.isNull("content")) {
-				item.setVideoId("");
-			} else {
-				item.setContent(json.getString("content"));
-				item.setVideoId(getIdVideo(json.getString("content")));
-			}
-
-			item.setOption(tabIndex);
-			item.setCountview(json.getJSONObject("custom_fields")
-					.getJSONArray("post_views_count").get(0).toString());
-
-			String urlThumnail = json.getJSONObject("thumbnail_images")
-					.getJSONObject("full").getString("url");
-			item.setUrl(urlThumnail);
+//			item.setStatus(json.getString("status"));
+//
+//			if (json.isNull("content")) {
+//				item.setVideoId("");
+//			} else {
+//				item.setContent(json.getString("content"));
+//				item.setVideoId(getIdVideo(json.getString("content")));
+//			}
+//
+//			item.setOption(tabIndex);
+//			item.setCountview(json.getJSONObject("custom_fields")
+//					.getJSONArray("post_views_count").get(0).toString());
+//
+//			String urlThumnail = json.getJSONObject("thumbnail_images")
+//					.getJSONObject("full").getString("url");
+			//item.setUrl(urlThumnail);
 
 		} catch (Exception e) {
 			e.printStackTrace();

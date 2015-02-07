@@ -58,16 +58,6 @@ public class AcitivityLoadding extends Activity {
 			finish();
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			// TODO Auto-generated method stub
-
-		}
+		
 	}
 }

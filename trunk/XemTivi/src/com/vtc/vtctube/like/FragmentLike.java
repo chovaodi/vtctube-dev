@@ -97,17 +97,7 @@ public class FragmentLike extends Fragment {
 			addView();
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int postion, boolean isLike) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			// TODO Auto-generated method stub
-
-		}
+		
 
 	}
 
@@ -165,19 +155,7 @@ public class FragmentLike extends Fragment {
 
 		}
 
-		@Override
-		public void pushResutClickItem(int type, int position, boolean isLike) {
-			adapter.getItem(position).setLike(isLike);
-			adapter.notifyDataSetChanged();
-		}
-
-		@Override
-		public void onCLickView(ItemPost item) {
-			Utils.getVideoView(item, getActivity(), listData);
-			if (mOnDisplayVideo != null) {
-				mOnDisplayVideo.display();
-			}
-		}
+	
 	}
 
 	public void addViewPost() {
