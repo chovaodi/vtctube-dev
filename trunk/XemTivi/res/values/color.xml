@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <integer-array name="pocket_background_colors">
+        <item>@color/pocket_color_1</item>
+        <item>@color/pocket_color_2</item>
+        <item>@color/pocket_color_3</item>
+        <item>@color/pocket_color_4</item>
+    </integer-array>
+
+    <color name="pocket_color_1">#27b5f3</color>
+    <color name="pocket_color_2">#27b5f3</color>
+    <color name="pocket_color_3">#27b5f3</color>
+    <color name="pocket_color_4">#27b5f3</color>
+    <color name="text_color">#515151</color>
+<color name="black">#FF000000</color>
+</resources>
