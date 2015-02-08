@@ -121,7 +121,7 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 							+ DatabaseHelper.TB_RESENT + " WHERE id='"
 							+ item.getIdPost() + "'";
 					if (MainActivity.myDbHelper.getCountRow(
-							DatabaseHelper.TB_RESENT, sqlCheck) == 0) {
+						 sqlCheck) == 0) {
 						MainActivity.myDbHelper.insertListVideo(
 								DatabaseHelper.TB_RESENT, item.getCateId(),
 								item.getTitle(), item.getVideoId(),
@@ -167,12 +167,8 @@ public class PinnedAdapter extends ArrayAdapter<ItemPost> {
 					String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 							+ " WHERE id='" + item.getIdPost() + "'";
 					if (MainActivity.myDbHelper.getCountRow(
-							DatabaseHelper.TB_LIKE, sqlCheck) == 0) {
-						MainActivity.myDbHelper.insertVideoLike(
-								item.getIdPost(), item.getCateId(),
-								item.getVideoId(), item.getUrl(),
-								item.getStatus(), item.getTitle(),
-								item.getSlug(), item.getCountview());
+						 sqlCheck) == 0) {
+						MainActivity.myDbHelper.insertVideoLike(item);
 //						callBack.pushResutClickItem(item.getOption(),
 //								getPosition(item), true);
 					}

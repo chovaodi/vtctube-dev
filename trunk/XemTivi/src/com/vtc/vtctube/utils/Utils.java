@@ -25,13 +25,18 @@ import android.os.Environment;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
 import com.vtc.vtctube.database.DatabaseHelper;
@@ -56,7 +61,8 @@ public class Utils {
 	public final static int LOAD_NEWVIDEO = 6;
 	public final static int LOAD_XEMNHIEU = 7;
 	public static ItemPost itemCurrent = null;
-
+	public static int LIKE = 0;
+	public static int VIEWED = 1;
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyB2JZj7bv31W5ZgcRCfeFHrX1msFBB4Ao0";
 	public static String ADMOB_ID = "ca-app-pub-4081287034753832/4823119301";
 
@@ -84,6 +90,55 @@ public class Utils {
 		final float scale = metrics.density;
 		int pixels = (int) (dps * scale + 0.5f);
 		return pixels;
+	}
+	public static void shareButton(ItemPost item, Context context) {
+		String shareLink = "";
+		shareLink = "https://www.youtube.com/watch?v=" + item.getId();
+
+		String userEntry = item.getTitle() + "\n"
+				+ "Quảng Ninh TV Kết nối và lan tỏa" + shareLink;
+
+		Intent textShareIntent = new Intent(Intent.ACTION_SEND);
+		textShareIntent.putExtra(Intent.EXTRA_TEXT, userEntry);
+		textShareIntent.setType("text/plain");
+		context.startActivity(textShareIntent);
+	}
+	public static void CreatePopupMenu(final Context context, View v,
+			final ItemPost itemvd) {
+
+		PopupMenu mypopupmenu = new PopupMenu(context, v);
+
+		MenuInflater inflater = mypopupmenu.getMenuInflater();
+
+		inflater.inflate(R.menu.popup_menu, mypopupmenu.getMenu());
+
+		mypopupmenu.show();
+		mypopupmenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				int id = item.getItemId();
+				switch (id) {
+				case R.id.popup_like:
+
+					if (MainActivity.myDbHelper.getCountRow("SELECT * FROM "
+							+ DatabaseHelper.TB_LIKE + " WHERE videoId='"
+							+ itemvd.getId() + "' and type='" + Utils.LIKE
+							+ "'") == 0) {
+						MainActivity.myDbHelper.insertVideoLike(itemvd);
+						Toast.makeText(context, "Thêm vào danh sách yêu thích",
+								Toast.LENGTH_LONG).show();
+					}
+
+					break;
+				case R.id.popup_share:
+					Utils.shareButton(itemvd, context);
+					break;
+				}
+				return false;
+			}
+		});
+
 	}
 
 	public static void settingControlRemove(int widht,
@@ -315,35 +370,36 @@ public class Utils {
 			int tabIndex) {
 		ItemPost item = new ItemPost();
 		try {
-//			item.setIdPost(json.getInt("id"));
-//			item.setSlug(json.getString("slug"));
-//
-//			JSONArray jsonArray = json.getJSONArray("categories");
-//			if (jsonArray.length() > 0) {
-//				JSONObject jsonObject = jsonArray.getJSONObject(0);
-//				item.setCateId(jsonObject.getInt("id") + "");
-//			} else {
-//				item.setCateId("");
-//			}
-//
-//			item.setPageCount(pageCount);
+			// item.setIdPost(json.getInt("id"));
+			// item.setSlug(json.getString("slug"));
+			//
+			// JSONArray jsonArray = json.getJSONArray("categories");
+			// if (jsonArray.length() > 0) {
+			// JSONObject jsonObject = jsonArray.getJSONObject(0);
+			// item.setCateId(jsonObject.getInt("id") + "");
+			// } else {
+			// item.setCateId("");
+			// }
+			//
+			// item.setPageCount(pageCount);
 			item.setTitle(json.getString("title"));
-//			item.setStatus(json.getString("status"));
-//
-//			if (json.isNull("content")) {
-//				item.setVideoId("");
-//			} else {
-//				item.setContent(json.getString("content"));
-//				item.setVideoId(getIdVideo(json.getString("content")));
-//			}
-//
-//			item.setOption(tabIndex);
-//			item.setCountview(json.getJSONObject("custom_fields")
-//					.getJSONArray("post_views_count").get(0).toString());
-//
-//			String urlThumnail = json.getJSONObject("thumbnail_images")
-//					.getJSONObject("full").getString("url");
-			//item.setUrl(urlThumnail);
+			// item.setStatus(json.getString("status"));
+			//
+			// if (json.isNull("content")) {
+			// item.setVideoId("");
+			// } else {
+			// item.setContent(json.getString("content"));
+			// item.setVideoId(getIdVideo(json.getString("content")));
+			// }
+			//
+			// item.setOption(tabIndex);
+			// item.setCountview(json.getJSONObject("custom_fields")
+			// .getJSONArray("post_views_count").get(0).toString());
+			//
+
+			String urlThumnail = json.getJSONArray("attachments")
+					.getJSONObject(0).getString("url");
+			item.setUrl(urlThumnail);
 
 		} catch (Exception e) {
 			e.printStackTrace();

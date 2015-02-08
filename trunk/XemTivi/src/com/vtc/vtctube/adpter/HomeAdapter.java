@@ -6,13 +6,17 @@ import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.vtc.vtctube.model.ItemPost;
+import com.vtc.vtctube.utils.Utils;
 import com.vtc.xemtivi.R;
 
 public class HomeAdapter extends ArrayAdapter<ItemPost> {
@@ -31,6 +35,7 @@ public class HomeAdapter extends ArrayAdapter<ItemPost> {
 		public TextView txtTitle;
 		public ImageView imgIcon;
 		public RatingBar ratingBar;
+		public LinearLayout lineOption;
 	}
 
 	@Override
@@ -40,24 +45,34 @@ public class HomeAdapter extends ArrayAdapter<ItemPost> {
 			viewHolder = new ViewHolder();
 			convertView = layoutInflater.inflate(resource, null, true);
 
-			// viewHolder.imgIcon = (ImageView)
-			// convertView.findViewById(R.id.icon);
+			 viewHolder.imgIcon = (ImageView)
+			 convertView.findViewById(R.id.thumnail_home);
 			 viewHolder.txtTitle = (TextView)
 			 convertView.findViewById(R.id.lblTitle);
-
+			 viewHolder.lineOption = (LinearLayout)
+					 convertView.findViewById(R.id.lineOption);
+			 
 			convertView.setTag(viewHolder);
 
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		ItemPost item = getItem(position);
+		final ItemPost item = getItem(position);
 		// viewHolder.checkBox.setClickable(false);
 		// viewHolder.name.setClickable(false);
 		// viewHolder.userImg.setClickable(false);
-
+		Picasso.with(context)
+		.load(item.getUrl())
+		.placeholder(R.drawable.thumnail_home).into(viewHolder.imgIcon);
 		 viewHolder.txtTitle.setText(Html.fromHtml(item.getTitle()));
 		// /viewHolder.imgIcon.setImageResource(item.getIcon());
-
+		 viewHolder.lineOption.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Utils.CreatePopupMenu(context,arg0, item);
+			}
+		});
 		return convertView;
 	}
 

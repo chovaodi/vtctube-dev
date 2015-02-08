@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.vtc.vtctube.model.ItemPost;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -207,7 +209,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		myDataBase.update(table, updatedValues, where, new String[] { "0" });
 	}
 
-	public int getCountRow(String table, String query) {
+	public int getCountRow( String query) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(query, null);
 		int cnt = cursor.getCount();
@@ -215,18 +217,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return cnt;
 	}
 
-	public long insertVideoLike(int id, String cateId, String videoId,
-			String url, String status, String title, String slug, String countview) {
+	public long insertVideoLike(ItemPost item) {
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(COLLUM_ID, id);
-		initialValues.put(COLLUM_CATID, cateId);
-		initialValues.put(COLLUM_VIDEOID, videoId);
-		initialValues.put(COLLUM_URL, url);
-		initialValues.put(COLLUM_STATUS, status);
-		initialValues.put(COLLUM_TITLE, title);
-		initialValues.put(COLLUM_SLUG, slug);
-		initialValues.put(COLLUM_COUNTVIEW, countview);
-
+		initialValues.put(COLLUM_ID, item.getIdPost());
+		initialValues.put(COLLUM_CATID, item.getCateId());
+		initialValues.put(COLLUM_VIDEOID, item.getVideoId());
+		initialValues.put(COLLUM_URL, item.getUrl());
+		initialValues.put(COLLUM_STATUS, item.getStatus());
+		initialValues.put(COLLUM_TITLE,  item.getTitle());
+		initialValues.put(COLLUM_SLUG, item.getSlug());
+		initialValues.put(COLLUM_COUNTVIEW, item.getCountview());
 		return myDataBase.insert(TB_LIKE, null, initialValues);
 	}
 

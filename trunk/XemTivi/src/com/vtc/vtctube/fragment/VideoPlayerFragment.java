@@ -68,7 +68,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 	private PinnedAdapter adapterTab;
 	private ItemPost itemActive = null;
 	private FragmentActivity mActivity;
-
+	private FragmentVimeo mFragmentVimeo;
 	private DraggableView mView;
 
 	private static VideoPlayerFragment sInstance = null;
@@ -181,26 +181,31 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
 		webview_fbview = (WebView) view.findViewById(R.id.contentView);
 		settingWebView();
-		mYoutubeFragment = new YouTubePlayerSupportFragment();
+		// mYoutubeFragment = new YouTubePlayerSupportFragment();
+		// getFragmentManager().beginTransaction()
+		// .replace(R.id.youtube_player_fragment, mYoutubeFragment)
+		// .commit();
+
+		mFragmentVimeo = new FragmentVimeo();
 		getFragmentManager().beginTransaction()
-				.replace(R.id.youtube_player_fragment, mYoutubeFragment)
+				.replace(R.id.youtube_player_fragment, mFragmentVimeo)
 				.commit();
-		updateData();
+		//updateData();
 	}
 
 	public void updateData() {
-		if(adapterTab!=null){
+		if (adapterTab != null) {
 			adapterTab.clear();
 		}
 		lblYeuthich.setSelected(Utils.itemCurrent.isLike());
 		if (Utils.listLienquan != null && Utils.listLienquan.size() > 0) {
-			addViewItemLienquan(Utils.listLienquan);
+			//addViewItemLienquan(Utils.listLienquan);
 		} else {
-			ResultCallBackLoad callBackLoad = new ResultCallBackLoad();
-			loadingListview.setVisibility(View.VISIBLE);
-			String url = Utils.host + "get_posts?count=5&page=6";
-			new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
-					MainActivity.smooth, callBackLoad).execute(url);
+//			ResultCallBackLoad callBackLoad = new ResultCallBackLoad();
+//			loadingListview.setVisibility(View.VISIBLE);
+//			String url = Utils.host + "get_posts?count=5&page=6";
+//			new AysnRequestHttp((ViewGroup) mainView, Utils.LOAD_XEMNHIEU,
+//					MainActivity.smooth, callBackLoad).execute(url);
 		}
 		setDataview(Utils.itemCurrent);
 		if (mPlayer != null) {
@@ -234,7 +239,6 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 			}
 		}
 
-		
 	}
 
 	public void addViewItemLienquan(List<ItemPost> list) {
@@ -253,17 +257,13 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		public void getResult(int type, String result) {
 		}
 
-	
-
 	}
 
 	public void actionLike() {
 		String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 				+ " WHERE id='" + itemActive.getIdPost() + "'";
-		if (MainActivity.myDbHelper.getCountRow(DatabaseHelper.TB_LIKE,
-				sqlCheck) == 0) {
-			MainActivity.myDbHelper.insertVideoLike(id, cate, videoId, url,
-					status, title, slug, countview);
+		if (MainActivity.myDbHelper.getCountRow(sqlCheck) == 0) {
+			MainActivity.myDbHelper.insertVideoLike(itemActive);
 		}
 		// Utils.getDialogMessges(PlayerViewActivity.this,
 		// "Video vừa được thêm vào danh sách yêu thích");
@@ -294,19 +294,17 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 
 		}
 
-		
-
-//		@Override
-//		public void onCLickView(ItemPost item) {
-//			try {
-//				if (!item.getVideoId().equals(title)) {
-//					mPlayer.cueVideo(item.getVideoId());
-//					setDataview(item);
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
+		// @Override
+		// public void onCLickView(ItemPost item) {
+		// try {
+		// if (!item.getVideoId().equals(title)) {
+		// mPlayer.cueVideo(item.getVideoId());
+		// setDataview(item);
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// }
 
 	}
 

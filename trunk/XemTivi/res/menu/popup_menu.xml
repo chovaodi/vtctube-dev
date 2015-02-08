@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/popup_like"
+        android:icon="@drawable/ic_home"
+        android:title="Yêu thích">
+    </item>
+    <item
+        android:id="@+id/popup_share"
+        android:icon="@drawable/ic_daxem"
+        android:title="Chia sẻ">
+    </item>
+
+
+</menu>
