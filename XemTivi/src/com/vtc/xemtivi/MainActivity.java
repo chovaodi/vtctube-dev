@@ -583,7 +583,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 		case R.id.menu_video_daxem:
 			String sqlDaxem = "SELECT * FROM " + DatabaseHelper.TB_RESENT;
-			if (myDbHelper.getCountRow(DatabaseHelper.TB_RESENT, sqlDaxem) > 0) {
+			if (myDbHelper.getCountRow( sqlDaxem) > 0) {
 				addFragmentResent(R.id.menu_video_daxem, getResources()
 						.getString(R.string.lblmenu_daxem));
 			} else {
@@ -1077,8 +1077,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 								+ DatabaseHelper.TB_QUERY_SEARCH
 								+ " WHERE query='" + queryCurent + "'";
 
-						if (myDbHelper.getCountRow(
-								DatabaseHelper.TB_QUERY_SEARCH, sqlCheck) == 0) {
+						if (myDbHelper.getCountRow( sqlCheck) == 0) {
 							myDbHelper.insertQuerySearch(queryCurent);
 						}
 						JSONObject json = new JSONObject(result);

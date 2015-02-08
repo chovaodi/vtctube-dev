@@ -137,12 +137,9 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 			} else {
 				String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_LIKE
 						+ " WHERE id='" + item.getIdPost() + "'";
-				if (MainActivity.myDbHelper.getCountRow(DatabaseHelper.TB_LIKE,
+				if (MainActivity.myDbHelper.getCountRow(
 						sqlCheck) == 0) {
-					MainActivity.myDbHelper.insertVideoLike(item.getIdPost(),
-							item.getCateId(), item.getVideoId(), item.getUrl(),
-							item.getStatus(), item.getTitle(), item.getSlug(),
-							item.getCountview());
+					MainActivity.myDbHelper.insertVideoLike(item);
 //					callBack.pushResutClickItem(item.getOption(),
 //							getPosition(item), true);
 				}
@@ -189,7 +186,7 @@ public class RightLikeAdapter extends ArrayAdapter<ItemPost> {
 
 			String sqlCheck = "SELECT * FROM " + DatabaseHelper.TB_RESENT
 					+ " WHERE id='" + item.getIdPost() + "'";
-			if (MainActivity.myDbHelper.getCountRow(DatabaseHelper.TB_RESENT,
+			if (MainActivity.myDbHelper.getCountRow(
 					sqlCheck) == 0) {
 				MainActivity.myDbHelper.insertListVideo(
 						DatabaseHelper.TB_RESENT, item.getCateId(),

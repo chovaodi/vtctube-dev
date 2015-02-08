@@ -99,9 +99,10 @@ public class FragmentHome extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_home, container, false);
-		String url = Utils.host + "get_posts?count=20&page=1";
+		String url = Utils.host + "get_posts?count=20";
 		Log.d("actionNewvideo", url);
 		ResultCallBack callBack = new ResultCallBack();
+		MainActivity.progressBar.setVisibility(View.VISIBLE);
 		new AysnRequestHttp(null, Utils.LOAD_NEWVIDEO, null, callBack)
 				.execute(url);
 		return view;
@@ -111,16 +112,14 @@ public class FragmentHome extends SherlockFragment {
 
 		@Override
 		public void getResult(int type, String result) {
+			MainActivity.progressBar.setVisibility(View.GONE);
 			Log.d("result",result);
 			try {
-				
-
 				JSONObject jsonObj = new JSONObject(result);
 				String status = jsonObj.getString("status");
 				pageCount = jsonObj.getInt("pages");
 				int count_total = jsonObj.getInt("count_total");
 				JSONObject jsoncate = jsonObj.getJSONObject("query");
-			//	String cate = jsoncate.getString("cat");
 				if (status.equals("ok") && count_total > 0) {
 					List<ItemPost> listTmp = new ArrayList<ItemPost>();
 					JSONArray jsonArray = jsonObj.getJSONArray("posts");
@@ -128,13 +127,8 @@ public class FragmentHome extends SherlockFragment {
 						ItemPost item = new ItemPost();
 						JSONObject json = (JSONObject) jsonArray.get(i);
 						item = Utils.getItemPost(json, pageCount, 0);
-
 						listTmp.add(item);
-
 					}
-
-
-
 					if(adapter==null){
 						adapter=new HomeAdapter(getActivity(), R.layout.item_img_search, listTmp);
 						gridView.setAdapter(adapter);
@@ -152,16 +146,20 @@ public class FragmentHome extends SherlockFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
 		View headerView = getActivity().getLayoutInflater().inflate(
 				R.layout.header_home, null);
 		gridView = (GridViewWithHeaderAndFooter) view.findViewById(R.id.list);
 		gridView.addHeaderView(headerView);
 		gridView.setNumColumns(2);
+		gridView.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				mOnDisplayVideo.display();
+			}
+		}); 
 		
-		
-
 	}
 
 	public void addview() {
@@ -194,7 +192,7 @@ public class FragmentHome extends SherlockFragment {
 		Picasso.with(getActivity())
 				.load("http://img.youtube.com/vi/" + idPostHome
 						+ "/maxresdefault.jpg")
-				.placeholder(R.drawable.bgr_home_video).into(img);
+				.placeholder(R.drawable.thumnail_home).into(img);
 
 		String url = Utils.getUrlHttp(Utils.host, "get_category_index");
 		Log.d("url", url);
@@ -217,5 +215,4 @@ public class FragmentHome extends SherlockFragment {
 	public void showView(String result) {
 		
 	}
-
 }
