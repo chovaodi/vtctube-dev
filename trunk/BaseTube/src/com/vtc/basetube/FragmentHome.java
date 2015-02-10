@@ -21,12 +21,14 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.Category;
@@ -43,6 +45,7 @@ public class FragmentHome extends Fragment {
 	private OnDisplayVideo mOnDisplayVideo;
 	private YoutubeController mController;
 	public static Activity activity;
+	private ProgressBar loadding;
 
 	public static FragmentHome framgnent = null;
 
@@ -86,13 +89,15 @@ public class FragmentHome extends Fragment {
 			Bundle savedInstanceState) {
 		activity = getActivity();
 		view = inflater.inflate(R.layout.fragment_home, container, false);
-		MainActivity.progressBar.setVisibility(View.VISIBLE);
+		
 		return view;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		loadding=(ProgressBar)view.findViewById(R.id.loadding_home);
+		loadding.setVisibility(View.VISIBLE);
 		listvideo = (ListView) view.findViewById(R.id.listivideo);
 		View header = getActivity().getLayoutInflater().inflate(
 				R.layout.header_home, null);
@@ -133,6 +138,7 @@ public class FragmentHome extends Fragment {
 	}
 
 	public void setUpAdapter(ArrayList<Category> data) {
+		
 		if (adapterVideo == null)
 			adapterVideo = new VideoAdapter(activity);
 		adapterVideo.RemoveData();
@@ -144,7 +150,8 @@ public class FragmentHome extends Fragment {
 
 						@Override
 						public void onSuccess(ListData<Category> data) {
-							MainActivity.progressBar.setVisibility(View.GONE);
+							Log.d("onSuccess", "onSuccess");
+							loadding.setVisibility(View.GONE);
 							ItemVideo itemCate = new ItemVideo();
 							itemCate.setTitle(cat.getTitle());
 							itemCate.setPlaylistId(cat.getPlaylistId());
@@ -161,7 +168,7 @@ public class FragmentHome extends Fragment {
 								item.setThumbnail(dt.getThumbnail());
 								item.setPlaylistId(dt.getPlaylistId());
 								item.setDuration(dt.getDuration());
-								// Log.d("dt.getThumbnail()",dt.getThumbnail());
+								
 								adapterVideo.addItem(item);
 							}
 							listvideo.setAdapter(adapterVideo);

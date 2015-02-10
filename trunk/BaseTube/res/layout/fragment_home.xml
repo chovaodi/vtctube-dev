@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical" >
+    android:background="@android:color/white" >
+
+    <com.vtc.basetube.font.TextViewRobotoLight
+        android:id="@+id/lblThongbao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:text="Danh sách rỗng. Vui lòng thử lại sau!"
+        android:textColor="@color/text_black" />
 
     <ListView
         android:id="@+id/listivideo"
@@ -16,4 +24,12 @@
         android:scrollingCache="false" >
     </ListView>
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/loadding_home"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>

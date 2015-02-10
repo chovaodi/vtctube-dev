@@ -12,9 +12,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.vtc.basetube.BaseTubeApplication;
-import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.Category;
@@ -31,6 +32,8 @@ public class FragmentSearch extends Fragment {
 	private YoutubeController mController;
     private BaseTubeApplication mApp;
     private VideoAdapter mAdapterVideo;
+    private TextView lblMessage;
+    private ProgressBar loadding;
 
 	public static FragmentSearch newInstance(String querry) {
 		if (fragment == null) {
@@ -44,17 +47,17 @@ public class FragmentSearch extends Fragment {
 
 	public void updateValue(String txtSearch) {
 		this.mQuerry = txtSearch;
-		MainActivity.lblMessage.setVisibility(View.GONE);
-		MainActivity.progressBar.setVisibility(View.VISIBLE);
+		lblMessage.setVisibility(View.GONE);
+		loadding.setVisibility(View.VISIBLE);
 		 mController.requestSearchVideos(mApp.getApplicationContext(), mQuerry,
 	                new OnRequest<ArrayList<Category>>() {
 
 	                    @Override
 	                    public void onSuccess(ArrayList<Category> data) {
-	                    	MainActivity.progressBar.setVisibility(View.GONE);
+	                    	loadding.setVisibility(View.GONE);
 	                    	if(data.size()==0){
-	                    		MainActivity.lblMessage.setVisibility(View.VISIBLE);
-	                    		MainActivity.lblMessage.setText("Không tìm nội dung này!");
+	                    		lblMessage.setVisibility(View.VISIBLE);
+	                    		lblMessage.setText("Không tìm nội dung này!");
 	                    	}
 	                    	Log.d(Utils.TAG, "Data: " + data.size());
 	                        mAdapterVideo.RemoveData();
@@ -116,6 +119,9 @@ public class FragmentSearch extends Fragment {
 
 		mAdapterVideo = new VideoAdapter(getActivity());
 		View view = getView();
+		loadding=(ProgressBar)view.findViewById(R.id.loadding_home);
+		lblMessage=(TextView)view.findViewById(R.id.lblThongbao);
+		
 		ListView listvideo = (ListView) view.findViewById(R.id.listivideo);
 
 		listvideo.setAdapter(mAdapterVideo);

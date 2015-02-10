@@ -8,8 +8,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
@@ -23,7 +23,6 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.pedrovgs.draggablepanel.DraggableListener;
 import com.pedrovgs.draggablepanel.DraggableView;
 import com.vtc.basetube.BaseTubeApplication;
-import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.Category;
@@ -113,7 +112,7 @@ public class VideoPlayerFragment extends YoutubePlayerFragment {
 		mTvViewCount = (TextView) header.findViewById(R.id.lblCountview);
 		mLoading=(ProgressBar)mView.findViewById(R.id.loading);
 
-		MainActivity.lblMessage.setVisibility(View.GONE);
+		
 		Bundle bundle = this.getArguments();
 		if (bundle == null) {
 			return;

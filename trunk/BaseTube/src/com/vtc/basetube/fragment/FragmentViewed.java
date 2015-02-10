@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.ItemVideo;
@@ -26,7 +26,7 @@ public class FragmentViewed extends Fragment {
 	private static Fragment fragment = null;
 	private DatabaseHelper myDbHelper;
 	private OnDisplayVideo mOnDisplayVideo;
-
+	 private TextView lblMessage;
 	public static Fragment newInstance() {
 		if (fragment == null)
 			fragment = new FragmentViewed();
@@ -53,6 +53,7 @@ public class FragmentViewed extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		VideoAdapter adapterVideo = new VideoAdapter(getActivity());
 		View view = getView();
+		lblMessage=(TextView)view.findViewById(R.id.lblThongbao);
 		ListView listvideo = (ListView) view.findViewById(R.id.listivideo);
 		myDbHelper = new DatabaseHelper(getActivity());
 		try {
@@ -67,9 +68,9 @@ public class FragmentViewed extends Fragment {
 		final List<ItemVideo> list = DatabaseHelper.getVideoData(
 				"SELECT * FROM " + DatabaseHelper.TB_DATA + " WHERE type='"
 						+ Utils.VIEWED + "'", myDbHelper);
-		MainActivity.lblMessage.setVisibility(View.GONE);
+		lblMessage.setVisibility(View.GONE);
 		if (list == null || list.size() == 0)
-			MainActivity.lblMessage.setVisibility(View.VISIBLE);
+			lblMessage.setVisibility(View.VISIBLE);
 
 		for (int i = 0; i < list.size(); i++) {
 			ItemVideo item = new ItemVideo();

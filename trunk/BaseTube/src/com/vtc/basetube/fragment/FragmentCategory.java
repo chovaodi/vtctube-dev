@@ -13,9 +13,9 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.vtc.basetube.BaseTubeApplication;
-import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.adapter.VideoAdapter;
 import com.vtc.basetube.model.Category;
@@ -35,6 +35,7 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
     private OnDisplayVideo mOnDisplayVideo;
     private String mNextPageToken = null;
     private String mPlaylistId = null;
+    private ProgressBar loadding;
 
     public static FragmentCategory newInstance() {
         if (fragment == null)
@@ -63,6 +64,8 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
         super.onActivityCreated(savedInstanceState);
         mAdapterVideo = new VideoAdapter(getActivity());
         View view = getView();
+        loadding=(ProgressBar)view.findViewById(R.id.loadding_home);
+		loadding.setVisibility(View.VISIBLE);
         ListView listvideo = (ListView) view.findViewById(R.id.listivideo);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -105,7 +108,7 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
     }
 
     private void loadPlayList(String playlistId, final boolean isLoadMore) {
-        MainActivity.progressBar.setVisibility(View.VISIBLE);
+        loadding.setVisibility(View.VISIBLE);
         if (isLoadMore == false) {
             mNextPageToken = null;
         }
@@ -113,7 +116,7 @@ public class FragmentCategory extends Fragment implements OnScrollListener {
 
             @Override
             public void onSuccess(ListData<Category> data) {
-                MainActivity.progressBar.setVisibility(View.GONE);
+            	loadding.setVisibility(View.GONE);
                 Log.d(Utils.TAG, "Data: " + data.size());
                 if(isLoadMore == false) {
                     mAdapterVideo.RemoveData();
