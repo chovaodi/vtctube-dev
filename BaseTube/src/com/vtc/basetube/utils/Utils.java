@@ -1,6 +1,6 @@
 package com.vtc.basetube.utils;
 
-import java.text.ParseException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,17 +13,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.Toast;
 
-import com.vtc.basetube.MainActivity;
 import com.vtc.basetube.R;
 import com.vtc.basetube.model.Item;
 import com.vtc.basetube.model.ItemVideo;
@@ -33,7 +34,7 @@ public class Utils {
 	public final static String DEVELOPER_KEY_YOUTUBE = "AIzaSyDsQDuxjOZLCiwx9MKIa_LTPhYPHV293L8";// "AIzaSyA49SV21QaIN0oj9iUqW-u4zWi-41NDFNo";
 	public static int LIKE = 0;
 	public static int VIEWED = 1;
-	
+
 	private static SimpleDateFormat sUSTimeFormatter = new SimpleDateFormat(
 			"yyyy-MM-dd");
 	private static SimpleDateFormat sVITimeFormatter = new SimpleDateFormat(
@@ -82,38 +83,44 @@ public class Utils {
 		return menuItems;
 
 	}
-	public static void CreatePopupMenu(final Context context,View v, final ItemVideo itemvd) {
 
+	public static void CreatePopupMenu(final Context context, View v,
+			final ItemVideo itemvd) {
+		final DatabaseHelper myDbHelper = new DatabaseHelper(context);
+		try {
+			myDbHelper.createDataBase();
+			myDbHelper.openDataBase();
+		} catch (IOException ioe) {
+			throw new Error("Unable to create database");
+		} catch (SQLException sqle) {
+			throw sqle;
+		}
 		PopupMenu mypopupmenu = new PopupMenu(context, v);
 
 		MenuInflater inflater = mypopupmenu.getMenuInflater();
 
 		inflater.inflate(R.menu.popup_menu, mypopupmenu.getMenu());
-
 		mypopupmenu.show();
 		mypopupmenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				int id = item.getItemId();
-				switch (id) {
-				case R.id.popup_like:
-
-					if (MainActivity.myDbHelper.getCountRow("SELECT * FROM "
+				String title = (String) item.getTitle();
+				Log.d("title", title);
+				if (title.equalsIgnoreCase("yêu thích")) {
+					if (myDbHelper.getCountRow("SELECT * FROM "
 							+ DatabaseHelper.TB_DATA + " WHERE videoId='"
 							+ itemvd.getId() + "' and type='" + Utils.LIKE
 							+ "'") == 0) {
-						MainActivity.myDbHelper.insertVideoLike(itemvd,
-								Utils.LIKE);
+						myDbHelper.insertVideoLike(itemvd, Utils.LIKE);
 						Toast.makeText(context, "Thêm vào danh sách yêu thích",
 								Toast.LENGTH_LONG).show();
 					}
 
-					break;
-				case R.id.popup_share:
+				} else {
 					Utils.shareButton(itemvd, context);
-					break;
 				}
+
 				return false;
 			}
 		});
@@ -169,10 +176,19 @@ public class Utils {
 		return false;
 	}
 
-	public static ArrayList<String> getQuerySearch(String sql) {
-		Cursor c = MainActivity.myDbHelper.query(DatabaseHelper.TB_SEARCH,
-				null, null, null, null, null, null);
-		c = MainActivity.myDbHelper.rawQuery(sql);
+	public static ArrayList<String> getQuerySearch(String sql, Activity activity) {
+		final DatabaseHelper myDbHelper = new DatabaseHelper(activity);
+		try {
+			myDbHelper.createDataBase();
+			myDbHelper.openDataBase();
+		} catch (IOException ioe) {
+			throw new Error("Unable to create database");
+		} catch (SQLException sqle) {
+			throw sqle;
+		}
+		Cursor c = myDbHelper.query(DatabaseHelper.TB_SEARCH, null, null, null,
+				null, null, null);
+		c = myDbHelper.rawQuery(sql);
 		ArrayList<String> listAccount = new ArrayList<String>();
 
 		if (c.moveToFirst()) {
@@ -182,8 +198,6 @@ public class Utils {
 		}
 		return listAccount;
 	}
-
-	
 
 	public static String getTime(String timeString) {
 		try {

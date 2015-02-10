@@ -12,4 +12,6 @@ public abstract class BaseTubeApplication extends Application {
     public abstract String getChannelId();
 
     public abstract String getPlaylistResource();
+    
+    
 }
